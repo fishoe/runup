@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser as user_parent
 
 class Users(user_parent):
     class GenderCtg(models.IntegerChoices):
+        COMMON = 0
         WOMAN = 1
         MAN = 2
     Gender = models.IntegerField(choices=GenderCtg.choices)
@@ -21,10 +22,21 @@ class Brands(models.Model):
     Description = models.TextField(null=True)
     Link = models.URLField()
 
-class Categories(models.Model):
-    Name = models.CharField(max_length=50)
-    Main = models.CharField(max_length=50)
-    Sub = models.CharField(max_length=50)
+class MainCategories(models.Model):
+    class GenderCtg(models.IntegerChoices):
+        WOMAN = 1
+        MAN = 2
+        COMMON = 3
+        NONE = 4
+    
+    Name_kr = models.CharField(max_length=50)
+    Name_en = models.CharField(max_length=50,unique=True) 
+    Gender = models.IntegerField(choices=GenderCtg.choices)
+
+class SubCategories(models.Model):
+    Name_kr = models.CharField(max_length=50)
+    Name_en = models.CharField(max_length=50)
+    Main = models.ForeignKey(MainCategories, on_delete= models.CASCADE, related_name='sub_ctgs')
 
     class GenderCtg(models.IntegerChoices):
         WOMAN = 1
@@ -36,11 +48,12 @@ class Categories(models.Model):
 
 class Products(models.Model):
     class GenderCtg(models.IntegerChoices):
+        COMMON = 0
         WOMAN = 1
         MAN = 2
 
     Brand = models.ForeignKey(Brands,related_name="Products", on_delete = models.DO_NOTHING)
-    Category = models.ForeignKey(Categories,related_name='Products', on_delete = models.DO_NOTHING)
+    Category = models.ForeignKey(SubCategories,related_name='Products', on_delete = models.DO_NOTHING)
     Name = models.CharField(max_length=150)
     Img_url = models.URLField()
     Url = models.URLField()

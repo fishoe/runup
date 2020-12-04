@@ -1,0 +1,157 @@
+{% extends 'layout.html'%} {% load static %} {% block style%}
+<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" />
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
+{% endblock %} {% block content %}
+<!--********************************* 카테고리 헤더 *********************************-->
+<section class="category-main-section">
+  <div class="category-main-title">
+    <h1>카테고리</h1>
+    <i class="fas fa-times category-cancel-icon"></i>
+  </div>
+  <div class="category-main-items">
+    <div class="category-main-item">
+      <img class="category-item-icon" src="{% static 'assets/longTshirt-icon.svg' %}" alt="longTshirt-icon" />
+      <span>아우터</span>
+    </div>
+    <div class="category-main-item">
+      <img class="category-item-icon" src="{% static 'assets/longTshirt-icon.svg' %}" alt="longTshirt-icon" />
+      <span>아우터</span>
+    </div>
+    <div class="category-main-item">
+      <img class="category-item-icon" src="{% static 'assets/longTshirt-icon.svg' %}" alt="longTshirt-icon" />
+      <span>아우터</span>
+    </div>
+    <div class="category-main-item">
+      <img class="category-item-icon" src="{% static 'assets/longTshirt-icon.svg' %}" alt="longTshirt-icon" />
+      <span>아우터</span>
+    </div>
+  </div>
+</section>
+
+<div class="category-infinite">
+  <section class="category-sub-section">
+    <div class="category-sub-title">
+      <h3 class="category-sub-title-item">전체의류</h3>
+      <h3 class="category-sub-title-item">블라블라</h3>
+    </div>
+    <!-- <h1 class="category-title">{{ctg_name}}</h1> -->
+    <div class="category-sub">
+      <div class="category-sub-filter">
+        <div class="category-sub-filter-box">
+          <span>필터</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <aside class="categoryFilter-dropdown-menu">
+          <dl class="categoryFilter-dropdown-list">
+            <dt class="sr-only">필터</dt>
+            <dd>필터</dd>
+          </dl>
+        </aside>
+      </div>
+
+      <div class="category-sub-sort">
+        <div class="category-sub-sort-box">
+          <span>정렬</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <aside class="categorySort-dropdown-menu">
+          <dl class="categorySort-dropdown-list">
+            <dt class="sr-only">정렬</dt>
+            <dd>
+              <a href="#">인기순</a>
+            </dd>
+            <dd>
+              <a href="#">상푼순</a>
+            </dd>
+            <dd>
+              <a href="?ctg={{ctg}}&flt=1">높은가격순</a>
+            </dd>
+            <dd>
+              <a href="?ctg={{ctg}}&flt=2">낮은가격순</a>
+            </dd>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+  <!--********************************* 상품 목록 *********************************-->
+  <div class="infinite-container">
+    {% for prod in numbers %}
+    <div class="infinite-item">
+      <div class="box">
+        <div class="img_box">
+          <a onclick="animation('{% url 'sub' prod.pk%}')">
+            <img src="{{prod.image}}" alt="image" class="image" />
+          </a>
+        </div>
+        <div class="info">
+          <b>{{ prod.Brand.Name_kr }}</b>
+          <div class="price">{% load humanize %} {{prod.price|intcomma}}원</div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% if numbers.has_next %}
+<a class="infinite-more-link" href="?page={{ numbers.next_page_number }}&ctg={{ctg}}&flt={{flt}}">More</a>
+{% endif %}
+
+<script>
+  if (window.console != null) {
+    console.log('console is exist');
+  } else {
+    coneolse.log('console is null');
+  }
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0],
+  });
+</script>
+{% comment %} <input id="page" type="hidden" value="2" /> <button id="callmorepost" type="button" class="btn btn-primary btn-block">More Post</button> {% endcomment %}
+
+<script type="text/javascript">
+  function animation(targetUrl) {
+    var maskHeight = $(document).height();
+    var windowHeight = $(window).height();
+    var maskWidth = $(document).width();
+    var height = $(document).scrollTop();
+
+    var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+    var loadingImg = '';
+    var delayTimeMillis = 1200;
+
+    loadingImg += "<div id='loadingImg' style='position:absolute; left:10%; display:none; z-index:10000;'>";
+    loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
+    loadingImg += '</div>';
+
+    $('form').append(mask).append(loadingImg);
+
+    $('#mask').css({
+      width: maskWidth,
+      height: maskHeight,
+      opacity: '0.4',
+    });
+
+    $('#mask').show();
+
+    if (height == 0) {
+      $('#loadingImg').css({
+        top: windowHeight / 3,
+      });
+    } else {
+      $('#loadingImg').css({
+        top: height + windowHeight / 3,
+      });
+    }
+
+    $('#loadingImg').show();
+
+    // 실행 지연
+    setTimeout(function () {
+      location.href = targetUrl;
+    }, delayTimeMillis);
+  }
+</script>
+
+{% endblock %}

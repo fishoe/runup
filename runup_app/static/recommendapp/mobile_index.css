@@ -1,0 +1,507 @@
+/* reset */
+button {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
+
+img {
+  display: inline-block;
+}
+
+.sr-only {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  z-index: -1;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+input {
+  display: block;
+}
+
+/* header-section */
+.sign-up-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  margin-top: 42px;
+}
+
+.sign-up-header-title {
+  font-size: 35px;
+  font-weight: 400;
+  line-height: 0.3645833333;
+  margin-bottom: 40px;
+}
+
+.sign-up-header-desc {
+  font-size: 20px;
+  line-height: 1;
+  margin-bottom: 15px;
+}
+
+.sign-in-button-box,
+.sign-up-button-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.sign-in-button {
+  padding: 9.6px 14px;
+  margin-bottom: 12px;
+  width: 315px;
+  height: 35px;
+  background-color: #000;
+  color: #fff;
+}
+
+.sign-in-kakao-button,
+.sign-up-kakao-button {
+  display: flex;
+  align-items: center;
+  padding: 9.6px 14px;
+  margin-bottom: 12px;
+  width: 315px;
+  height: 35px;
+  background-color: #feec34;
+  position: relative;
+}
+
+.sign-in-kakao-button span,
+.sign-up-kakao-button span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.sign-in-naver-button,
+.sign-up-naver-button {
+  display: flex;
+  align-items: center;
+  padding: 11.9px 17px 12.6px;
+  margin-bottom: 12px;
+  width: 315px;
+  height: 35px;
+  background-color: #42cd65;
+  color: #fff;
+  position: relative;
+}
+
+.sign-in-naver-button span,
+.sign-up-naver-button span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.sign-in-facebook-button,
+.sign-up-facebook-button {
+  display: flex;
+  align-items: center;
+  padding: 10px 17px 9.6px;
+  margin-bottom: 12px;
+  width: 315px;
+  height: 35px;
+  background-color: #21538a;
+  color: #fff;
+  position: relative;
+}
+
+.sign-in-facebook-button span,
+.sign-up-facebook-button span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.sign-up-or-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 13px;
+}
+
+.sign-up-or-bar span {
+  font-size: 15px;
+  line-height: 0.6;
+  margin-left: 17px;
+  margin-right: 17px;
+}
+
+.sign-up-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-up-content input {
+  padding: 10px 10px 9px;
+  width: 315px;
+  height: 35px;
+  border: 1px solid #848484;
+  margin-bottom: 13px;
+  font-size: 13px;
+  line-height: 0.52;
+}
+
+.sign-up-content input:nth-child(2) {
+  font-size: 12px;
+  line-height: 0.48;
+}
+
+.sign-up-button {
+  padding: 13px 72.5px;
+  margin-bottom: 23px;
+  background-color: #000;
+  color: #fff;
+  font-size: 15px;
+  line-height: 0.6;
+  height: 45px;
+}
+
+/* sign-in section */
+.sign-in-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* width: 100%; */
+  margin-top: 62px;
+}
+
+.sign-in-header-title {
+  font-size: 35px;
+  line-height: 0.3645833333;
+  margin-bottom: 60px;
+}
+
+.sign-in-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
+
+.sign-in-form input {
+  font-size: 20px;
+  line-height: 0.8;
+  padding: 8px 12px;
+  border-bottom: 2px solid #707070;
+  margin-bottom: 45px;
+  width: 375px;
+}
+
+.sign-in-form input:last-child {
+  margin-bottom: 0;
+}
+
+.sign-in-desc {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: 12px;
+  line-height: 0.48;
+  margin-bottom: 56px;
+}
+
+.sign-in-desc-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+#checkbox {
+  margin-right: 8px;
+}
+
+.sign-in-facebook-button {
+  margin-bottom: 24px;
+}
+
+.sign-in-footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  line-height: 0.48;
+  margin-bottom: 55px;
+}
+
+.sign-up-question {
+  margin-bottom: 14px;
+}
+
+.sign-up-question span {
+  color: #989898;
+  margin-right: 9px;
+}
+
+.sign-in-footer a {
+  text-decoration: underline;
+  font-weight: 400;
+}
+
+/* basket-section */
+.basket-title {
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 0.2604166667;
+  margin-top: 26px;
+  margin-bottom: 44px;
+}
+
+.basket-desc {
+  font-size: 20px;
+  line-height: 0.2083333333;
+  margin-bottom: 27px;
+}
+
+.basket-bar {
+  width: 100%;
+  margin-bottom: 94.8px;
+}
+
+.basket-image {
+  width: 129px;
+  height: 114.67px;
+  margin-bottom: 37.5px;
+}
+
+.basket-section {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+.basket-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.basket-content p {
+  font-size: 20px;
+  line-height: 0.2083333333;
+  margin-bottom: 51px;
+}
+
+.basket-button {
+  font-size: 20px;
+  line-height: 0.2083333333;
+  padding: 18px 34px;
+  background-color: #000;
+  color: #fff;
+  margin-bottom: 149px;
+}
+
+/* category header */
+/* .category-header {
+  width: 100%;
+} */
+
+/* category main Section */
+.category-main-section {
+  width: 100%;
+  padding: 10px 18px;
+  height: 101px;
+  background-color: #000;
+  color: #fff;
+  /* position */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  /* box-shadow */
+  -webkit-box-shadow: 0px 2px 4px 0px rgba(50, 50, 50, 0.2);
+  -moz-box-shadow: 0px 2px 4px 0px rgba(50, 50, 50, 0.2);
+  box-shadow: 0px 2px 4px 0px rgba(50, 50, 50, 0.2);
+}
+
+.category-main-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+
+.category-main-title h1 {
+  font-weight: 400;
+}
+
+.category-main-items {
+  display: flex;
+}
+
+.category-main-item {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  /* align-items: center; */
+  margin-right: 10px;
+}
+
+.category-main-item span {
+  margin-top: 5px;
+}
+
+.category-icon-item {
+  display: block;
+}
+
+/* category sub section */
+.category-sub-title {
+  display: flex;
+  padding: 5px 18px;
+  margin-bottom: 5px;
+}
+
+.category-sub-title-item {
+  margin-right: 5px;
+  font-weight: 400;
+}
+
+.category-sub-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* padding-bottom: 10px; */
+  background-color: #fff;
+}
+
+.category-sub {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.category-sub-filter,
+.category-sub-sort {
+  width: 43%;
+  padding: 7px 10px;
+  border-radius: 4px 4px 0 0;
+  background-color: #eff2f7;
+  position: relative;
+}
+
+.category-sub-filter-box,
+.category-sub-sort-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.categoryFilter-dropdown-menu,
+.categorySort-dropdown-menu {
+  display: none;
+}
+
+.categoryFilter-dropdown-menu.active,
+.categorySort-dropdown-menu.active {
+  display: block;
+}
+
+.categoryFilter-dropdown-list,
+.categorySort-dropdown-list {
+  font-size: 10px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #eff2f7;
+  z-index: 2;
+  width: 100%;
+  border-radius: 0 0 4px 4px;
+}
+
+.categoryFilter-dropdown-list dd,
+.categorySort-dropdown-list dd {
+  padding: 7px 10px;
+  /* border-radius: 4px; */
+  border-top: 1px solid #e1e4e8;
+}
+
+.wrap {
+  width: 100%;
+}
+
+.category-infinite {
+  overflow: auto;
+}
+
+/* 기존에 있던 css */
+.infinite-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 100vh;
+  /* margin-top: 46px; */
+  margin-bottom: 60px;
+}
+
+.infinite-item {
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2%;
+}
+
+.box {
+  width: 90%;
+  height: 100%;
+  background-color: white;
+
+  margin: 1.5%;
+  background-color: white;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.img_box {
+  width: 100%;
+  margin: 2%;
+
+  height: 150px;
+
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  max-width: 100%;
+  height: 150px;
+}
+
+/* <= 375 */
+@media screen and (max-width: 375px) {
+  .sign-in-form input {
+    width: 335px;
+  }
+}
+
+/* <= 320 iphone5 */
+@media screen and (max-width: 320px) {
+  .sign-in-form input {
+    width: 315px;
+  }
+}

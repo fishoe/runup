@@ -1,0 +1,78 @@
+{% extends 'layout.html'%} {% load static %} {% block style%}
+<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/sub.css' %}" />
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_sub.css' %}" />
+<!-- <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" /> -->
+{% endblock style %} {%block content%}
+
+<div class="container">
+  <div class="target_container">
+    <a href="{{main.href}}" class="target_box">
+      <img src="{{main.img}}" alt="image" class="target_img" />
+    </a>
+    <div class="info">
+      <b>{{main.brand}}</b>
+      <div class="price">{% load humanize %} {{main.price|intcomma}}원</div>
+    </div>
+  </div>
+  <div class="sim_container">
+    <div class="sim_title">
+      <h2>AI가 추천해주는 이런 상품은 어때요?</h2>
+      <h5>이미지 클릭시 해당 쇼핑몰로 넘어갑니다.</h5>
+    </div>
+    <!-- <div> -->
+    <div class="category-sub">
+      <div class="category-sub-filter">
+        <div class="category-sub-filter-box">
+          <span>필터</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <aside class="categoryFilter-dropdown-menu">
+          <dl class="categoryFilter-dropdown-list">
+            <dt class="sr-only">필터</dt>
+            <dd>필터</dd>
+          </dl>
+        </aside>
+      </div>
+      <div class="category-sub-sort">
+        <div class="category-sub-sort-box">
+          <span>정렬</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <aside class="categorySort-dropdown-menu">
+          <dl class="categorySort-dropdown-list">
+            <dt class="sr-only">정렬</dt>
+            <dd>
+              <a href="#">인기순</a>
+            </dd>
+            <dd>
+              <a href="#">상푼순</a>
+            </dd>
+            <dd>
+              <a href="?ctg={{ctg}}&flt=1">높은가격순</a>
+            </dd>
+            <dd>
+              <a href="?ctg={{ctg}}&flt=2">낮은가격순</a>
+            </dd>
+          </dl>
+        </aside>
+      </div>
+    </div>
+    <div class="sim_contents">
+      {% for content in contents %}
+      <div class="box">
+        <div class="img_box">
+          <a href="{{content.href}}">
+            <img class="image" src="{{content.img}}" alt="image" class="image" />
+          </a>
+        </div>
+        <div class="info">
+          <b>{{content.brand}}</b>
+          <div class="price">{% load humanize %} {{content.price|intcomma}}원</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <!-- </div> -->
+  </div>
+</div>
+{% endblock content %}
