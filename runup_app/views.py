@@ -18,38 +18,44 @@ class CtgGenderType():
     COMMON = 3
     NONE = 4
 
+class GenderChar():
+    WOMAN = 'w'
+    MAN = 'm'
+
 # Create your views here.
+
+def GetCtg(q_gender):
+    #카테고리 메뉴 파트
+    q_common = Q(Gender = CtgGenderType.COMMON)
+    q_ngen = Q(Gender = CtgGenderType.NONE)
+
+    main_ctgs = MainCategories.objects.filter( q_gender | q_ngen | q_common).order_by('pk')
+    sub_ctgs = SubCategories.objects.filter(q_gender | q_common | q_ngen ).order_by('Main')
+    return main_ctgs,sub_ctgs
 
 def main(request):
     
     #auth 관련 사항
     #auth 에 따라서 category 펼침 메뉴와 mypage 메뉴가 달라짐
-    q_gender = None
 
     #로그인 인증
     if request.user.is_authenticated :
         #로그인시
-        gender = 'w' if request.user.Gender == GenderType.WOMAN else 'm'
+        q_gender = Q( Gender = request.user.Gender)
     else :
         #페이지 아이템 출력 
         #비회원 기준으로 설정
-        gender = request.GET.get('gender','w')
+        gender = request.GET.get('gender', GenderChar.WOMAN)
+        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
+            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
+            gender = GenderChar.WOMAN    
+        q_gender = Q( Gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     
-    if (gender is 'w' or gender is 'm') is not True :
-        #잘못된 접근 출력?
-        gender = 'w' 
-    q_gender = Q( Gender = GenderType.WOMAN if gender == 'w' else GenderType.MAN )
-    
-    all_pd = Products.objects.filter(q_gender|Q( Gender=GenderType.COMMON )).order_by('?')
+    all_pd = Products.objects.filter(q_gender |Q( Gender=GenderType.COMMON )).order_by('?')
     prod_page = Paginator(all_pd,30) #모든 상품을 30개 보여준다.
     page = prod_page.get_page(1)
 
-    #카테고리 메뉴 파트
-    q_common =  Q(Gender = CtgGenderType.COMMON)
-    q_ngen = Q(Gender = CtgGenderType.NONE)
-
-    main_ctgs = MainCategories.objects.filter( q_gender | q_ngen | q_common).order_by('pk')
-    sub_ctgs = SubCategories.objects.filter(q_gender | q_common | q_ngen ).order_by('Main')
+    main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     #메인 포스트 노출 파트
 
