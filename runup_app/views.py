@@ -31,6 +31,7 @@ def GetCtg(q_gender):
 
     main_ctgs = MainCategories.objects.filter( q_gender | q_ngen | q_common).order_by('pk')
     sub_ctgs = SubCategories.objects.filter(q_gender | q_common | q_ngen ).order_by('Main')
+
     return main_ctgs,sub_ctgs
 
 def main(request):
@@ -40,18 +41,24 @@ def main(request):
 
     #로그인 인증
     if request.user.is_authenticated :
-        #로그인시
-        q_gender = Q( Gender = request.user.Gender)
+        #회원 메뉴 아이템
+        
+        #회원 성별 획득
+        gender = GenderChar.WOMAN if request.user.Gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q( Gender = request.user.Gender )
+        
     else :
-        #페이지 아이템 출력 
-        #비회원 기준으로 설정
-        gender = request.GET.get('gender', GenderChar.WOMAN)
+        #비회원 메뉴 아이템
+
+        #비회원 성별 획득
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
+        gender = request.GET.get('gender', gender)
         if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
             #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
             gender = GenderChar.WOMAN    
         q_gender = Q( Gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     
-    all_pd = Products.objects.filter(q_gender |Q( Gender=GenderType.COMMON )).order_by('?')
+    all_pd = Products.objects.filter(q_gender | Q( Gender=GenderType.COMMON )).order_by('?')
     prod_page = Paginator(all_pd,30) #모든 상품을 30개 보여준다.
     page = prod_page.get_page(1)
 
@@ -61,21 +68,22 @@ def main(request):
 
     active_banner_list = Main_banner.objects.filter( Q(Start__gte = timezone.now())| Q(End__lte = timezone.now()) )
 
-    #로그인 펼침 메뉴 부분
-
-    #Auth 구현 전까지 미구현
-    user_menu_list = None
-
     context = {
         'prod_objects' : page, #상품 목록 리스트 Products
         'gender' : gender, #사용자 성별
         'main_post' : active_banner_list, #현재 표시 되는 배너 리스트 쿼리 리스트 Main_banner
         'main_ctgs' : main_ctgs, #메인 카테고리 리스트 
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
-        'user_menu' : user_menu_list, #유저 메뉴 리스트
+        'user_data' : request.user, #유저 메뉴 리스트
     }
 
-    return render( request, 'main_content.html', context)
+    res = render( request, 'main_content.html', context)
+    
+    #cookie save if user is authenticated
+    if request.user.is_authenticated is False : 
+        res.set_cookie('gender', gender )
+
+    return res
 
 def recommend(request):
     #auth 확인 후 로그인 페이지 리다이렉트
