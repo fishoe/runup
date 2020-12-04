@@ -24,25 +24,25 @@ def main(request):
     
     #auth 관련 사항
     #auth 에 따라서 category 펼침 메뉴와 mypage 메뉴가 달라짐
+    q_gender = None
+
+    #로그인 인증
+    if request.user.is_authenticated :
+        #로그인시
+        gender = 'w' if request.user.Gender == GenderType.WOMAN else 'm'
+    else :
+        #페이지 아이템 출력 
+        #비회원 기준으로 설정
+        gender = request.GET.get('gender','w')
     
-    #페이지 아이템 출력 
-    #비회원 기준으로 설정
-    gender = request.GET.get('gender','w')
     if (gender is 'w' or gender is 'm') is not True :
         #잘못된 접근 출력?
         gender = 'w' 
-
     q_gender = Q( Gender = GenderType.WOMAN if gender == 'w' else GenderType.MAN )
     
     all_pd = Products.objects.filter(q_gender|Q( Gender=GenderType.COMMON )).order_by('?')
-
     prod_page = Paginator(all_pd,30) #모든 상품을 30개 보여준다.
-
     page = prod_page.get_page(1)
-
-    #메인 포스트 노출 파트
-
-    active_banner_list = Main_banner.objects.filter( Q(Start__gte = timezone.now())| Q(End__lte = timezone.now()) )
 
     #카테고리 메뉴 파트
     q_common =  Q(Gender = CtgGenderType.COMMON)
@@ -50,6 +50,10 @@ def main(request):
 
     main_ctgs = MainCategories.objects.filter( q_gender | q_ngen | q_common).order_by('pk')
     sub_ctgs = SubCategories.objects.filter(q_gender | q_common | q_ngen ).order_by('Main')
+
+    #메인 포스트 노출 파트
+
+    active_banner_list = Main_banner.objects.filter( Q(Start__gte = timezone.now())| Q(End__lte = timezone.now()) )
 
     #로그인 펼침 메뉴 부분
 
@@ -60,9 +64,9 @@ def main(request):
         'prod_objects' : page, #상품 목록 리스트 Products
         'gender' : gender, #사용자 성별
         'main_post' : active_banner_list, #현재 표시 되는 배너 리스트 쿼리 리스트 Main_banner
-        'main_ctgs' : main_ctgs, #카테고리 메인 리스트 [id,main,sub,name.]
-        'sub_ctgs' : sub_ctgs,
-        'user_menu' : user_menu_list, 
+        'main_ctgs' : main_ctgs, #메인 카테고리 리스트 
+        'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
+        'user_menu' : user_menu_list, #유저 메뉴 리스트
     }
 
     return render( request, 'main_content.html', context)
