@@ -60,8 +60,8 @@ def main(request):
         'prod_objects' : page, #상품 목록 리스트 Products
         'gender' : gender, #사용자 성별
         'main_post' : active_banner_list, #현재 표시 되는 배너 리스트 쿼리 리스트 Main_banner
-        'main_ctg' : main_ctgs, #카테고리 메인 리스트 [id,main,sub,name.]
-        'sub_ctg' : sub_ctgs,
+        'main_ctgs' : main_ctgs, #카테고리 메인 리스트 [id,main,sub,name.]
+        'sub_ctgs' : sub_ctgs,
         'user_menu' : user_menu_list, 
     }
 

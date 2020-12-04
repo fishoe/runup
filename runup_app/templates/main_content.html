@@ -67,4 +67,17 @@
 {% endblock %}
 
 {% block categories %}
+<p>hello boys</p>
+
+{% for i in main_ctgs %}
+  <p>{{ i.Name_kr }}</p>
+  <ol>
+  {% for j in sub_ctgs %}
+    {% if j.Main.pk == i.pk %}
+      <li>{{ j.Name_kr }}</li>
+    {% endif %}
+  {% endfor %}
+  </ol>
+{% endfor %}
+
 {% endblock %}
