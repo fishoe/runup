@@ -5,6 +5,7 @@ from .models import Main_banner
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
+from django.http import Http404, HttpResponseNotFound
 
 #constants
 class GenderType():
@@ -89,12 +90,15 @@ def recommend(request):
     #결과 값을 통한 제품 추천 페이지 이동
     return None
 
-def product_pg(request, product_no):
-    pd = Products.objects.get( id=product_no )
-    contents = Similarities.objects.filter( Sim_prod=pd ).order_by('-Sim_val')
+def product_pg(request, product_id):
+    try :
+        pd = Products.objects.get( id=product_id )
+    except :
+        raise Http404
+    contents = Similarities.objects.filter(Target_prod=pd).order_by('-Sim_val') 
 
     #리프레시 검사(리프레시를 이용한 뷰카운트 조작 방지 구현)
-    item.View_count += 1
+    pd.View_count += 1
 
     #제품 디테일 페이지 관련
     if request.user.is_authenticated :
@@ -103,11 +107,18 @@ def product_pg(request, product_no):
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        if gender #working
+        if pd.Gender != GenderType.COMMON :
+            gender = GenderChar.WOMAN if pd.Gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q( Gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+        
+        main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     context = {
         'main' : pd,
-        'content' : contents,
+        'contents' : contents,
+        'gender' : gender,
+        'main_ctgs' : main_ctgs,
+        'sub_ctgs' : sub_ctgs,
     }
 
     return render(request,'sub_content.html',context=context)
@@ -117,3 +128,4 @@ def nonepg(request):
 
 def test(request):
     return render(request,"test.html",{'var':'chooohada _ teacher'})
+
