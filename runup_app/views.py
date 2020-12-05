@@ -25,7 +25,7 @@ class GenderChar():
 # Create your views here.
 
 def GetCtg(q_gender):
-    #카테고리 메뉴 파트
+    #카테고리 메뉴
     q_common = Q(Gender = CtgGenderType.COMMON)
     q_ngen = Q(Gender = CtgGenderType.NONE)
 
@@ -35,21 +35,17 @@ def GetCtg(q_gender):
     return main_ctgs,sub_ctgs
 
 def main(request):
-    
-    #auth 관련 사항
-    #auth 에 따라서 category 펼침 메뉴와 mypage 메뉴가 달라짐
 
     #로그인 인증
     if request.user.is_authenticated :
         #회원 메뉴 아이템
-        
         #회원 성별 획득
+        user = request.user
         gender = GenderChar.WOMAN if request.user.Gender == GenderType.WOMAN else GenderChar.MAN
         q_gender = Q( Gender = request.user.Gender )
         
     else :
         #비회원 메뉴 아이템
-
         #비회원 성별 획득
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
         gender = request.GET.get('gender', gender)
@@ -69,11 +65,12 @@ def main(request):
     active_banner_list = Main_banner.objects.filter( Q(Start__gte = timezone.now())| Q(End__lte = timezone.now()) )
 
     context = {
-        'prod_objects' : page, #상품 목록 리스트 Products
+        'contents' : page, #상품 목록 리스트 Products
         'gender' : gender, #사용자 성별
         'main_post' : active_banner_list, #현재 표시 되는 배너 리스트 쿼리 리스트 Main_banner
         'main_ctgs' : main_ctgs, #메인 카테고리 리스트 
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
+        'login' : request.user.is_authenticated,
         'user_data' : request.user, #유저 메뉴 리스트
     }
 
@@ -92,9 +89,28 @@ def recommend(request):
     #결과 값을 통한 제품 추천 페이지 이동
     return None
 
-def product_pg(request):
+def product_pg(request, product_no):
+    pd = Products.objects.get( id=product_no )
+    contents = Similarities.objects.filter( Sim_prod=pd ).order_by('-Sim_val')
+
+    #리프레시 검사(리프레시를 이용한 뷰카운트 조작 방지 구현)
+    item.View_count += 1
+
     #제품 디테일 페이지 관련
-    return None
+    if request.user.is_authenticated :
+        #회원
+        pass
+    else :
+        #비회원
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+        if gender #working
+
+    context = {
+        'main' : pd,
+        'content' : contents,
+    }
+
+    return render(request,'sub_content.html',context=context)
 
 def nonepg(request):
     return None
