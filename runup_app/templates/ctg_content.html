@@ -32,7 +32,7 @@
   <section class="category-sub-section">
     <div class="category-sub-title">
       <h3 class="category-sub-title-item">전체의류</h3>
-      <h3 class="category-sub-title-item">블라블라</h3>
+      <h3 class="category-sub-title-item">{{ s_ctg.Name_kr }}</h3>
     </div>
     <!-- <h1 class="category-title">{{ctg_name}}</h1> -->
     <div class="category-sub">
@@ -80,23 +80,23 @@
     <div class="infinite-item">
       <div class="box">
         <div class="img_box">
-          <a onclick="animation('{% url 'product' prod.id %}')">
+        <a onclick="animation('{% url 'product' prod.id %}')">
             <img src="{{ prod.Img_url }}" alt="image" class="image" />
           </a>
         </div>
         <div class="info">
           <b>{{ prod.Brand.Name_kr }}</b>
-          <div class="price">{% load humanize %} {{prod.Origin_Price|intcomma}}원</div>
+          <div class="price">{% load humanize %} {{prod.Origin_price|intcomma}}원</div>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
+  {% if contents.has_next %}
+    <a class="infinite-more-link" href="?page={{ contents.next_page_number }}&s_ctg={{s_ctg.id}}">More</a>
+  {% endif %}
 </div>
 
-{% if page.has_next %}
-<a class="infinite-more-link" href="?page={{ page.next_page_number }}&ctg={{ctg}}&flt={{flt}}">More</a>
-{% endif %}
 
 <script>
   if (window.console != null) {
@@ -105,7 +105,7 @@
     coneolse.log('console is null');
   }
   var infinite = new Waypoint.Infinite({
-    element: $('.infinite-container')[0],
+    element: $('.infinite-container')[0]
   });
 </script>
 {% comment %} <input id="page" type="hidden" value="2" /> <button id="callmorepost" type="button" class="btn btn-primary btn-block">More Post</button> {% endcomment %}

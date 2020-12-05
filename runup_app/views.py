@@ -5,7 +5,7 @@ from .models import Main_banner
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
-from django.http import Http404, HttpResponseNotFound, JsonResponse
+from django.http import Http404, HttpResponseNotFound
 
 from config.settings import DEBUG
 if DEBUG == True : 
@@ -98,12 +98,6 @@ def recommend(request):
 
 def category_pg(request):
 
-    if request.is_ajax():
-        ctg_page = int(request.GET.get('page',1))
-        data = {
-            'msg' : 'None'
-        }
-        return JsonResponse(data)
 
     #auth
     if request.user.is_authenticated :
@@ -125,8 +119,9 @@ def category_pg(request):
             if sub_ctg.Gender != CtgGenderType.COMMON and sub_ctg.Gender != CtgGenderType.NONE:
                 gender = GenderChar.WOMAN if sub_ctg.Gender == CtgGenderType.WOMAN else GenderChar.MAN
             main_ctg = sub_ctg.Main
-            ctg_pd_list = Products.objects.filter( Category=sub_ctg )#todo
-        pg = Paginator(ctg_pd_list, const.ITEMS_PER_PAGE ).get_page(1)
+            ctg_pd_list = Products.objects.filter( Category=sub_ctg ).order_by(flt) #todo
+        paginator = Paginator(ctg_pd_list, const.ITEMS_PER_PAGE )
+        page = paginator.get_page(1)
     except ValueError as e:
         raise Http404('invalid value')
     except MainCategories.DoesNotExist as e :
@@ -140,7 +135,7 @@ def category_pg(request):
     #print(request.user)
 
     context = {
-        'contents' : pg , #상품 목록 리스트 Products
+        'contents' : page , #상품 목록 리스트 Products
         'm_ctg': main_ctg ,
         's_ctg' : sub_ctg ,
         's_ctg_friends' : main_ctg.sub_ctgs.all(), #현 카테고리 메인의 친구들
@@ -149,8 +144,12 @@ def category_pg(request):
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
         'user_data' : request.user, #유저 메뉴 리스트
     }
-
-    return render(request,'ctg_content.html', context=context )
+    if request.is_ajax():
+        ctg_page = int(request.GET.get('page',-1))
+        context['contents']=paginator.page(ctg_page)
+        return render(request,'ctg_content.html',context=context)
+    else :
+        return render(request,'ctg_content.html', context=context )
 
     
 def product_pg(request, product_id):
