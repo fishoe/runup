@@ -76,17 +76,17 @@
   </section>
   <!--********************************* 상품 목록 *********************************-->
   <div class="infinite-container">
-    {% for prod in numbers %}
+    {% for prod in contents %}
     <div class="infinite-item">
       <div class="box">
         <div class="img_box">
-          <a onclick="animation('{% url 'sub' prod.pk%}')">
-            <img src="{{prod.image}}" alt="image" class="image" />
+          <a onclick="animation('{% url 'product' prod.id %}')">
+            <img src="{{ prod.Img_url }}" alt="image" class="image" />
           </a>
         </div>
         <div class="info">
           <b>{{ prod.Brand.Name_kr }}</b>
-          <div class="price">{% load humanize %} {{prod.price|intcomma}}원</div>
+          <div class="price">{% load humanize %} {{prod.Origin_Price|intcomma}}원</div>
         </div>
       </div>
     </div>
@@ -94,8 +94,8 @@
   </div>
 </div>
 
-{% if numbers.has_next %}
-<a class="infinite-more-link" href="?page={{ numbers.next_page_number }}&ctg={{ctg}}&flt={{flt}}">More</a>
+{% if page.has_next %}
+<a class="infinite-more-link" href="?page={{ page.next_page_number }}&ctg={{ctg}}&flt={{flt}}">More</a>
 {% endif %}
 
 <script>
