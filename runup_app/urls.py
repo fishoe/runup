@@ -4,7 +4,7 @@ from django.urls import path
 urlpatterns = [
     path('', views.main, name = 'main'), #메인 페이지
     path('index', views.main, name = 'index'), #메인 페이지
-    path('<int:product_id>', views.product_pg , name = 'product'), #제품 페이지
+    path('<int:product_id>', views.nonepg, name = 'product'), #제품 페이지
     path('likes', views.nonepg, name = 'likes'), #좋아요 리스트
     path('<int:product_id>/like',views.nonepg, name = 'like'), #좋아요 action 대응 ajax url
     path('best', views.nonepg, name = 'best_page'), #베스트 리스트 페이지
@@ -17,5 +17,7 @@ urlpatterns = [
     path('signup', views.nonepg, name = 'signup'), #가입 페이지
     path('userinfo', views.nonepg, name = 'userinfo'), #유저 정보 페이지
 
-    path('test', views.test, name = 'test')
+    path('test', views.test, name = 'test'),
+    path('styleCatch', views.styleCatch, name = 'styleCatch'), #스타일케치 페이지
+    path('searchPage', views.searchPage, name='searchPage'), #검색 페이지
 ]

@@ -19,7 +19,6 @@ pipenv==2020.6.2
 prompt-toolkit==3.0.5
 Pygments==2.6.1
 pytz==2020.4
-pywin32==228
 pyzmq==19.0.1
 sqlparse==0.4.1
 tornado==6.0.4

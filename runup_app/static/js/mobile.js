@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 // const adSection = document.querySelector('.ad-section');
 // if (window.location.href !== "http://127.0.0.1:8000/"){
@@ -9,85 +9,121 @@
 // dropdown click function
 function dropdownClickFunction(button, dropdown) {
   if (button.active) {
-    dropdown.classList.remove('active');
+    dropdown.classList.remove("active");
   } else {
-    dropdown.classList.add('active');
+    dropdown.classList.add("active");
   }
   button.active = !button.active;
-  // dropdownMenuSide.style.height = `${dropdownMenu.clientHeight}px`;
 }
 
-// Category-menu Dropdown 실행
-const categoryMenu = document.querySelector('.category-menu');
-const categoryButton = document.querySelector('.footer-category');
-const categoryBox = document.querySelector('.category-box');
+// category-menu
+const categoryMenu = document.querySelector(".category-menu");
+const all = document.querySelectorAll(".category-menu-dt");
+const ddSection = document.querySelectorAll(".category-menu-dd-section");
+// console.log(categoryMenu);
 
-categoryButton.addEventListener('click', () => {
+categoryMenu.addEventListener("click", (event) => {
+  // console.log(event.target.firstChild.nextSibling.textContent);
+  switch (event.target.firstChild.nextSibling.textContent) {
+    case "후디&맨투맨":
+      dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      break;
+    case "탑&티셔츠":
+      dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      break;
+    case "팬츠&숏팬츠":
+      dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      break;
+    case "레깅스":
+      dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      break;
+    case "Accessory":
+      dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      break;
+    case "스포츠 브라":
+      dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      break;
+    case "가디건":
+      dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      break;
+    case "Outer":
+      dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      break;
+    case "스커트":
+      dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      break;
+  }
+});
+
+// Category-menu Dropdown 실행
+const categoryButton = document.querySelector(".footer-category");
+const categoryBox = document.querySelector(".category-box");
+
+categoryButton.addEventListener("click", () => {
   dropdownClickFunction(categoryButton, categoryBox);
 });
 
 categoryButton.active = false;
 
-// Men dropdown-menu
-const menButton = document.querySelector('.men-button');
-const categoryMenuMen = document.querySelector('.category-menu-men');
-
-menButton.addEventListener('click', () => {
-  dropdownClickFunction(menButton, categoryMenuMen);
-});
-
-menButton.active = false;
-
-// Women dropdown-menu
-const womenButton = document.querySelector('.women-button');
-const categoryMenuWomen = document.querySelector('.category-menu-women');
-
-womenButton.addEventListener('click', () => {
-  dropdownClickFunction(womenButton, categoryMenuWomen);
-});
-
-womenButton.active = false;
-
-// accessroy dropdown-menu
-const accessoryButton = document.querySelector('.accessory-button');
-const categoryMenuAccessory = document.querySelector('.category-menu-accessory');
-
-accessoryButton.addEventListener('click', () => {
-  dropdownClickFunction(accessoryButton, categoryMenuAccessory);
-});
-
-accessoryButton.active = false;
-
 // MyPage dropdown-menu 실행
-const myPageButton = document.querySelector('.footer-myPage');
-const myPageBox = document.querySelector('.myPage-box');
+const myPageButton = document.querySelector(".footer-myPage");
+const myPageBox = document.querySelector(".myPage-box");
 
-myPageButton.addEventListener('click', () => {
+myPageButton.addEventListener("click", () => {
   dropdownClickFunction(myPageButton, myPageBox);
 });
 
 myPageButton.active = false;
 
-// categorySort dropdown-menu
-const categorySortButton = document.querySelector('.category-sub-sort');
-const categorySortDropdownMenu = document.querySelector('.categorySort-dropdown-menu');
+// likes dropdown-menu 실행
+const likesButton = document.querySelector(".footer-likes");
+const likesBox = document.querySelector(".likes-box");
+likesButton.addEventListener("click", () => {
+  dropdownClickFunction(likesButton, likesBox);
+});
 
-categorySortButton.addEventListener('click', () => {
+likesButton.active = false;
+
+const footerItems = document.querySelector(".footer-items");
+const myPages = document.querySelectorAll(".myPage");
+const categories = document.querySelectorAll(".category");
+const likes = document.querySelectorAll(".likes");
+
+// console.log(categories);
+// console.log(likes);
+// console.log(myPages);
+
+function footerItemsHandler() {
+  console.log(footerItems);
+  footerItems.addEventListener("click", (event) => {
+    console.log(event.target);
+  });
+}
+function init() {
+  footerItemsHandler();
+}
+// init();
+
+// categorySort dropdown-menu
+const categorySortButton = document.querySelector(".category-sub-sort");
+const categorySortDropdownMenu = document.querySelector(".categorySort-dropdown-menu");
+
+categorySortButton.addEventListener("click", () => {
   dropdownClickFunction(categorySortButton, categorySortDropdownMenu);
 });
 categorySortButton.active = false;
 
 // categoryFilter dropdown-menu
-const categoryFilterButton = document.querySelector('.category-sub-filter');
-const categoryFilterDropdownMenu = document.querySelector('.categoryFilter-dropdown-menu');
+const categoryFilterButton = document.querySelector(".category-sub-filter");
+const categoryFilterDropdownMenu = document.querySelector(".categoryFilter-dropdown-menu");
 
-categoryFilterButton.addEventListener('click', () => {
+categoryFilterButton.addEventListener("click", () => {
   dropdownClickFunction(categoryFilterButton, categoryFilterDropdownMenu);
 });
 categoryFilterButton.active = false;
 
 // category cancel button click event
-const categoryCancelButton = document.querySelector('.category-cancel-icon');
-categoryCancelButton.addEventListener('click', () => {
+const categoryCancelButton = document.querySelector(".category-cancel-icon");
+categoryCancelButton.addEventListener("click", () => {
   window.history.back();
 });

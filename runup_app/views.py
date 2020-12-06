@@ -208,3 +208,9 @@ def test(request):
     }
     return render(request,'test.html',context=context)
 
+def styleCatch(request):
+    return render(request, 'styleCatch.html')
+
+def searchPage(request):
+    return render(request, 'searchPage.html')
+    

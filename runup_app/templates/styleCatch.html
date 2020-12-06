@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/f16496386e.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'recommendapp/styleCatch.css' %}" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header class="styleCatch-header">
+      <a href="{% url 'index' %}">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <h1 class="styleCatch-title">이미지 선택</h1>
+      <span class="styleCatch-complete">완료</span>
+    </header>
+
+    <section class="styleCatch-images">
+      <div class="styleCatch-camera-wrap">
+        <div class="styleCatch-camera">
+          <img src="{% static 'assets/camera-icon.svg' %}" alt="camera-icon" />
+          <span>카메라</span>
+        </div>
+      </div>
+      <div class="styleCatch-search-wrap">
+        <div class="styleCatch-search">
+          <img src="{% static 'assets/image-search-icon.svg' %}" alt="image-search-icon" />
+          <span>찾아보기</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="styleCatch-user">
+      <div class="styleCatch-user-image-wrap">
+        <div class="styleCatch-user-image">
+          <span>유저이미지 추가 공간</span>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

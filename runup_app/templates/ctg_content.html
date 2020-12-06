@@ -100,12 +100,12 @@
 
 <script>
   if (window.console != null) {
-    console.log('console is exist');
+    console.log("console is exist");
   } else {
-    coneolse.log('console is null');
+    coneolse.log("console is null");
   }
   var infinite = new Waypoint.Infinite({
-    element: $('.infinite-container')[0],
+    element: $(".infinite-container")[0],
   });
 </script>
 {% comment %} <input id="page" type="hidden" value="2" /> <button id="callmorepost" type="button" class="btn btn-primary btn-block">More Post</button> {% endcomment %}
@@ -118,34 +118,34 @@
     var height = $(document).scrollTop();
 
     var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-    var loadingImg = '';
+    var loadingImg = "";
     var delayTimeMillis = 1200;
 
     loadingImg += "<div id='loadingImg' style='position:absolute; left:10%; display:none; z-index:10000;'>";
     loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
-    loadingImg += '</div>';
+    loadingImg += "</div>";
 
-    $('form').append(mask).append(loadingImg);
+    $("form").append(mask).append(loadingImg);
 
-    $('#mask').css({
+    $("#mask").css({
       width: maskWidth,
       height: maskHeight,
-      opacity: '0.4',
+      opacity: "0.4",
     });
 
-    $('#mask').show();
+    $("#mask").show();
 
     if (height == 0) {
-      $('#loadingImg').css({
+      $("#loadingImg").css({
         top: windowHeight / 3,
       });
     } else {
-      $('#loadingImg').css({
+      $("#loadingImg").css({
         top: height + windowHeight / 3,
       });
     }
 
-    $('#loadingImg').show();
+    $("#loadingImg").show();
 
     // 실행 지연
     setTimeout(function () {
