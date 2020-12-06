@@ -25,30 +25,11 @@
         <h1 class="header-title-main">
           <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
         </h1>
-        <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
-        {% comment %}
-        <div class="header-icon">
-          <a href="{% url 'basket'%}">
-            <img class="header-icon-shoppingBox" src="{% static 'assets/shopping-box.svg'%}" alt="shopping-box" />
-          </a>
-          <img class="header-icon-dropdownMenu" src="{% static 'assets/dropdown-menu.svg'%}" alt="dropdown-menu" />
-        </div>
-        {% endcomment %}
-      </div>
-      <div class="header-menu">
-        <a href="#">
-          <span>NEW</span>
-        </a>
-        <a href="#">
-          <span>BEST</span>
-        </a>
-        <a href="#">
-          <span>SALE</span>
-        </a>
-        <a href="#">
-          <span>BRAND</span>
+        <a href="{% url 'searchPage' %}">
+          <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
         </a>
       </div>
+
       {% comment %}
       <div class="header-search">
         <img class="header-search-icon" src="{% static 'assets/search-icon.svg'%}" alt="search-icon" />
@@ -65,164 +46,47 @@
 
     <section class="wrap">
       {% comment %} 메뉴바 {% endcomment %}
-      <div class="category-box">
+      <!-- <section class="category-box"></section> -->
+
+      <section class="category-box">
         <header class="header">
           <div class="header-title">
             <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
             <h1 class="header-title-main">
               <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
             </h1>
-            <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+            <a href="{% url 'searchPage' %}">
+              <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+            </a>
           </div>
         </header>
-
         <dl class="category-menu">
-          <!-- men -->
-          <dt class="category-menu-dt men-button">Men</dt>
-          <div class="category-menu-men">
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=0">의류전체</a>
-            </dd>
-
-            <dd class="category-menu-dd">
-              <dl>
-                <dt>
-                  <a href="{% url 'category'%}?category=1">후디&맨투맨</a>
-                </dt>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=2">후디</a>
-                </dd>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=3">맨투맨</a>
-                </dd>
-              </dl>
-            </dd>
-
-            <dd class="category-menu-dd">
-              <dl>
-                <dt>
-                  <a href="{% url 'category'%}?category=4">탑&티셔츠</a>
-                </dt>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=5">긴팔 티셔츠</a>
-                </dd>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=6">반팔 티셔츠</a>
-                </dd>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=7">민소매티</a>
-                </dd>
-              </dl>
-            </dd>
-
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=8">아우터</a>
-            </dd>
-            <dd class="category-menu-dd">
-              <dl>
-                <dt>
-                  <a href="{% url 'category'%}?category=9">팬츠&타이즈</a>
-                </dt>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=10">팬츠</a>
-                </dd>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=11">타이즈</a>
-                </dd>
-              </dl>
-            </dd>
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=12">숏팬츠</a>
-            </dd>
+          {% for i in main_ctgs %}
+          <div class="categoty-menu-dt-section">
+            <dt class="category-menu-dt">{{ i.Name_kr }}</dt>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          <!-- women -->
-          <dt class="category-menu-dt women-button">
-            Women
-            <!-- <a href="{% url 'category'%}?category=6">Women</a> -->
-          </dt>
-          <div class="category-menu-women">
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=13">의류전체</a>
-            </dd>
-            <dd class="category-menu-dd">
-              <dl>
-                <dt>
-                  <a href="{% url 'category'%}?category=14">후디&맨투맨</a>
-                </dt>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=15">후디</a>
-                </dd>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=16">맨투맨</a>
-                </dd>
-              </dl>
-            </dd>
-            <dd class="category-menu-dd">
-              <dl>
-                <dt>
-                  <a href="{% url 'category'%}?category=17">탑&티셔츠</a>
-                </dt>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=18">긴팔 티셔츠</a>
-                </dd>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=19">반팔 티셔츠</a>
-                </dd>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=20">민소매티</a>
-                </dd>
-              </dl>
-            </dd>
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=21">스포츠브라</a>
-            </dd>
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=22">가디건</a>
-            </dd>
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=23">아우터</a>
-            </dd>
-            <dd class="category-menu-dd">
-              <dl>
-                <dt>
-                  <a href="{% url 'category'%}?category=24">팬츠&숏팬츠</a>
-                </dt>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=25">팬츠</a>
-                </dd>
-                <dd class="category-menu-dd-dt-dd">
-                  <a href="{% url 'category'%}?category=26">숏팬츠</a>
-                </dd>
-              </dl>
-            </dd>
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=27">레깅스</a>
-            </dd>
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=28">스커트</a>
-            </dd>
+          <div class="category-menu-dd-section">
+            {% for j in sub_ctgs %} {% if j.Main.pk == i.pk %}
+            <a href="{% url 'category' %}?s_ctg={{j.pk}}">
+              <dd class="category-menu-dd">{{ j.Name_kr }}</dd>
+            </a>
+            {% endif %} {% endfor %}
           </div>
-          <!-- accessory -->
-          <dt class="category-menu-dt accessory-button">
-            Accessory
-            <!-- <a href="{% url 'category'%}?category=15">Accessory</a> -->
-          </dt>
-          <div class="category-menu-accessory">
-            <dd class="category-menu-dd">
-              <a href="{% url 'category'%}?category=29">요가용품</a>
-            </dd>
-          </div>
+          {% endfor %}
         </dl>
-      </div>
+      </section>
 
-      <div class="myPage-box">
+      <section class="myPage-box">
         <header class="header">
           <div class="header-title">
             <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
             <h1 class="header-title-main">
               <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
             </h1>
-            <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+            <a href="{% url 'searchPage' %}">
+              <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+            </a>
           </div>
         </header>
         <dl class="myPage-menu">
@@ -242,19 +106,32 @@
             <dd>내정보</dd>
           </div>
         </dl>
-      </div>
+      </section>
+
+      <section class="likes-box">
+        <header class="header">
+          <div class="header-title">
+            <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
+            <h1 class="header-title-main">
+              <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
+            </h1>
+            <a href="{% url 'searchPage' %}">
+              <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+            </a>
+          </div>
+        </header>
+        <dl class="likes-menu">
+          <dt>최근 본 상품</dt>
+          <dd>최근 본 이미지 띄우기</dd>
+          <dt>내가 좋아요 한 상품</dt>
+          <dd>내가 좋아요 한 상품 띄우기</dd>
+        </dl>
+      </section>
 
       {% comment %} 메인콘텐츠 {% endcomment %}
-      <div class="content">
-        <div class="ad-section">
-          <div class="ad-box"></div>
-        </div>
-        {%block content%} {%endblock%}
-      </div>
+      <div class="content">{%block content%} {%endblock%}</div>
       {% block categories %} {%endblock%}
     </section>
-
-    
 
     <footer class="footer">
       <dl class="footer-items">
@@ -267,30 +144,30 @@
         </dd>
         <dt class="sr-only">Recomend</dt>
         <dd class="footer-item footer-recommend">
-          <a href="#">
+          <a href="{% url 'styleCatch' %}">
             <img src="{% static 'assets/recommend-icon.svg' %}" alt="recommend-icon" />
             <span>ST CATCH</span>
           </a>
         </dd>
         <dt class="sr-only">Category</dt>
         <dd class="footer-item footer-category">
-          <a href="#">
-            <img src="{% static 'assets/category-icon.svg' %}" alt="category-icon" />
-            <span>CATEGORY </span>
+          <a class="category" href="#">
+            <img class="category" src="{% static 'assets/category-icon.svg' %}" alt="category-icon" />
+            <span class="category">CATEGORY </span>
           </a>
         </dd>
         <dt class="sr-only">likes</dt>
         <dd class="footer-item footer-likes">
-          <a href="#">
-            <img src="{% static 'assets/likes-icon.svg' %}" alt="likes-icon" />
-            <span>LIKES</span>
+          <a class="likes" href="#">
+            <img class="likes" src="{% static 'assets/likes-icon.svg' %}" alt="likes-icon" />
+            <span class="likes">LIKES</span>
           </a>
         </dd>
         <dt class="sr-only">My Page</dt>
         <dd class="footer-item footer-myPage">
-          <a href="#">
-            <img src="{% static 'assets/myPage-icon.svg' %}" alt="myPage-icon" />
-            <span>MY PAGE</span>
+          <a class="myPage" href="#">
+            <img class="myPage" src="{% static 'assets/myPage-icon.svg' %}" alt="myPage-icon" />
+            <span class="myPage">MY PAGE</span>
           </a>
         </dd>
       </dl>

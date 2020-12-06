@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'recommendapp/searchPage.css' %}" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
+    <title>Document</title>
+  </head>
+  <body>
+    <header class="search-header">
+      <input class="search-header-input" type="text" placeholder="상품이나 브랜드를 검색해 보세요." />
+      <a href="#">
+        <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+      </a>
+      <a href="{% url 'index' %}">
+        <img src="{% static 'assets/cancel-icon.svg' %}" alt="canel-icon" />
+      </a>
+    </header>
+    <section class="search-desc">
+      <h3>추천 검색어</h3>
+      <h3>최근검색</h3>
+    </section>
+  </body>
+</html>

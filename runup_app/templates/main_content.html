@@ -2,6 +2,23 @@
 <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" />
 <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
 {% endblock %} {% block content %} {% comment %} {{category}} {% endcomment %}
+<div class="header-menu">
+  <a href="#">
+    <span>NEW</span>
+  </a>
+  <a href="#">
+    <span>BEST</span>
+  </a>
+  <a href="#">
+    <span>SALE</span>
+  </a>
+  <a href="#">
+    <span>BRAND</span>
+  </a>
+</div>
+<div class="ad-section">
+  <div class="ad-box"></div>
+</div>
 <div class="infinite-container">
   {% for prod in contents %}
   <div class="infinite-item">
@@ -28,34 +45,34 @@
     var height = $(document).scrollTop();
 
     var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-    var loadingImg = '';
+    var loadingImg = "";
     var delayTimeMillis = 1200;
 
     loadingImg += "<div id='loadingImg' style='position:absolute; left:15%; display:none; z-index:10000;'>";
     loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
-    loadingImg += '</div>';
+    loadingImg += "</div>";
 
-    $('form').append(mask).append(loadingImg);
+    $("form").append(mask).append(loadingImg);
 
-    $('#mask').css({
+    $("#mask").css({
       width: maskWidth,
       height: maskHeight,
-      opacity: '0.4',
+      opacity: "0.4",
     });
 
-    $('#mask').show();
+    $("#mask").show();
 
     if (height == 0) {
-      $('#loadingImg').css({
+      $("#loadingImg").css({
         top: windowHeight / 3,
       });
     } else {
-      $('#loadingImg').css({
+      $("#loadingImg").css({
         top: height + windowHeight / 3,
       });
     }
 
-    $('#loadingImg').show();
+    $("#loadingImg").show();
 
     // 실행 지연
     setTimeout(function () {
@@ -63,21 +80,4 @@
     }, delayTimeMillis);
   }
 </script>
-
-{% endblock %}
-
-{% block categories %}
-<p>hello boys</p>
-
-{% for i in main_ctgs %}
-  <p>{{ i.Name_kr }}</p>
-  <ol>
-  {% for j in sub_ctgs %}
-    {% if j.Main.pk == i.pk %}
-      <li>{{ j.Name_kr }}</li>
-    {% endif %}
-  {% endfor %}
-  </ol>
-{% endfor %}
-
 {% endblock %}
