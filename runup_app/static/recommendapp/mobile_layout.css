@@ -179,9 +179,11 @@ input:focus {
   background-color: #fff;
 }
 
-.category-menu-dd {
+.category-menu-a {
   width: 49.8%;
   padding: 11px;
+  background-color: #fff;
+  margin-bottom: 1px;
 }
 
 /* category dropdown menu */
@@ -211,7 +213,7 @@ input:focus {
   flex-wrap: wrap;
 }
 
-.category-menu-dd:nth-child(2n-1) {
+.category-menu-a:nth-child(2n-1) {
   margin-right: 1px;
 }
 
@@ -286,6 +288,12 @@ input:focus {
 }
 
 .footer-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 60px;
 }
 
 .footer-item a {
@@ -293,8 +301,6 @@ input:focus {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 64px;
-  height: 60px;
 }
 
 .footer-item img {
