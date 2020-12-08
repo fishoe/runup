@@ -10,6 +10,7 @@
 
     <body> 
         <form action="{% url 'up' %}" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
             <input type="text" id="prod" name="prod" >
             <input type="file" id="photo" name="photo" capture="camera" accept="image/*"/>
             <br />

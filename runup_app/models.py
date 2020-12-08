@@ -76,7 +76,7 @@ class Reviews(models.Model):
     Product = models.ForeignKey(Products, related_name='Product', on_delete = models.CASCADE )
     Context = models.TextField()
     Rate = models.IntegerField()
-    Date = models.DateField()
+    Date = models.DateTimeField(auto_now_add=True)
 
 def rv_dir_path(instance,filename):
     print(instance)
@@ -97,21 +97,28 @@ class Review_rates(models.Model):
     Up_down = models.BooleanField()
 
 def rec_dir_path(instance, filename):
-    return f'rec/{filename}'
+    return f'rec/{instance.User.id}/{filename}'
 
-class Recommend_result(models.Model):
-    User = models.ForeignKey(Users, related_name='recommends', on_delete = models.DO_NOTHING)
+class Scatch_result(models.Model):
+    User = models.ForeignKey(Users, related_name='Scatch_results', on_delete = models.DO_NOTHING)
     Result = models.TextField()
     Img = models.ImageField(upload_to = rec_dir_path)
-    Date = models.DateField()
+    Date = models.DateTimeField(auto_now_add=True)
 
 class Main_banner(models.Model):
-    Start = models.DateField()
-    End = models.DateField()
+    Start = models.DateTimeField()
+    End = models.DateTimeField()
     Img = models.ImageField(upload_to='main_banner/')
     Link = models.URLField()
     Name = models.CharField(max_length=150)
 
+def dir_path(instance, filename):
+    # print(instance.Product.id)
+    return f'test/instance.Product.id/{filename}'
+
 class Img_test(models.Model):
-    Products = models.ForeignKey(Products, related_name='Prod',on_delete=models.DO_NOTHING)
-    Img = models.ImageField(upload_to='test')
+    Product = models.ForeignKey(Products, related_name='Prod',on_delete=models.DO_NOTHING)
+    Img = models.ImageField(upload_to=dir_path)
+
+class Img_temp(models.Model):
+    Img = models.ImageField(upload_to=dir_path)

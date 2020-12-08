@@ -3,3 +3,4 @@ runup_app/__pycache__/*
 runup_app/migrations/*
 config/__pycache__/*
 runup_migrate/*
+media/*

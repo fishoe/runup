@@ -15,9 +15,9 @@ urlpatterns = [
     path('login', views.nonepg, name = 'login'), #로그인 페이지
     path('signup', views.nonepg, name = 'signup'), #가입 페이지
     path('userinfo', views.nonepg, name = 'userinfo'), #유저 정보 페이지
-
-    path('styleCatch', views.styleCatch, name = 'styleCatch'), #스타일캐치 페이지
+    path('scatch',views.styleCatch, name = 'styleCatch'), #스타일캐치 페이지
     path('searchPage', views.searchPage, name='searchPage'), #검색 페이지
+    path('scatch_res', views.analyzing, name='analyze'), #스타일캐치 분석 페이지
 
     #이하 테스트용 url
     path('test', views.test, name = 'test'),

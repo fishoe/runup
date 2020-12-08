@@ -4,6 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="https://kit.fontawesome.com/f16496386e.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'recommendapp/styleCatch.css' %}" />
     <title>Document</title>
@@ -14,30 +15,48 @@
         <i class="fas fa-arrow-left"></i>
       </a>
       <h1 class="styleCatch-title">이미지 선택</h1>
-      <span class="styleCatch-complete">완료</span>
+      <label for="submit">
+        <span class="styleCatch-complete">완료</span>
+      </label>
     </header>
-
+    
     <section class="styleCatch-images">
       <div class="styleCatch-camera-wrap">
         <div class="styleCatch-camera">
-          <img src="{% static 'assets/camera-icon.svg' %}" alt="camera-icon" />
+          <label for="photo">
+          <img src="{% static 'assets/camera-icon.svg' %}" alt="camera-icon"/>
+          <form action="{% url 'analyze' %}" enctype="multipart/form-data" method='POST' style="display:none">
+            {% csrf_token %}
+            <input type="file" id="photo" name='photo' capture="camera" accept="image/*" style="display:none" >
+            <input type="submit" id="submit" >
+          </form>
           <span>카메라</span>
-        </div>
+        </label>
+        </div>  
       </div>
-      <div class="styleCatch-search-wrap">
-        <div class="styleCatch-search">
-          <img src="{% static 'assets/image-search-icon.svg' %}" alt="image-search-icon" />
-          <span>찾아보기</span>
+        <div class="styleCatch-search-wrap">
+          <div class="styleCatch-search">
+            <img src="{% static 'assets/image-search-icon.svg' %}" alt="image-search-icon" />
+            <span>찾아보기</span>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="styleCatch-user">
-      <div class="styleCatch-user-image-wrap">
-        <div class="styleCatch-user-image">
-          <span>유저이미지 추가 공간</span>
+      <section class="styleCatch-user">
+        <div class="styleCatch-user-image-wrap">
+          <div class="styleCatch-user-image">
+            <!-- <span>유저이미지 추가 공간</span> -->
+            <img id="pic"style="width:100%;"/>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
   </body>
+  <script>
+    $(document).ready(function () {
+        if (!('url' in window) && ('webkitURL' in window)) { window.URL = window.webkitURL; } $('#photo').change(function (e) {
+          $('#pic').attr('src', URL.createObjectURL(e.target.files[0]));
+        });
+      });
+    //$('.styleCatch-camera').on('click',function(){$('#photo').click();});
+  </script>
 </html>
