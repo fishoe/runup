@@ -196,11 +196,12 @@ def analyzing(request):
         #성별을 가져옵니다. 지금은 쿠키를 쓰겟습니다.
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
 
-        print(request.FILES)
+        # print(request.FILES)
         #request의 포스트 데이터의 validate 체크
         form = UploadImgForm(request.POST, request.FILES)
         if form.is_valid() :
-            s_result = Img_temp(Img=request.FILES['photo'])
+            img = request.FILES['photo'] if 'photo' in request.FILES else request.FILES['album']
+            s_result = Img_temp(Img=img)
             s_result.save()
         else :
             return HttpResponseNotFound("Not valid Image")
