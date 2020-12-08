@@ -1,8 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .models import SubCategories, MainCategories, Brands, Products, Users, Similarities
-from .models import Review_rates, Reviews, Product_Likes, Scatch_result
-from .models import Main_banner 
-from .forms import UploadImgForm
+from .models import Review_rates, Reviews, Product_Likes, Recommend_result
+from .models import Main_banner
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
@@ -10,7 +9,6 @@ from django.http import Http404, HttpResponseNotFound
 
 from config.settings import DEBUG
 if DEBUG == True : 
-    from .models import Img_test, Img_temp
     from django.http import HttpResponse
 
 #constants
@@ -91,7 +89,16 @@ def main(request):
         res.set_cookie('gender', gender )
     return res
 
+def recommend(request):
+    #auth 확인 후 로그인 페이지 리다이렉트
+    #파일 읽기 후 페이지에서 리사이징 js 이용
+    #파일 업로드 후 추천 시스템 모듈 이용
+    #결과 값을 통한 제품 추천 페이지 이동
+    return None
+
 def category_pg(request):
+
+
     #auth
     if request.user.is_authenticated :
         #회원
@@ -144,6 +151,7 @@ def category_pg(request):
     else :
         return render(request,'ctg_content.html', context=context )
 
+    
 def product_pg(request, product_id):
     try :
         pd = Products.objects.get( id=product_id )
@@ -180,87 +188,9 @@ def product_pg(request, product_id):
         res.set_cookie('gender', gender )
     return res
 
-def styleCatch(request):
-    if request.user.is_authenticated :
-        return render(request, 'styleCatch.html')
-    else :
-        return render(request, 'styleCatch.html')
-
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
-
-def analyzing(request):
-    if request.user.is_authenticated is False and request.method == 'POST': 
-        #회원 구현이 아직 되지 않아서 임시로 넣었습니다.
-        #구현이 되면 is False를 제거해서 씁시다.
-        
-        #성별을 가져옵니다. 지금은 쿠키를 쓰겟습니다.
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-
-        # print(request.FILES)
-        #request의 포스트 데이터의 validate 체크
-        form = UploadImgForm(request.POST, request.FILES)
-        if form.is_valid() :
-            img = request.FILES['photo'] if 'photo' in request.FILES else request.FILES['album']
-            s_result = Img_temp(Img=img)
-            s_result.save()
-        else :
-            return HttpResponseNotFound("Not valid Image")
-        #대충 알고리즘을 돌렸습니다
-        class ACLS():
-            pass
-        main = ACLS()
-        main.Img_url = s_result.Img.url 
-
-        q_gender = Q( Gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-        main_ctgs, sub_ctgs = GetCtg(q_gender)
-        smpl_pd = Products.objects.all().order_by('?')[0]
-        contents = smpl_pd.Target_prod.all().order_by('-Sim_val')
-
-        context = {
-            'main' : main ,
-            'contents' : contents ,
-            'gender' : gender ,
-            'main_ctgs' : main_ctgs ,
-            'sub_ctgs' : sub_ctgs ,
-        }
-        return render(request,'sub_content.html',context=context)
-    else :
-        return redirect('index')
-
-def recommend(request):
-    #auth 확인 후 로그인 페이지 리다이렉트
-    #파일 읽기 후 페이지에서 리사이징 js 이용
-    #파일 업로드 후 추천 시스템 모듈 이용
-    #결과 값을 통한 제품 추천 페이지 이동
-    return None
-
-def searchPage(request):
-    return render(request, 'searchPage.html')
-
-#---------------------------------------이하 서비스 시 제거------------------------------------#
-
 def nonepg(request):
-    print(request)
     return None
 
-def uploadimg(request):
-    print(request.FILES)
-    if request.method == 'POST' :
-        a = Products.objects.get(id = request.POST['prod'])
-        form = UploadImgForm(request.POST, request.FILES)
-        # print(form)
-        if form.is_valid():
-            # handle_uploaded_file(request.FILES['photo'])
-            # a = Img_test(Product=a,Img=request.FILES['photo'])
-            # a.save()
-            return HttpResponse("succeed")
-    return HttpResponse('failed')
-
-def handle_uploaded_file(f):
-    with open('name.png', 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
-    
 def test(request):
     a = request.GET.get('data',-1)
     try :
@@ -276,3 +206,10 @@ def test(request):
         'test' : 'hi'
     }
     return render(request,'test.html',context=context)
+
+def styleCatch(request):
+    return render(request, 'styleCatch.html')
+
+def searchPage(request):
+    return render(request, 'searchPage.html')
+    
