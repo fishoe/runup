@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=320; user-scalable=no" />
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <title>Camera</title>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script> $(document).ready(function () { if (!('url' in window) && ('webkitURL' in window)) { window.URL = window.webkitURL; } $('#photo').change(function (e) { $('#pic').attr('src', URL.createObjectURL(e.target.files[0])); }); }); </script>
+    </head>
+
+    <body> 
+        <form action="{% url 'up' %}" enctype="multipart/form-data" method="POST">
+            {% csrf_token %}
+            <input type="text" id="prod" name="prod" >
+            <input type="file" id="photo" name="photo" capture="camera" accept="image/*"/>
+            <br />
+            <input type="submit" value="전송">
+        </form>
+        <img id="pic"style="width:100%;"/>
+        <br/>
+        
+    </body>    
+</html>
