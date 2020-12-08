@@ -16,7 +16,10 @@ urlpatterns = [
     path('signup', views.nonepg, name = 'signup'), #가입 페이지
     path('userinfo', views.nonepg, name = 'userinfo'), #유저 정보 페이지
 
-    path('test', views.test, name = 'test'),
     path('styleCatch', views.styleCatch, name = 'styleCatch'), #스타일캐치 페이지
     path('searchPage', views.searchPage, name='searchPage'), #검색 페이지
+
+    #이하 테스트용 url
+    path('test', views.test, name = 'test'),
+    path('upload', views.uploadimg, name = 'up'),
 ]

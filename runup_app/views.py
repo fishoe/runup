@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import SubCategories, MainCategories, Brands, Products, Users, Similarities
 from .models import Review_rates, Reviews, Product_Likes, Recommend_result
-from .models import Main_banner
+from .models import Main_banner 
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
@@ -9,6 +9,7 @@ from django.http import Http404, HttpResponseNotFound
 
 from config.settings import DEBUG
 if DEBUG == True : 
+    from .models import Img_test
     from django.http import HttpResponse
 
 #constants
@@ -189,7 +190,30 @@ def product_pg(request, product_id):
     return res
 
 def nonepg(request):
+    print(request)
     return None
+
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from .forms import UploadFileForm
+
+@csrf_exempt
+def uploadimg(request):
+    print(request.FILES.keys())
+    if request.method == 'POST' :
+        a = Products.objects.get(id = request.POST['prod'])
+        form = UploadFileForm(request.POST, request.FILES)
+        # print(form)
+        if form.is_valid():
+            # handle_uploaded_file(request.FILES['photo'])
+            a = Img_test(Products=a,Img=request.FILES['photo'])
+            a.save()
+            return HttpResponse("succeed")
+    return HttpResponse('failed')
+
+def handle_uploaded_file(f):
+    with open('name.png', 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 def test(request):
     a = request.GET.get('data',-1)

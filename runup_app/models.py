@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser as user_parent
+from django.conf import settings
 
 # Create your models here.
 
@@ -75,8 +76,15 @@ class Reviews(models.Model):
     Product = models.ForeignKey(Products, related_name='Product', on_delete = models.CASCADE )
     Context = models.TextField()
     Rate = models.IntegerField()
-    UserImg = models.ImageField()
     Date = models.DateField()
+
+def rv_dir_path(instance,filename):
+    print(instance)
+    return f'review_/{filename}'
+
+class Review_imgs(models.Model):
+    Review = models.ForeignKey(Users, related_name='Imgs', on_delete = models.DO_NOTHING)
+    ImageFile = models.ImageField(upload_to = rv_dir_path)
 
 class Similarities(models.Model):
     Target_prod = models.ForeignKey(Products, related_name='Target_prod',on_delete=models.CASCADE)
@@ -88,15 +96,22 @@ class Review_rates(models.Model):
     Review = models.ForeignKey(Reviews, related_name='Rates', on_delete = models.DO_NOTHING)
     Up_down = models.BooleanField()
 
+def rec_dir_path(instance, filename):
+    return f'rec/{filename}'
+
 class Recommend_result(models.Model):
     User = models.ForeignKey(Users, related_name='recommends', on_delete = models.DO_NOTHING)
     Result = models.TextField()
-    Img = models.ImageField()
+    Img = models.ImageField(upload_to = rec_dir_path)
     Date = models.DateField()
 
 class Main_banner(models.Model):
     Start = models.DateField()
     End = models.DateField()
-    Img = models.ImageField()
+    Img = models.ImageField(upload_to='main_banner/')
     Link = models.URLField()
     Name = models.CharField(max_length=150)
+
+class Img_test(models.Model):
+    Products = models.ForeignKey(Products, related_name='Prod',on_delete=models.DO_NOTHING)
+    Img = models.ImageField(upload_to='test')
