@@ -70,7 +70,7 @@ def rv_dir_path(instance,filename):
     return f'review_/{filename}'
 
 class Review_imgs(models.Model):
-    Review = models.ForeignKey(Users, related_name='Imgs', on_delete = models.DO_NOTHING)
+    Review = models.ForeignKey(Reviews, related_name='Imgs', on_delete = models.DO_NOTHING)
     ImageFile = models.ImageField(upload_to = rv_dir_path)
 
 class Similarities(models.Model):

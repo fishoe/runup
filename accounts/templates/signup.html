@@ -1,0 +1,25 @@
+{% extends 'layout.html'%}
+
+{% load static %}
+{% block style%}
+    <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}"/>
+    <link rel="stylesheet" type="text/css" media = "(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}"/>
+    <style>
+        input {background-color: #EEFFFF; size: 10pt;}
+    </style>
+{% endblock %}
+
+{% block content %}
+<form>
+    ID: <input type="text" id="id" name="id" required="required" minlength="5" maxlength="50" pattern="^(?=.*[\da-zA-Z]).*"><br/>
+    PASSWORD:   <input type="password" id="password" name="password" required="required" minlength="6" maxlength="50" pattern="^(?=.*\d)(?=.*[!@#$%&])(?=.*[a-zA-Z]).*"><br/>
+    NAME:<input type="text" id="name" name="name" required="required" minlength="2" maxlength="10"><br/>
+    <p>GENDER:  
+    <input type="radio" id="w" name="gender" value="w" checked><input type="radio" id="m" name="gender" value="m">
+    <br/></p>
+    EMAIL:  <input type="email" id="email" name="email" required><br>
+    BRITH:  <input type="date" id="birth" name="birth"><br/>
+    CONTACT:    <input type="tel" id="contact" name="contact"><br>
+    <input type="submit" value="send">
+</form>
+{% endblock %}
