@@ -184,17 +184,3 @@ input {
   max-width: 100%;
   height: 150px;
 }
-
-/* <= 375 */
-@media screen and (max-width: 375px) {
-  .sign-in-form input {
-    width: 335px;
-  }
-}
-
-/* <= 320 iphone5 */
-@media screen and (max-width: 320px) {
-  .sign-in-form input {
-    width: 315px;
-  }
-}

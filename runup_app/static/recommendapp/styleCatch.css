@@ -82,6 +82,14 @@ img {
   color: #b8b8b8;
 }
 
+/* styleCatch-desc section */
+.styleCatch-desc {
+  padding: 0 20px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  align-self: flex-start;
+}
+
 /* styleCatch-images section */
 .styleCatch-images {
   display: flex;
@@ -122,9 +130,21 @@ img {
   height: 100%;
 }
 
+.styleCatch-search label,
+.styleCatch-camera label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .styleCatch-search img,
 .styleCatch-camera img {
   margin-bottom: 10px;
+}
+
+.styleCatch-camera-form {
+  display: none;
 }
 
 /* styleCatch-images userimage section */
