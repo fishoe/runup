@@ -7,7 +7,11 @@ def login(request):
     return render(request,'login.html')
 
 def signup(request):
-    return render(request,'signup.html')
+    if request.method=='GET':
+        return render(request,'signup.html')
+    elif request.method=='POST':
+        print(request.POST['gender'])
+        return render(request,'signup.html')
 
 def auth(request): #authentication
     pass
