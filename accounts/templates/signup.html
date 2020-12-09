@@ -10,13 +10,15 @@
 {% endblock %}
 
 {% block content %}
+<p>{{error}}</p>
 <form action="{% url 'signup' %}" method="POST">
+    {% csrf_token %}
     <label for="id">ID</label> 
     <input type="text" id="id" name="id" required="required" minlength="5" maxlength="50" pattern="[^!@#$%^&*()_~+\-=:;`|/<>'{\[\\\]}&quot;?\s]+"><br/>
     <label for="password">PASSWORD</label> 
-    <input type="password" id="password" name="password" required="required" minlength="6" maxlength="50" pattern="^(?=.*\d)(?=.*[!@#$%^&*_+=}?])(?=.*[a-zA-Z])(?!.*[~\-:;`|/<>'{}\[\]&quot;?\\\s]).*"><br/>
+    <input type="password" id="password" name="password" required="required" minlength="6" maxlength="50" pattern="^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*_+=}?])(?!.*[~\-:;`|/<>'{}\[\]&quot;?\\\s]).*"><br/>
     <label for="name">NAME</label> 
-    <input type="text" id="name" name="name" required="required" minlength="2" maxlength="10"><br/>
+    <input type="text" id="name" name="name" required="required" minlength="2" maxlength="10" pattern="^(?!.*\s).*"><br/>
     <p>GENDER
     <br>
     <input type="radio" id="w" name="gender" value="w" checked>
