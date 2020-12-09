@@ -1,0 +1,159 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0 auto;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 10px;
+  background-color: #eff2f7;
+}
+
+/* ResetCss */
+li,
+ul,
+ol {
+  list-style-type: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+a {
+  outline: none;
+  text-decoration: none;
+  color: #000;
+}
+
+a:hover,
+a:active {
+  text-decoration: none;
+  color: #000;
+}
+
+input {
+  border: none;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+input:focus {
+  border: none;
+  outline: 0;
+  box-shadow: none;
+}
+
+.sr-only {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  z-index: -1;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+img {
+  display: block;
+}
+
+/* style Catch section */
+.styleCatch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 25px 20px 10px;
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+
+.styleCatch-title {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.styleCatch-complete {
+  color: #b8b8b8;
+}
+
+/* styleCatch-images section */
+.styleCatch-images {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
+  margin-bottom: 3px;
+}
+
+.styleCatch-camera-wrap,
+.styleCatch-search-wrap {
+  position: relative;
+  background-color: #fff;
+  width: 50%;
+}
+
+.styleCatch-camera-wrap:after,
+.styleCatch-search-wrap:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.styleCatch-camera-wrap {
+  margin-right: 3px;
+}
+
+.styleCatch-search,
+.styleCatch-camera {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* position */
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.styleCatch-search img,
+.styleCatch-camera img {
+  margin-bottom: 10px;
+}
+
+/* styleCatch-images userimage section */
+.styleCatch-user {
+  width: 100%;
+  padding: 0 20px;
+}
+
+.styleCatch-user-image-wrap {
+  position: relative;
+  background-color: #fff;
+  width: 100%;
+}
+
+.styleCatch-user-image-wrap:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.styleCatch-user-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+input[type="file"] {
+  display: none;
+}

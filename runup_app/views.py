@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import SubCategories, MainCategories, Brands, Products, Users, Similarities
+from .models import SubCategories, MainCategories, Brands, Products, Similarities
 from .models import Review_rates, Reviews, Product_Likes, Scatch_result
 from .models import Main_banner 
+from accounts.models import Users
 from .forms import UploadImgForm
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -201,6 +202,7 @@ def analyzing(request):
         form = UploadImgForm(request.POST, request.FILES)
         if form.is_valid() :
             img = request.FILES['photo'] if 'photo' in request.FILES else request.FILES['album']
+            #회원 정보가 없어서 임시로 만든 Img_temp 테이블에 저장합니다.
             s_result = Img_temp(Img=img)
             s_result.save()
         else :
@@ -227,15 +229,11 @@ def analyzing(request):
     else :
         return redirect('index')
 
-def recommend(request):
-    #auth 확인 후 로그인 페이지 리다이렉트
-    #파일 읽기 후 페이지에서 리사이징 js 이용
-    #파일 업로드 후 추천 시스템 모듈 이용
-    #결과 값을 통한 제품 추천 페이지 이동
-    return None
-
 def searchPage(request):
     return render(request, 'searchPage.html')
+
+def login(request):
+    return render(request,"login.html")
 
 #---------------------------------------이하 서비스 시 제거------------------------------------#
 

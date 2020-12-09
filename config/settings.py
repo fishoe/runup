@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 # CustomUserAuth
 
-AUTH_USER_MODEL = 'runup_app.Users'
+AUTH_USER_MODEL = 'accounts.Users'
 
 # Application definition
 
@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'runup_app'
+    'runup_app',
+    'accounts',
 ]
 
 MIDDLEWARE = [

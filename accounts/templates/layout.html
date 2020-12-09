@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="{% static 'js/mobile.js' %}" defer></script>
+    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/infinite.min.js' %}"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="https://kit.fontawesome.com/f16496386e.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/layout.css' %}" />
+    <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_layout.css' %}" />
+    <link rel="icon" href="data:," />
+    {%block style%} {%endblock%}
+  </head>
+  <body>
+    {% comment %} 헤더 {% endcomment %}
+    <header class="header">
+      <div class="header-title">
+        <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
+        <h1 class="header-title-main">
+          <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
+        </h1>
+        <a href="{% url 'searchPage' %}">
+          <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+        </a>
+      </div>
+
+      {% comment %}
+      <div class="header-search">
+        <img class="header-search-icon" src="{% static 'assets/search-icon.svg'%}" alt="search-icon" />
+        <form action='{% url "search" %}' method="POST" class="search-container">
+          {% csrf_token %}
+          <input placeholder="Search" name="search" />
+          <input type="image" class="header-search-icon" src="{% static 'assets/search-icon.svg'%}" alt="search-icon" />
+          <button type="submit">Search</button>
+        </form>
+      </div>
+      <img class="header-wide-line" src="{% static 'assets/wide-line.svg'%}" alt="wide-line-image" />
+      {% endcomment %}
+    </header>
+
+    <section class="wrap">
+      {% comment %} 메뉴바 {% endcomment %}
+      <!-- <section class="category-box"></section> -->
+
+      <section class="category-box">
+        <header class="header">
+          <div class="header-title">
+            <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
+            <h1 class="header-title-main">
+              <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
+            </h1>
+            <a href="{% url 'searchPage' %}">
+              <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+            </a>
+          </div>
+        </header>
+        <dl class="category-menu">
+          {% for i in main_ctgs %}
+          <div class="categoty-menu-dt-section">
+            <dt class="category-menu-dt">{{ i.Name_kr }}</dt>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="category-menu-dd-section">
+            {% for j in sub_ctgs %} {% if j.Main.pk == i.pk %}
+            <a class="category-menu-a" href="{% url 'category' %}?s_ctg={{j.pk}}">
+              <dd class="category-menu-dd">{{ j.Name_kr }}</dd>
+            </a>
+            {% endif %} {% endfor %}
+          </div>
+          {% endfor %}
+        </dl>
+      </section>
+
+      <section class="myPage-box">
+        <header class="header">
+          <div class="header-title">
+            <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
+            <h1 class="header-title-main">
+              <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
+            </h1>
+            <a href="{% url 'searchPage' %}">
+              <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+            </a>
+          </div>
+        </header>
+        <dl class="myPage-menu">
+          <dt class="sr-only">회원가입 & 로그인</dt>
+          <div class="signUp-signIn">
+            <dd class="sign-up">
+              <a href="{% url 'signup'%}">아테나 회원가입</a>
+            </dd>
+            <dd class="sign-in">
+              <a href="{% url 'login'%}">로그인</a>
+            </dd>
+            <dt class="sr-only">좋아요</dt>
+            <dd class="myPage-likes">좋아요</dd>
+            <dt class="sr-only">고객센터</dt>
+            <dd>고객센터</dd>
+            <dt class="sr-only">내정보</dt>
+            <dd>내정보</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="likes-box">
+        <header class="header">
+          <div class="header-title">
+            <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
+            <h1 class="header-title-main">
+              <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
+            </h1>
+            <a href="{% url 'searchPage' %}">
+              <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
+            </a>
+          </div>
+        </header>
+        <dl class="likes-menu">
+          <dt>최근 본 상품</dt>
+          <dd>최근 본 이미지 띄우기</dd>
+          <dt>내가 좋아요 한 상품</dt>
+          <dd>내가 좋아요 한 상품 띄우기</dd>
+        </dl>
+      </section>
+
+      {% comment %} 메인콘텐츠 {% endcomment %}
+      <div class="content">{%block content%} {%endblock%}</div>
+      {% block categories %} {%endblock%}
+    </section>
+
+    <footer class="footer">
+      <dl class="footer-items">
+        <dt class="sr-only">Home</dt>
+        <dd class="footer-item footer-home">
+          <a href="{% url 'index' %}">
+            <img src="{% static 'assets/home-icon.svg' %}" alt="home-icon" />
+            <span>HOME</span>
+          </a>
+        </dd>
+        <dt class="sr-only">Recomend</dt>
+        <dd class="footer-item footer-recommend">
+          <a href="{% url 'styleCatch' %}">
+            <img src="{% static 'assets/recommend-icon.svg' %}" alt="recommend-icon" />
+            <span>ST CATCH</span>
+          </a>
+        </dd>
+        <dt class="sr-only">Category</dt>
+        <dd class="category footer-item footer-category">
+          <img class="category" src="{% static 'assets/category-icon.svg' %}" alt="category-icon" />
+          <span class="category">CATEGORY </span>
+        </dd>
+        <dt class="sr-only">likes</dt>
+        <dd class="likes footer-item footer-likes">
+          <img class="likes" src="{% static 'assets/likes-icon.svg' %}" alt="likes-icon" />
+          <span class="likes">LIKES</span>
+        </dd>
+        <dt class="sr-only">My Page</dt>
+        <dd class="myPage footer-item footer-myPage">
+          <img class="myPage" src="{% static 'assets/myPage-icon.svg' %}" alt="myPage-icon" />
+          <span class="myPage">MY PAGE</span>
+        </dd>
+      </dl>
+    </footer>
+  </body>
+</html>
