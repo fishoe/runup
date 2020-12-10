@@ -25,3 +25,5 @@ urlpatterns = [
 ]
 urlpatterns += \
     static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+#샘플 수정 git 연습
