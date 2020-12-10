@@ -4,5 +4,6 @@ runup_app/migrations/*
 config/__pycache__/*
 runup_migrate/*
 media/*
+.vscode/*
 accounts/migrations/*
 accounts/__pycache__/*

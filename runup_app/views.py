@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
 from django.http import Http404, HttpResponseNotFound
-
+from django.db.models import Sum    # DB aggregation 사용
 from config.settings import DEBUG
 if DEBUG == True : 
     from .models import Img_test, Img_temp
@@ -234,6 +234,56 @@ def searchPage(request):
 
 def login(request):
     return render(request,"login.html")
+
+def brandrank(request):
+    #브랜드 랭크 페이지
+    # - 브랜드 총 조회수 기준, 브랜드 총 like 기준으로 선택정렬
+    # - 정렬 옵션 기능(order by query, pg reload)
+    # - 스크롤링 기능 미지원    
+    # ******************************************
+        # brand 총 조회수: brand_view 
+        #   // 제품테이블의 브랜드의 조회수 sum
+        #   // 나타낼 정보: 제품의 브랜드 이름, 브랜드의 조회수, 조회수 순위
+
+        # 브랜드 총 like: brand_like
+        #   // 찜한제품테이블의 브랜드의 좋아요수 sum
+        # 
+    # ******************************************
+
+    # option: 사용자가누른 옵션(조회수/좋아요)
+    option=request.GET.get('option')
+    # 먼저 모든 제품 로드
+    product=Products.objects.all()
+    
+    # 브랜드를 조회수 기준으로 볼때
+    if option=='view':            
+        # product[0].Brand.Name_en  >> FCMM //제품의 브랜드 이름
+        #   orm_sum쓰는 법: product.aggregate(Sum('origin_price')) >> 제품들의 총 합 나옴        
+        #   orm_group_by_sum: product.values('Gender').order_by('Gender').annotate(total=Sum('Origin_price'))   >> Gender별 가격합산 나옴
+
+        # 브랜드별 조회수 딕셔너리 리스트 >> [{'Brand__Name_en': 'Athlete', 'b_v': 335}, {'Brand__Name_en': 'Bunnybugs', 'b_v': 54},...,]
+        b_v=product.values('Brand__Name_en').order_by('Brand__Name_en').annotate(b_v=Sum('View_count'))
+        # 브랜드 리스트
+        brand=[]
+        # 브랜드별 조회수
+        view=[]
+
+        for i in range(0,len(b_v)):
+            brand.append(b_v[i]['Brand__Name_en'])
+            view.append(b_v[i]['b_v'])
+
+        context={
+            'b_v':b_v,
+            'brand':brand,
+            'view':view
+        }
+
+#   브랜드를 좋아요 기준으로 볼때
+    else:
+        context={
+            'option':option
+        }
+    return render(request,'brandrank.html',context)
 
 #---------------------------------------이하 서비스 시 제거------------------------------------#
 

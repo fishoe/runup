@@ -1,0 +1,22 @@
+{% extends 'layout.html'%} 
+{% load static %} 
+
+{% block style%}
+<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" />
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
+{% endblock %} 
+
+{% block content %}
+<a href="{% url 'brand_page' %}?option=like">좋아요순</a>
+<a href="{% url 'brand_page' %}?option=view">조회순</a>
+
+{% for i in b_v %}
+    <ol>
+        <li>{{b_v[i]['Brand__Name_en']}}</li>
+        <li>{{b_v[i]['b_v']}}</li>
+    </ol>
+    <br>
+{% endfor %}
+{{brand}}
+{{view}}
+{% endblock %}
