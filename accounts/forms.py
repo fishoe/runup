@@ -1,18 +1,27 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from .models import Users
 from django.contrib.auth.forms import UserCreationForm
 
-Users = get_user_model()
-
 class AccountForm(UserCreationForm):
-    def __init__(self, *args, **kwargs):
-        super
-
-    username = forms.CharField(label='id', min_length=5, max_length=50)
-    password = forms.CharField(label='password', widget=forms.PasswordInput)
+    password1 = forms.CharField(label='password1',widget = forms.PasswordInput)
+    password2 = forms.CharField(label='password2',widget = forms.PasswordInput)
     name = forms.CharField(label='name')
-    birth = forms.DateField(label='birth')
-    email =  forms.EmailField(label='email')
+    birth = forms.DateField(label='birth', widget=forms.DateInput)
+    email =  forms.EmailField(label='email',widget=forms.EmailInput)
     gender = forms.CharField(label='gender',widget=forms.RadioSelect)
     contact = forms.CharField(label='contact')
-    pass
+
+    class Meta :
+        model = Users
+        fields = ['username','password1','password2','name','birth','email','gender','contact']
+
+    def save(self):
+        user = super().save(commit=False)
+        user.Name = self.cleaned_data['name']
+        user.Birth = self.cleaned_data['birth']
+        user.Email = self.cleaned_data['email']
+        user.Contact = self.cleaned_data['contact']
+        user.Gender = 1 if self.cleaned_data['gender'] == 'w' else 2
+        return user
+
+    

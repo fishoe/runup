@@ -8,10 +8,14 @@ class Users(user_parent):
         COMMON = 0
         WOMAN = 1
         MAN = 2
+    Email = models.EmailField()
     Gender = models.IntegerField(choices=GenderCtg.choices)
     Birth = models.DateField()
     Contact = models.CharField(max_length=25)
     Name = models.CharField(max_length=20)
 
+    EMAIL_FIELD = 'Email'
+    REQUIRED_FIELDS = ['Email','Gender','Birth','Contact','Name']
+    
     class Meta(user_parent.Meta):
         swappable = 'AUTH_USER_MODEL'

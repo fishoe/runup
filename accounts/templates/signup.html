@@ -11,7 +11,9 @@
       최고의 제품과 혜택을 만나보세요.
     </p>
   </div>
-  <form class="signup-form" action="POST">
+  {{ errors }}
+  <form class="signup-form" action="{% url 'signup' %}{{ next }}" method="POST">
+    {% csrf_token %}
     <div class="signup-input-box">
       <span class="gender-span">성별을 체크해주세요 </span>
       <div class="gender-box">
@@ -30,17 +32,17 @@
       <input class="signup-input" type="date" id="birth" name="birth" />
     </div>
     <div class="signup-input-box">
-      <label class="sr-only" for="id">ID: </label>
-      <input class="signup-input" placeholder="아이디를 입력해주세요" type="text" id="id" name="id" required="required" minlength="5" maxlength="50" pattern="^(?!.*[^\da-zA-Z]).*" />
+      <label class="sr-only" for="username">ID: </label>
+      <input class="signup-input" placeholder="아이디를 입력해주세요" type="text" id="username" name="username" required="required" minlength="5" maxlength="50" pattern="^(?!.*[^\da-zA-Z]).*" />
     </div>
     <div class="signup-input-box">
-      <label class="sr-only" for="password">PASSWORD: </label>
+      <label class="sr-only" for="password1">PASSWORD: </label>
       <input
         class="signup-input"
         placeholder="비밀번호를 입력해주세요"
         type="password"
-        id="password"
-        name="password"
+        id="password1"
+        name="password1"
         required="required"
         minlength="6"
         maxlength="50"
@@ -48,13 +50,13 @@
       />
     </div>
     <div class="signup-input-box">
-      <label class="sr-only" for="password-check">PASSWORD CHECK: </label>
+      <label class="sr-only" for="password2">PASSWORD CHECK: </label>
       <input
         class="signup-input"
         placeholder="비밀번호를 다시 입력해주세요"
         type="password"
-        id="password-check"
-        name="password-check"
+        id="password2"
+        name="password2"
         required="required"
         minlength="6"
         maxlength="50"

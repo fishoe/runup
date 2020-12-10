@@ -7,17 +7,14 @@
 {% endblock %}
 
 {% block content %}
-{% if error %}
-<div>
-    <p>{{ error }}</p>
-</div>
-<br>
+<p>{{ User.username }}</p><br>
+<p>{{ User.Name }}</p><br>
+{% if User.Gender == 1 %}
+<p>WOMAN</p><br>
+{% else %}
+<p>MAN</p><br>
 {% endif %}
-로그인
-<form action='{% url 'login' %}' method='POST'>
-    {% csrf_token %}
-    <input placeholder="ID" name='id'/><br>
-    <input placeholder="PW" name='password'/><br>
-    <button type='submit'>로그인</button>
-</form>
+<p>{{ User.Birth }}</p><br>
+<p>{{ User.Email }}</p><br>
+<p>{{ User.contact }}</p><br>
 {% endblock %}
