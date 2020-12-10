@@ -31,7 +31,7 @@
     </div>
     <div class="signup-input-box">
       <label class="sr-only" for="id">ID: </label>
-      <input class="signup-input" placeholder="아이디를 입력해주세요" type="text" id="id" name="id" required="required" minlength="5" maxlength="50" pattern="^(?=.*[\da-zA-Z]).*" />
+      <input class="signup-input" placeholder="아이디를 입력해주세요" type="text" id="id" name="id" required="required" minlength="5" maxlength="50" pattern="^(?!.*[^\da-zA-Z]).*" />
     </div>
     <div class="signup-input-box">
       <label class="sr-only" for="password">PASSWORD: </label>
@@ -44,7 +44,7 @@
         required="required"
         minlength="6"
         maxlength="50"
-        pattern="^(?=.*\d)(?=.*[!@#$%&])(?=.*[a-zA-Z]).*"
+        pattern="^(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*_+=}?])(?!.*[~\-:;`|/<>'{}\[\]&quot;?\\\s]).*"
       />
     </div>
     <div class="signup-input-box">

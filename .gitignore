@@ -6,3 +6,5 @@ runup_migrate/*
 media/*
 accounts/migrations/*
 accounts/__pycache__/*
+.vscode/settings.json
+.DS_Store
