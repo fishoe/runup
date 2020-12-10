@@ -71,6 +71,14 @@ function whiteColorChange(button) {
   button.style.backgroundColor = "#fff";
 }
 
+function scrollControl() {
+  window.scroll({
+    top: 0,
+    left: 0,
+    behavior: "smooth",
+  });
+}
+
 const footerItems = document.querySelector(".footer-items");
 const categoryButton = document.querySelector(".footer-category");
 const categoryBox = document.querySelector(".category-box");
@@ -94,6 +102,7 @@ function footerItemsHandler() {
         if (!checkTarget) {
           onClickAdd(categoryButton, categoryBox);
           grayColorChange(categoryButton);
+          scrollControl();
         } else {
           checkButton = document.querySelector(`.footer-${checkTarget}`);
           checkBox = document.querySelector(`.${checkTarget}-box`);
@@ -101,6 +110,7 @@ function footerItemsHandler() {
           whiteColorChange(checkButton);
           onClickAdd(categoryButton, categoryBox);
           grayColorChange(categoryButton);
+          scrollControl();
         }
         checkTarget = event.target.classList[0];
         // console.log(checkTarget);
@@ -110,6 +120,7 @@ function footerItemsHandler() {
         if (!checkTarget) {
           onClickAdd(likesButton, likesBox);
           grayColorChange(likesButton);
+          scrollControl();
         } else {
           checkButton = document.querySelector(`.footer-${checkTarget}`);
           checkBox = document.querySelector(`.${checkTarget}-box`);
@@ -117,6 +128,7 @@ function footerItemsHandler() {
           whiteColorChange(checkButton);
           onClickAdd(likesButton, likesBox);
           grayColorChange(likesButton);
+          scrollControl();
         }
         checkTarget = event.target.classList[0];
         break;
@@ -125,6 +137,7 @@ function footerItemsHandler() {
         if (!checkTarget) {
           onClickAdd(myPageButton, myPageBox);
           grayColorChange(myPageButton);
+          scrollControl();
         } else {
           checkButton = document.querySelector(`.footer-${checkTarget}`);
           checkBox = document.querySelector(`.${checkTarget}-box`);
@@ -132,6 +145,7 @@ function footerItemsHandler() {
           whiteColorChange(checkButton);
           onClickAdd(myPageButton, myPageBox);
           grayColorChange(myPageButton);
+          scrollControl();
         }
         checkTarget = event.target.classList[0];
         break;

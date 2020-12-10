@@ -14,57 +14,65 @@
       <a href="{% url 'index' %}">
         <i class="fas fa-arrow-left"></i>
       </a>
-      <h1 class="styleCatch-title">이미지 선택</h1>
+      <h1 class="styleCatch-title">Style Catch</h1>
       <label for="submit">
         <span class="styleCatch-complete">완료</span>
       </label>
     </header>
-    
+    <section class="styleCatch-desc">
+      <span>about style catch</span>
+    </section>
     <section class="styleCatch-images">
       <div class="styleCatch-camera-wrap">
         <div class="styleCatch-camera">
           <label for="photo">
-          <img src="{% static 'assets/camera-icon.svg' %}" alt="camera-icon"/>
-          <form action="{% url 'analyze' %}" enctype="multipart/form-data" method='POST' style="display:none">
-            {% csrf_token %}
-            <input type="file" id="photo" name='photo' capture="camera" accept="image/*" style="display:none" >
-            <input type="file" id="album" name='album' accept="image/*" style="display:none" >
-            <input type="submit" id="submit" >
-          </form>
-          <span>카메라</span>
-        </label>
-        </div>  
+            <img src="{% static 'assets/camera-icon.svg' %}" alt="camera-icon" />
+            <form class="styleCatch-camera-form" action="{% url 'analyze' %}" enctype="multipart/form-data" method="POST">
+              {% csrf_token %}
+              <input type="file" id="photo" name="photo" capture="camera" accept="image/*" />
+              <input type="file" id="album" name="album" accept="image/*" />
+              <input type="submit" id="submit" />
+            </form>
+            <span>카메라</span>
+          </label>
+        </div>
       </div>
-        <div class="styleCatch-search-wrap">
-          <div class="styleCatch-search">
-            <label for="album">
+      <div class="styleCatch-search-wrap">
+        <div class="styleCatch-search">
+          <label for="album">
             <img src="{% static 'assets/image-search-icon.svg' %}" alt="image-search-icon" />
             <span>찾아보기</span>
-            </label>
-          </div>
+          </label>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="styleCatch-user">
-        <div class="styleCatch-user-image-wrap">
-          <div class="styleCatch-user-image">
-            <!-- <span>유저이미지 추가 공간</span> -->
-            <img id="pic"style="width:100%;"/>
-          </div>
+    <section class="styleCatch-user">
+      <div class="styleCatch-user-image-wrap">
+        <div class="styleCatch-user-image">
+          <!-- <span>유저이미지 추가 공간</span> -->
+          <img id="pic" style="width: 100%" />
         </div>
-      </section>
+      </div>
+    </section>
   </body>
   <script>
     $(document).ready(function () {
-        if (!('url' in window) && ('webkitURL' in window)) { window.URL = window.webkitURL; } $('#photo').change(function (e) {
-          $('#pic').attr('src', URL.createObjectURL(e.target.files[0]));
-        });
+      if (!("url" in window) && "webkitURL" in window) {
+        window.URL = window.webkitURL;
+      }
+      $("#photo").change(function (e) {
+        $("#pic").attr("src", URL.createObjectURL(e.target.files[0]));
       });
+    });
     $(document).ready(function () {
-        if (!('url' in window) && ('webkitURL' in window)) { window.URL = window.webkitURL; } $('#album').change(function (e) {
-          $('#pic').attr('src', URL.createObjectURL(e.target.files[0]));
-        });
+      if (!("url" in window) && "webkitURL" in window) {
+        window.URL = window.webkitURL;
+      }
+      $("#album").change(function (e) {
+        $("#pic").attr("src", URL.createObjectURL(e.target.files[0]));
       });
+    });
     //$('.styleCatch-camera').on('click',function(){$('#photo').click();});
   </script>
 </html>
