@@ -1,0 +1,102 @@
+input {
+  display: block;
+  border: 1px solid #e1e4e8;
+  padding: 7px 7px;
+  display: block;
+}
+
+input:hover,
+input:active {
+  border: 1px solid #e1e4e8;
+}
+
+/* sign up section */
+.signup {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.signup-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  text-align: center;
+}
+
+.signup-title {
+  font-size: 25px;
+  font-weight: 400;
+  margin: 20px 0;
+}
+
+.signup-desc {
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.signup-input-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 9px;
+  width: 100%;
+}
+
+.signup-input-box:first-child {
+  /* justify-content: flex-start; */
+  align-items: flex-start;
+}
+
+.gender-span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 13px;
+}
+
+.gender-box {
+  display: flex;
+}
+
+.gender-box-item {
+  display: flex;
+  align-items: center;
+}
+
+.gender-box-item:first-child {
+  margin-right: 5px;
+}
+
+.gender-box-item input {
+  margin-right: 3px;
+}
+
+.gender-input {
+  display: inline-block;
+}
+
+.birth-label {
+  align-self: flex-start;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+
+.signup-input {
+  width: 100%;
+}
+
+.wrap {
+  width: 100%;
+}
