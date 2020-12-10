@@ -262,7 +262,7 @@ def brandrank(request):
         #   orm_group_by_sum: product.values('Gender').order_by('Gender').annotate(total=Sum('Origin_price'))   >> Gender별 가격합산 나옴
 
         # 브랜드별 조회수 딕셔너리 리스트 >> [{'Brand__Name_en': 'Athlete', 'b_v': 335}, {'Brand__Name_en': 'Bunnybugs', 'b_v': 54},...,]
-        b_v=product.values('Brand__Name_en').order_by('Brand__Name_en').annotate(b_v=Sum('View_count'))
+        b_v=product.values('Brand__Name_en').order_by('Brand__Name_en').annotate(b_v=Sum('View_count')).order_by('-b_v')
         # 브랜드 리스트
         brand=[]
         # 브랜드별 조회수
@@ -278,12 +278,18 @@ def brandrank(request):
             'view':view
         }
 
-#   브랜드를 좋아요 기준으로 볼때
+    # 브랜드를 좋아요 기준으로 볼때
     else:
+        # Product_Likes 테이블: User(F), Product(F)
+        # p_l=Product_Likes.objects.all()
+        # 각각을 불러오는 방법: p_l.values('User')
         context={
             'option':option
         }
     return render(request,'brandrank.html',context)
+
+def likes(request):
+    pass
 
 #---------------------------------------이하 서비스 시 제거------------------------------------#
 

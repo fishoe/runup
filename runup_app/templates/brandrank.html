@@ -11,12 +11,9 @@
 <a href="{% url 'brand_page' %}?option=view">조회순</a>
 
 {% for i in b_v %}
-    <ol>
-        <li>{{b_v[i]['Brand__Name_en']}}</li>
-        <li>{{b_v[i]['b_v']}}</li>
-    </ol>
-    <br>
+    {% comment %} <ol> {% endcomment %}
+        브랜드: <li>{{i.Brand__Name_en}}</li>
+        조회수: <li>{{i.b_v}}</li>
+    {% comment %} </ol>     {% endcomment %}
 {% endfor %}
-{{brand}}
-{{view}}
 {% endblock %}
