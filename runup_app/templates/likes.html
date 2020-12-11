@@ -1,0 +1,12 @@
+{% extends 'layout.html'%} 
+{% load static %} 
+
+{% block style%}
+<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" />
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
+{% endblock %} 
+
+{% block content %}
+    내가 좋아요 한 상품<br><br>
+    {{check}}
+{% endblock %}
