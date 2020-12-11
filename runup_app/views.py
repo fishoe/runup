@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.http import Http404, HttpResponseNotFound
 from django.db.models import Sum    # DB aggregation 사용
 from config.settings import DEBUG
+from django.http import JsonResponse
 if DEBUG == True : 
     from .models import Img_test, Img_temp
     from django.http import HttpResponse
@@ -288,8 +289,51 @@ def brandrank(request):
         }
     return render(request,'brandrank.html',context)
 
+
+def like(request,product_id):
+    # 제품을 찜하면 찜하기를 처리하는 controller함수
+    # 로그인한 유저: 추후 구현하도록 한다
+    # 로그인하지 않은 유저: prod_id값을 받아 쿠키에 저장한다
+    print('*'*30)
+    print('like')
+    print(product_id)
+    # ajax로 잘 왔는지
+    if request.is_ajax:
+        return JsonResponse({'status':1})
+    # ajax로 오는게 실패했을경우
+    else:
+        return JsonResponse({'status':0})
+        # return 
+
 def likes(request):
-    pass
+    # 하단 메뉴바의 Likes의 내가 좋아요한 상품을 눌렀을 때 나오는 페이지
+    #*************************************************************
+    # 로그인된 유저일 경우 찜한 목록
+    # 쿠키로 저장하여 그 목록들을 보여준다
+    if request.user.is_authenticated:
+        check='로그인 됨'
+        context={
+            'check':check
+        }
+    else:
+    # 로그인이 안된 유저일 경우 찜한 목록
+    # 각각의 제품을 찜하기를 누를 시 쿠키의 찜한상품들(iteam_array)을 로드한다
+        check='로그인 안됨'
+        like = request.COOKIES['like']
+        like_array=like.split('%2C')
+        print(like_array)
+        contents=[]
+
+        for i in like_array:
+            pd=Products.objects.get(id=i)
+            contents.append(pd)
+
+        context={
+            'check':check ,
+            'user' : request.user,
+            'contents':contents
+        }
+    return render(request,'likes.html',context)
 
 #---------------------------------------이하 서비스 시 제거------------------------------------#
 
