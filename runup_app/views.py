@@ -113,11 +113,8 @@ def category_pg(request):
                 gender = GenderChar.WOMAN if sub_ctg.Gender == CtgGenderType.WOMAN else GenderChar.MAN
             main_ctg = sub_ctg.Main
             ctg_pd_list = Products.objects.filter( Q(Category=sub_ctg) & (q_gender | Q(Gender=GenderType.COMMON) ))#.order_by(flt) #todo
-        if len(ctg_pd_list) > 0: 
-            paginator = Paginator(ctg_pd_list, const.ITEMS_PER_PAGE )
-            page = paginator.get_page(1)
-        else :
-            page = []
+        paginator = Paginator(ctg_pd_list, const.ITEMS_PER_PAGE )
+        page = paginator.get_page(1)
     except ValueError as e:
         raise Http404('invalid value')
     except MainCategories.DoesNotExist as e :
@@ -130,6 +127,7 @@ def category_pg(request):
     #print(request.user)
 
     context = {
+        'user' : request.user , # 유저정보
         'contents' : page , #상품 목록 리스트 Products
         'm_ctg': main_ctg ,
         's_ctg' : sub_ctg ,
@@ -171,6 +169,7 @@ def product_pg(request, product_id):
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     context = {
+        'user' : request.user , # 유저정보
         'main' : pd,
         'contents' : contents,
         'gender' : gender,
@@ -219,6 +218,7 @@ def analyzing(request):
         contents = smpl_pd.Target_prod.all().order_by('-Sim_val')
 
         context = {
+            'user' : request.user , # 유저정보
             'main' : main ,
             'contents' : contents ,
             'gender' : gender ,
