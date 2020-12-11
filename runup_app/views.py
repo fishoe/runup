@@ -158,7 +158,7 @@ def product_pg(request, product_id):
     #제품 디테일 페이지 관련
     if request.user.is_authenticated :
         #회원
-        gender = Gender = GenderChar.WOMAN if request.user.Gender == GenderType.WOMAN else GenderChar.MAN
+        gender = GenderChar.WOMAN if request.user.Gender == GenderType.WOMAN else GenderChar.MAN
         q_gender = Q(Gender= request.user.Gender)
     else :
         #비회원
@@ -331,9 +331,9 @@ def likes(request):
         try :
             for i in like_array:
                 pd_id = int(i)
-                pd=Products.objects.get(id=i)
+                pd=Products.objects.get(id=pd_id)
                 contents.append(pd)
-        except :
+        except Exception:
             contents = []
 
         context={
