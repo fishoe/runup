@@ -126,7 +126,7 @@
   function addCookie(id) {
     var items = getCookie('like'); // 이미 저장된 값을 쿠키에서 가져오기
     var maxItemNum = 5; // 최대 저장 가능한 아이템개수
-    var expire = 7; // 쿠키값을 저장할 기간
+    var expire = 1; // 쿠키값을 저장할 기간
     if (items) {
       var itemArray = items.split(',');
       if (itemArray.indexOf(id) != -1) {
@@ -148,14 +148,14 @@
 
     // like페이지 로드 시 item_array이용하여 product_id 불러오기
     alert(items)
-    item_array=items.split(',')
+    likes_array=items.split(',')
     getLikes(item_array)
   }
 
   function getLikes(item_array){
     alert('***getLikes***')
-    alert(item_array)
-    return item_array
+    alert(likes_array)
+    return likes_array
   }
 </script>
 {% endblock %}

@@ -317,11 +317,21 @@ def likes(request):
         }
     else:
     # 로그인이 안된 유저일 경우 찜한 목록
-    # 각각의 제품을 찜하기를 누를 시 쿠키에 정보를 저장하여 쿠키객체(?)들을 로드한다
+    # 각각의 제품을 찜하기를 누를 시 쿠키의 찜한상품들(iteam_array)을 로드한다
         check='로그인 안됨'
+        like = request.COOKIES['like']
+        like_array=like.split('%2C')
+        print(like_array)
+        contents=[]
+
+        for i in like_array:
+            pd=Products.objects.get(id=i)
+            contents.append(pd)
+
         context={
             'check':check ,
-            'user' : request.user 
+            'user' : request.user,
+            'contents':contents
         }
     return render(request,'likes.html',context)
 
