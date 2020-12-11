@@ -184,6 +184,7 @@ def product_pg(request, product_id):
     return res
 
 from django.contrib.auth.decorators import login_required
+@login_required
 def styleCatch(request):
     if request.user.is_authenticated :
         return render(request, 'styleCatch.html')
@@ -319,14 +320,21 @@ def likes(request):
     # 로그인이 안된 유저일 경우 찜한 목록
     # 각각의 제품을 찜하기를 누를 시 쿠키의 찜한상품들(iteam_array)을 로드한다
         check='로그인 안됨'
-        like = request.COOKIES['like']
-        like_array=like.split('%2C')
-        print(like_array)
+        print(type(request.COOKIES))
+        like = request.COOKIES.get('like','')
+        like.strip(', ')
+        if like != '' :
+            like_array=like.split(',')
+        # print(like_array)
         contents=[]
 
-        for i in like_array:
-            pd=Products.objects.get(id=i)
-            contents.append(pd)
+        try :
+            for i in like_array:
+                pd_id = int(i)
+                pd=Products.objects.get(id=i)
+                contents.append(pd)
+        except :
+            contents = []
 
         context={
             'check':check ,

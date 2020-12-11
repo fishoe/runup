@@ -103,7 +103,7 @@
   function setCookie(cookie_name,prod_id){
     alert('***setCookie***')
     alert(document.cookie)
-    var cookie_value=escape(prod_id)
+    var cookie_value=prod_id//escape(prod_id)
     document.cookie=cookie_name+'='+cookie_value
     alert(document.cookie)
   }
