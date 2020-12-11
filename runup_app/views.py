@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from .models import SubCategories, MainCategories, Brands, Products, Similarities
 from .models import Review_rates, Reviews, Product_Likes, Scatch_result
 from .models import Main_banner 
-from accounts.models import Users
 from .forms import UploadImgForm
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -51,8 +50,7 @@ def main(request):
     if request.user.is_authenticated :
         #회원 메뉴 아이템
         #회원 성별 획득
-        user = request.user
-        gender = GenderChar.WOMAN if request.user.Gender == GenderType.WOMAN else GenderChar.MAN
+        gender = request.user.Gender
         q_gender = Q( Gender = request.user.Gender )
     else :
         #비회원 메뉴 아이템
@@ -95,11 +93,12 @@ def main(request):
 def category_pg(request):
     #auth
     if request.user.is_authenticated :
-        #회원
-        pass
+        gender = GenderChar.WOMAN if request.user.Gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(Gender= request.user.Gender)
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+        q_gender = Q( Gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     try :
         sub_ctg_id = int(request.GET.get('s_ctg',-1))
         flt = request.GET.get('flt','?')
@@ -107,15 +106,18 @@ def category_pg(request):
             main_ctg_id = int(request.GET.get('m_ctg',-1))
             main_ctg = MainCategories.objects.get(id = main_ctg_id)
             sub_ctg = None
-            ctg_pd_list = Products.objects.filter( Category__Main=main_ctg_id ).order_by(flt) 
+            ctg_pd_list = Products.objects.filter( Q(Category__Main=main_ctg_id) & (q_gender | Q(Gender=GenderType.COMMON) ) )#.order_by(flt) 
         else :
             sub_ctg = SubCategories.objects.get( id = sub_ctg_id )
             if sub_ctg.Gender != CtgGenderType.COMMON and sub_ctg.Gender != CtgGenderType.NONE:
                 gender = GenderChar.WOMAN if sub_ctg.Gender == CtgGenderType.WOMAN else GenderChar.MAN
             main_ctg = sub_ctg.Main
-            ctg_pd_list = Products.objects.filter( Category=sub_ctg ).order_by(flt) #todo
-        paginator = Paginator(ctg_pd_list, const.ITEMS_PER_PAGE )
-        page = paginator.get_page(1)
+            ctg_pd_list = Products.objects.filter( Q(Category=sub_ctg) & (q_gender | Q(Gender=GenderType.COMMON) ))#.order_by(flt) #todo
+        if len(ctg_pd_list) > 0: 
+            paginator = Paginator(ctg_pd_list, const.ITEMS_PER_PAGE )
+            page = paginator.get_page(1)
+        else :
+            page = []
     except ValueError as e:
         raise Http404('invalid value')
     except MainCategories.DoesNotExist as e :
@@ -123,7 +125,6 @@ def category_pg(request):
     except SubCategories.DoesNotExist as e :
         raise Http404('not s_ctg')
 
-    q_gender = Q( Gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     #print(request.user)
@@ -158,7 +159,8 @@ def product_pg(request, product_id):
     #제품 디테일 페이지 관련
     if request.user.is_authenticated :
         #회원
-        pass
+        gender = Gender = GenderChar.WOMAN if request.user.Gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(Gender= request.user.Gender)
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
@@ -181,29 +183,28 @@ def product_pg(request, product_id):
         res.set_cookie('gender', gender )
     return res
 
+from django.contrib.auth.decorators import login_required
 def styleCatch(request):
     if request.user.is_authenticated :
         return render(request, 'styleCatch.html')
-    else :
-        return render(request, 'styleCatch.html')
 
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
-
+# from django.views.decorators.csrf import csrf_exempt, csrf_protect
+@login_required
 def analyzing(request):
-    if request.user.is_authenticated is False and request.method == 'POST': 
-        #회원 구현이 아직 되지 않아서 임시로 넣었습니다.
-        #구현이 되면 is False를 제거해서 씁시다.
+    if request.user.is_authenticated and request.method == 'POST': 
         
-        #성별을 가져옵니다. 지금은 쿠키를 쓰겟습니다.
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+        #성별을 가져옵니다.
+        gender = request.user.Gender
+        q_gender = Q( Gender = gender )
 
-        # print(request.FILES)
         #request의 포스트 데이터의 validate 체크
         form = UploadImgForm(request.POST, request.FILES)
         if form.is_valid() :
             img = request.FILES['photo'] if 'photo' in request.FILES else request.FILES['album']
-            #회원 정보가 없어서 임시로 만든 Img_temp 테이블에 저장합니다.
-            s_result = Img_temp(Img=img)
+
+            #암튼 함수를 돌렸음 암튼 그럼
+
+            s_result = Scatch_result(User=request.user, Img= img, Result='Nothing')
             s_result.save()
         else :
             return HttpResponseNotFound("Not valid Image")
@@ -213,7 +214,6 @@ def analyzing(request):
         main = ACLS()
         main.Img_url = s_result.Img.url 
 
-        q_gender = Q( Gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
         main_ctgs, sub_ctgs = GetCtg(q_gender)
         smpl_pd = Products.objects.all().order_by('?')[0]
         contents = smpl_pd.Target_prod.all().order_by('-Sim_val')

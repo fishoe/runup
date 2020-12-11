@@ -14,10 +14,11 @@
 <br>
 {% endif %}
 로그인
-<form action='{% url 'login' %}' method='POST'>
+<form action='{% url 'login' %}{% if next %}?next={{ next }}{% endif %}' method='POST'>
     {% csrf_token %}
     <input placeholder="ID" name='id'/><br>
     <input placeholder="PW" name='password'/><br>
     <button type='submit'>로그인</button>
+    <input type="hidden" name='next' value="{{ request.GET.next }}">
 </form>
 {% endblock %}

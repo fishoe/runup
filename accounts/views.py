@@ -1,28 +1,33 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.forms import ValidationError
 from django.contrib.auth import authenticate, login, logout
-from .forms import AccountForm
-from .models import Users
 from django.conf import settings
+from .forms import AccountForm
 
 # Create your views here.
 
 def log_in(request):
+    """
+    log_in view
+    """
     redir_url = request.GET.get('next','index')
+    if request.user.is_authenticated:
+        return redirect(redir_url)
     if request.method == 'GET':
         return render(request,'login.html')
     elif request.method =='POST':
         username = request.POST['id']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-
         if user is not None :
             login(request, user)
+            redir_url= request.POST['next'] if request.POST['next'] != '' else 'index'
             return redirect(redir_url)
         else :
-            return render(request,'login.html',{'error':'login failed'})
+            if redir_url != 'index':
+                return render(request,'login.html',{'error':'login failed','next':request})
+            else :
+                return render(request,'login.html',{'error':'login failed'})
     return redirect('index')
 
 def signup(request):
@@ -33,23 +38,23 @@ def signup(request):
     elif request.method=='POST':
         #print(request.POST)
         form = AccountForm(request.POST)
-        if(form.is_valid()):
-            a = form.save()
-            # res = "id : " + a.username + "<br/>\n"
-            # res += "name : " + a.Name + "<br/>\n"
-            # res += "P.N : " + a.Contact + "<br/>\n"
-            # res += "Email : " + a.Email + "<br/>\n"
-            # res += f"Birth : {a.Birth} <br/>\n"
-            # res += f"Gender : {a.Gender} <br/>"
-            a.save()
-            login(request,a)
+        if form.is_valid() :
+            new_user = form.save()
+            new_user.save()
+            login(request,new_user)
             return redirect(settings.LOGIN_REDIRECT_URL)
         else :
             return render(request,'signup.html',{'errors':form.errors})
         return render(request,'signup.html')
 
 @login_required
-def user(request):
+def log_out(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect('index')
+
+@login_required
+def userinfo(request):
     if request.user.is_authenticated:
         context = {
             'User' : request.user
