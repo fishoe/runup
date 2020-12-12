@@ -2,23 +2,37 @@
 
 {% load static %}
 {% block style%}
-    <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}"/>
-    <link rel="stylesheet" type="text/css" media = "(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}"/>
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}"/> -->
+  <!-- <link rel="stylesheet" type="text/css" media = "(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}"/> -->
+  <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/signup_login.css' %}" />
 {% endblock %}
 
 {% block content %}
 {% if error %}
 <div>
-    <p>{{ error }}</p>
+  <p>{{ error }}</p>
 </div>
-<br>
 {% endif %}
-로그인
-<form action='{% url 'login' %}{% if next %}?next={{ next }}{% endif %}' method='POST'>
+<section class="login-section">
+  <h1 class="login-title">RUNUP 맴버 로그인</h1>
+  <form class="login-form" action='{% url 'login' %}{% if next %}?next={{ next }}{% endif %}' method='POST'>
     {% csrf_token %}
-    <input placeholder="ID" name='id'/><br>
-    <input placeholder="PW" name='password'/><br>
-    <button type='submit'>로그인</button>
+    <label class="sr-only" for="id">ID</label>
+    <input class="login-input" placeholder="아이디" name='id'/>
+    <label class="sr-only" for="password">PASSWORD</label>
+    <input class="login-input" placeholder="비밀번호" name='password'/>
+    <!-- <div class="login-checkbox">
+      <input id="keep-login" name="keep-login" type="checkbox">
+      <label for="keep-login">로그인 유지하기</label>
+    </div> -->
+    <button class="login-button" type='submit'>RUNUP 맴버 로그인</button>
     <input type="hidden" name='next' value="{{ request.GET.next }}">
-</form>
+  </form>
+  <div class="login-subtext">
+    <span>회원이 아니신가요?</span>
+    <strong>
+      <a class="login-subtext-signup" href="{% url 'signup'%}">회원가입</a>
+    </strong>
+  </div>
+</section>
 {% endblock %}

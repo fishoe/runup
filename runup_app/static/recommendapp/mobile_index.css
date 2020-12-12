@@ -185,6 +185,43 @@ input {
   height: 150px;
 }
 
+/* likes */
+.product-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.heart-button {
+  width: 15px;
+  height: 15px;
+  border: none;
+  background-color: transparent;
+  background-size: contian;
+  background-position: center center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: 100ms;
+}
+
+.heart-button:hover {
+  opacity: 0.75;
+}
+
+.heart-button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.heart-button {
+  background: url("../assets/heart.svg");
+}
+
+.heart-button.active {
+  background: url("../assets/heart-fill.svg");
+}
+
+/* background: url("../assets/heart.svg"); */
+
 /* <= 375 */
 @media screen and (max-width: 375px) {
   .sign-in-form input {

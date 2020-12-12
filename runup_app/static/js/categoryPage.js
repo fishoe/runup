@@ -12,7 +12,9 @@ function dropdownClickFunction(button, dropdown) {
 
 // categorySort dropdown-menu
 const categorySortButton = document.querySelector(".category-sub-sort");
-const categorySortDropdownMenu = document.querySelector(".categorySort-dropdown-menu");
+const categorySortDropdownMenu = document.querySelector(
+  ".categorySort-dropdown-menu"
+);
 
 categorySortButton.addEventListener("click", () => {
   dropdownClickFunction(categorySortButton, categorySortDropdownMenu);
@@ -21,7 +23,9 @@ categorySortButton.active = false;
 
 // categoryFilter dropdown-menu
 const categoryFilterButton = document.querySelector(".category-sub-filter");
-const categoryFilterDropdownMenu = document.querySelector(".categoryFilter-dropdown-menu");
+const categoryFilterDropdownMenu = document.querySelector(
+  ".categoryFilter-dropdown-menu"
+);
 
 categoryFilterButton.addEventListener("click", () => {
   dropdownClickFunction(categoryFilterButton, categoryFilterDropdownMenu);
@@ -29,7 +33,7 @@ categoryFilterButton.addEventListener("click", () => {
 categoryFilterButton.active = false;
 
 // category cancel button click event
-const categoryCancelButton = document.querySelector(".category-cancel-icon");
-categoryCancelButton.addEventListener("click", () => {
-  window.history.back();
-});
+// const categoryCancelButton = document.querySelector(".category-cancel-icon");
+// categoryCancelButton.addEventListener("click", () => {
+//   window.history.back();
+// });
