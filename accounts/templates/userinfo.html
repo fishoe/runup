@@ -1,20 +1,18 @@
-{% extends 'layout.html'%}
-
-{% load static %}
-{% block style%}
-    <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}"/>
-    <link rel="stylesheet" type="text/css" media = "(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}"/>
-{% endblock %}
-
-{% block content %}
-<p>{{ user.username }}</p><br>
-<p>{{ user.Name }}</p><br>
-{% if user.Gender == 1 %}
-<p>WOMAN</p><br>
-{% else %}
-<p>MAN</p><br>
-{% endif %}
-<p>{{ user.Birth }}</p><br>
-<p>{{ user.Email }}</p><br>
-<p>{{ user.contact }}</p><br>
+{% extends 'layout.html'%} {% load static %} {% block style%}
+<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" />
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
+{% endblock %} {% block content %}
+<section class="userinfo-section">
+  <h1>{{ user.username }}</h1>
+  <!-- <p>{{ user.username }}</p> -->
+  <p>{{ user.Name }}</p>
+  {% if user.Gender == 1 %}
+  <p>WOMAN</p>
+  {% else %}
+  <p>MAN</p>
+  {% endif %}
+  <p>{{ user.Birth }}</p>
+  <p>{{ user.Email }}</p>
+  <p>{{ user.contact }}</p>
+</section>
 {% endblock %}

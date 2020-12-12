@@ -1,24 +1,9 @@
 {% extends 'layout.html'%} {% load static %} {% block style%}
-<link
-  rel="stylesheet"
-  type="text/css"
-  href="{% static 'recommendapp/index.css' %}"
-/>
-<link
-  rel="stylesheet"
-  type="text/css"
-  media="(max-width: 480px)"
-  href="{% static 'recommendapp/mobile_index.css' %}"
-/>
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" /> -->
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
 <script src="{% static 'js/categoryPage.js' %}" defer></script>
 {% endblock %} {% block content %}
 <!--********************************* 카테고리 헤더 *********************************-->
-<!-- <section class="category-main-section">
-  <div class="category-main-title">
-    <h1>{{ s_ctg.Name_kr }}</h1>
-    <i class="fas fa-times category-cancel-icon"></i>
-  </div>
-</section> -->
 
 <div class="category-infinite">
   <h1 class="category-infinite-title">{{ s_ctg.Name_kr }}</h1>
@@ -63,6 +48,7 @@
     </div>
   </section>
   <!--********************************* 상품 목록 *********************************-->
+
   <div class="infinite-container">
     {% for prod in contents %}
     <div class="infinite-item">
@@ -72,39 +58,27 @@
             <img src="{{ prod.Img_url }}" alt="image" class="image" />
           </a>
         </div>
-        <div class="info">
-          <b>{{ prod.Brand.Name_kr }}</b>
-          <div class="price">
-            {% load humanize %} {{prod.Origin_price|intcomma}}원
+        <div class="product-container">
+          <div class="info">
+            <b>{{ prod.Brand.Name_kr }}</b>
+            <div class="price">{% load humanize %} {{prod.Origin_price|intcomma}}원</div>
           </div>
+          <!-- onclick="like_ajax('{% url 'like' prod.id %}', {{ prod.id }} )" -->
+          <a class="product-image-box">
+            <button class="heart-button" type="button"></button>
+          </a>
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
   {% if contents.has_next %}
-  <a
-    class="infinite-more-link"
-    href="?page={{ contents.next_page_number }}&s_ctg={{s_ctg.id}}"
-    >More</a
-  >
+  <a class="infinite-more-link" href="?page={{ contents.next_page_number }}&s_ctg={{s_ctg.id}}">More</a>
   {% endif %}
 </div>
 
-<script>
-  if (window.console != null) {
-    console.log("console is exist");
-  } else {
-    coneolse.log("console is null");
-  }
-  var infinite = new Waypoint.Infinite({
-    element: $(".infinite-container")[0],
-  });
-</script>
 {% comment %} <input id="page" type="hidden" value="2" />
-<button id="callmorepost" type="button" class="btn btn-primary btn-block">
-  More Post
-</button>
+<button id="callmorepost" type="button" class="btn btn-primary btn-block">More Post</button>
 {% endcomment %}
 
 <script type="text/javascript">
@@ -114,15 +88,12 @@
     var maskWidth = $(document).width();
     var height = $(document).scrollTop();
 
-    var mask =
-      "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+    var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
     var loadingImg = "";
     var delayTimeMillis = 1200;
 
-    loadingImg +=
-      "<div id='loadingImg' style='position:absolute; left:10%; display:none; z-index:10000;'>";
-    loadingImg +=
-      " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
+    loadingImg += "<div id='loadingImg' style='position:absolute; left:10%; display:none; z-index:10000;'>";
+    loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
     loadingImg += "</div>";
 
     $("form").append(mask).append(loadingImg);

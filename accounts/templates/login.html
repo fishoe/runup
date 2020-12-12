@@ -18,9 +18,9 @@
   <form class="login-form" action='{% url 'login' %}{% if next %}?next={{ next }}{% endif %}' method='POST'>
     {% csrf_token %}
     <label class="sr-only" for="id">ID</label>
-    <input class="login-input" placeholder="아이디" name='id'/>
+    <input type="text" class="login-input" placeholder="아이디" name='id'/>
     <label class="sr-only" for="password">PASSWORD</label>
-    <input class="login-input" placeholder="비밀번호" name='password'/>
+    <input type="password" class="login-input" placeholder="비밀번호" name='password'/>
     <!-- <div class="login-checkbox">
       <input id="keep-login" name="keep-login" type="checkbox">
       <label for="keep-login">로그인 유지하기</label>
