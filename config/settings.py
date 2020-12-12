@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 # CustomUserAuth
 
-AUTH_USER_MODEL = 'accounts.Users'
+AUTH_USER_MODEL = 'accounts.users'
 
 # Application definition
 

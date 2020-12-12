@@ -36,7 +36,7 @@ def GetCtg(q_gender):
     q_ngen = Q(gender = CtgGenderType.NONE)
 
     main_ctgs = main_categories.objects.filter( q_gender | q_ngen | q_common).order_by('pk')
-    sub_ctgs = sub_categories.objects.filter(q_gender | q_common | q_ngen ).order_by('Main')
+    sub_ctgs = sub_categories.objects.filter(q_gender | q_common | q_ngen ).order_by('main')
 
     return main_ctgs,sub_ctgs
 
@@ -144,7 +144,7 @@ def product_pg(request, product_id):
         pd = products.objects.get( id=product_id )
     except products.DoesNotExist as e:
         raise Http404(e)
-    contents = similarities.objects.filter(target_prod=pd).order_by('-Sim_val') 
+    contents = similarities.objects.filter(target_prod=pd).order_by('-sim_val') 
 
     #리프레시 검사(리프레시를 이용한 뷰카운트 조작 방지 구현)
     pd.view_count += 1
@@ -199,7 +199,7 @@ def analyzing(request):
 
             #암튼 함수를 돌렸음 암튼 그럼
 
-            s_result = scatch_result(User=request.user, Img= img, Result='Nothing')
+            s_result = scatch_result(user=request.user, img= img, result='Nothing')
             s_result.save()
         else :
             return HttpResponseNotFound("Not valid Image")
