@@ -10,40 +10,66 @@ function dropdownClickFunction(button, dropdown) {
   button.active = !button.active;
 }
 
+function categoryDropdownClickFunction(button, dropdown) {
+  if (button.active) {
+    dropdown.classList.remove("category-menu-dd-section-active");
+  } else {
+    dropdown.classList.add("category-menu-dd-section-active");
+  }
+  button.active = !button.active;
+}
+
 // category-menu
 const categoryMenu = document.querySelector(".category-menu");
-// const all = document.querySelectorAll(".category-menu-dt");
+// 각 카테고리의 드랍다운 매뉴들 --> 추후에 매뉴가 바뀌면 확인 해봐야할 듯...?
+const menuDropdown1 = document.querySelector(".menu-dropdown-1"); // 후디 맨투맨
+const menuDropdown2 = document.querySelector(".menu-dropdown-2"); // 탑티셔츠
+const menuDropdown3 = document.querySelector(".menu-dropdown-3"); // 팬츠 숏팬츠
+const menuDropdown4 = document.querySelector(".menu-dropdown-4"); // 레깅스
+const menuDropdown5 = document.querySelector(".menu-dropdown-5"); // 악세사리
+const menuDropdown6 = document.querySelector(".menu-dropdown-6"); // 스포츠 브라
+const menuDropdown7 = document.querySelector(".menu-dropdown-7"); // 가디건
+const menuDropdown8 = document.querySelector(".menu-dropdown-8"); // 아우터
+const menuDropdown9 = document.querySelector(".menu-dropdown-9"); // 스커트
 
 function categorySubDropDown() {
   categoryMenu.addEventListener("click", (event) => {
-    // console.log(event.target.firstChild.nextSibling.textContent);
-    switch (event.target.firstChild.nextSibling.textContent) {
-      case "후디&맨투맨":
-        dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+    switch (event.target.classList[0]) {
+      // 후디 맨투맨
+      case "menu-id-1":
+        categoryDropdownClickFunction(event.target, menuDropdown1);
         break;
-      case "탑&티셔츠":
-        dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      // 탑 티셔츠
+      case "menu-id-2":
+        categoryDropdownClickFunction(event.target, menuDropdown2);
         break;
-      case "팬츠&숏팬츠":
-        dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      // 팬츠 숏팬츠
+      case "menu-id-3":
+        categoryDropdownClickFunction(event.target, menuDropdown3);
         break;
-      case "레깅스":
-        dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      // 레깅스
+      case "menu-id-4":
+        categoryDropdownClickFunction(event.target, menuDropdown4);
         break;
-      case "Accessory":
-        dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      // 악세사리
+      case "menu-id-5":
+        categoryDropdownClickFunction(event.target, menuDropdown5);
         break;
-      case "스포츠 브라":
-        dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      // 스포츠 브라
+      case "menu-id-6":
+        categoryDropdownClickFunction(event.target, menuDropdown6);
         break;
-      case "가디건":
-        dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      // 가디건
+      case "menu-id-7":
+        categoryDropdownClickFunction(event.target, menuDropdown7);
         break;
-      case "Outer":
-        dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      // 아우터
+      case "menu-id-8":
+        categoryDropdownClickFunction(event.target, menuDropdown8);
         break;
-      case "스커트":
-        dropdownClickFunction(event.target, event.target.nextSibling.nextSibling);
+      // 스커트
+      case "menu-id-9":
+        categoryDropdownClickFunction(event.target, menuDropdown9);
         break;
     }
   });
@@ -101,7 +127,7 @@ function footerItemsHandler() {
         // checkTarget을 확인 만약 비어있다면, onClickAdd()
         if (!checkTarget) {
           onClickAdd(categoryButton, categoryBox);
-          grayColorChange(categoryButton);
+          // grayColorChange(categoryButton);
           scrollControl();
         } else {
           checkButton = document.querySelector(`.footer-${checkTarget}`);
@@ -109,7 +135,7 @@ function footerItemsHandler() {
           onClickRemove(checkButton, checkBox);
           whiteColorChange(checkButton);
           onClickAdd(categoryButton, categoryBox);
-          grayColorChange(categoryButton);
+          // grayColorChange(categoryButton);
           scrollControl();
         }
         checkTarget = event.target.classList[0];
@@ -119,7 +145,7 @@ function footerItemsHandler() {
         // checkTarget을 확인 만약 비어있다면, onClickAdd()
         if (!checkTarget) {
           onClickAdd(likesButton, likesBox);
-          grayColorChange(likesButton);
+          // grayColorChange(likesButton);
           scrollControl();
         } else {
           checkButton = document.querySelector(`.footer-${checkTarget}`);
@@ -127,7 +153,7 @@ function footerItemsHandler() {
           onClickRemove(checkButton, checkBox);
           whiteColorChange(checkButton);
           onClickAdd(likesButton, likesBox);
-          grayColorChange(likesButton);
+          // grayColorChange(likesButton);
           scrollControl();
         }
         checkTarget = event.target.classList[0];
@@ -136,7 +162,7 @@ function footerItemsHandler() {
         // checkTarget을 확인 만약 비어있다면, onClickAdd()
         if (!checkTarget) {
           onClickAdd(myPageButton, myPageBox);
-          grayColorChange(myPageButton);
+          // grayColorChange(myPageButton);
           scrollControl();
         } else {
           checkButton = document.querySelector(`.footer-${checkTarget}`);
@@ -144,7 +170,7 @@ function footerItemsHandler() {
           onClickRemove(checkButton, checkBox);
           whiteColorChange(checkButton);
           onClickAdd(myPageButton, myPageBox);
-          grayColorChange(myPageButton);
+          // grayColorChange(myPageButton);
           scrollControl();
         }
         checkTarget = event.target.classList[0];

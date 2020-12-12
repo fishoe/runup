@@ -82,6 +82,10 @@ img {
   color: #b8b8b8;
 }
 
+.styleCatch-complete.active {
+  color: #000;
+}
+
 /* styleCatch-desc section */
 .styleCatch-desc {
   padding: 0 20px;
