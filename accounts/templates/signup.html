@@ -1,13 +1,12 @@
 {% extends 'layout.html'%} {% load static %} {% block style%}
-<!-- <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" /> -->
 <!-- <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_layout.css' %}" /> -->
-<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/signup.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/signup_login.css' %}" />
 {% endblock %} {% block content %}
 <section class="signup">
   <div class="signup-header">
-    <h1 class="signup-title">Runup 맴버 가입</h1>
+    <h1 class="signup-title">RUNUP 맴버 가입</h1>
     <p class="signup-desc">
-      맴버가 되어 Runnup이 제공하는 <br />
+      맴버가 되어 Runup이 제공하는 <br />
       최고의 제품과 혜택을 만나보세요.
     </p>
   </div>
@@ -75,7 +74,7 @@
       <label class="sr-only" for="contact">CONTACT: </label>
       <input class="signup-input" placeholder="핸드폰번호를 입력해주세요" type="tel" id="contact" name="contact" />
     </div>
-    <button type="submit">회원가입</button>
+    <button class="signup-button" type="submit">RUNUP 맴버 가입 (만 14세 이상)</button>
   </form>
 </section>
 {% endblock %}

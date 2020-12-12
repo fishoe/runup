@@ -1,20 +1,26 @@
-input {
-  display: block;
-  border: 1px solid #e1e4e8;
-  padding: 7px 7px;
-  display: block;
+.wrap {
+  width: 100%;
 }
 
-input:hover,
-input:active {
-  border: 1px solid #e1e4e8;
+input {
+  display: block;
+  border: none;
+  padding: 7px 7px;
+}
+
+input,
+input:active,
+input:focus {
+  border: none;
+  outline: 0;
+  box-shadow: none;
 }
 
 /* sign up section */
 .signup {
   display: flex;
   flex-direction: column;
-  align-self: center;
+  align-items: center;
   width: 100%;
   margin-bottom: 15px;
 }
@@ -56,7 +62,6 @@ input:active {
 }
 
 .signup-input-box:first-child {
-  /* justify-content: flex-start; */
   align-items: flex-start;
 }
 
@@ -95,8 +100,77 @@ input:active {
 
 .signup-input {
   width: 100%;
+  border: 1px solid #e1e4e8;
 }
 
-.wrap {
+.signup-input:hover,
+.signup-input:active {
+  border: 1px solid #e1e4e8;
+}
+
+.signup-button {
   width: 100%;
+  border: none;
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
+}
+
+/* login-section */
+.login-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.login-title {
+  font-size: 25px;
+  font-weight: 400;
+  margin: 40px 0;
+}
+
+.login-form {
+  padding: 0 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.login-input {
+  width: 100%;
+  border-bottom: 1px solid #e1e4e8;
+  margin-bottom: 15px;
+}
+
+.login-input:hover,
+.login-input:active {
+  border-bottom: 1px solid #e1e4e8;
+}
+
+/* .login-checkbox {
+  display: flex;
+  align-items: center;
+} */
+
+.login-button {
+  width: 100%;
+  border: none;
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
+}
+
+.login-subtext {
+  display: flex;
+  align-items: center;
+}
+
+.login-subtext span {
+  color: #8e8e93;
+  margin-right: 7px;
+}
+
+.login-subtext-signup {
+  text-decoration: underline;
 }
