@@ -60,6 +60,7 @@ def signup(request):
         return render(request, 'signup.html',context=context)
     elif request.method == 'POST':
         #print(request.POST)
+        request.POST['gender']
         form = AccountForm(request.POST)
         if form.is_valid():
             new_user = form.save()
