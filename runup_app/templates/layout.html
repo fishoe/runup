@@ -66,13 +66,13 @@
         <dl class="category-menu">
           {% for i in main_ctgs %}
           <div class="categoty-menu-dt-section">
-            <dt class="category-menu-dt">{{ i.Name_kr }}</dt>
+            <dt class="category-menu-dt">{{ i.name_kr }}</dt>
             <i class="fas fa-chevron-down"></i>
           </div>
           <div class="category-menu-dd-section">
-            {% for j in sub_ctgs %} {% if j.Main.pk == i.pk %}
+            {% for j in sub_ctgs %} {% if j.main.pk == i.pk %}
             <a class="category-menu-a" href="{% url 'category' %}?s_ctg={{j.pk}}">
-              <dd class="category-menu-dd">{{ j.Name_kr }}</dd>
+              <dd class="category-menu-dd">{{ j.name_kr }}</dd>
             </a>
             {% endif %} {% endfor %}
           </div>

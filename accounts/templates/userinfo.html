@@ -8,13 +8,13 @@
 
 {% block content %}
 <p>{{ user.username }}</p><br>
-<p>{{ user.Name }}</p><br>
-{% if user.Gender == 1 %}
+<p>{{ user.name }}</p><br>
+{% if user.gender == 1 %}
 <p>WOMAN</p><br>
 {% else %}
 <p>MAN</p><br>
 {% endif %}
-<p>{{ user.Birth }}</p><br>
-<p>{{ user.Email }}</p><br>
+<p>{{ user.birth }}</p><br>
+<p>{{ user.email }}</p><br>
 <p>{{ user.contact }}</p><br>
 {% endblock %}

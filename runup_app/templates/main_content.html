@@ -26,13 +26,13 @@
     <div class="box">
       <div class="img_box">
         <a onclick="animation('{% url 'product' prod.id %}')">
-          <img src="{{ prod.Img_url }}" alt="image" class="image" />
+          <img src="{{ prod.img_url }}" alt="image" class="image" />
         </a>
       </div>
       <div class="product-container">
         <div class="info">
-          <b>{{ prod.Brand.Name_en }}</b>
-          <div class="price">{% load humanize %} {{prod.Origin_price|intcomma}}원</div>
+          <b>{{ prod.brand.name_en }}</b>
+          <div class="price">{% load humanize %} {{prod.origin_price|intcomma}}원</div>
         </div>
         <!-- 임의로 찜하기 버튼을 추가했습니다. 추후 수정요망 -->
         <!-- ajax로 제품의 아이디값을 보내서 컨트롤러단으로 보내게 한다 -->

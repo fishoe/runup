@@ -21,7 +21,7 @@
 </section> -->
 
 <div class="category-infinite">
-  <h1 class="category-infinite-title">{{ s_ctg.Name_kr }}</h1>
+  <h1 class="category-infinite-title">{{ s_ctg.name_kr }}</h1>
   <section class="category-sub-section">
     <div class="category-sub">
       <div class="category-sub-filter">
@@ -73,9 +73,9 @@
           </a>
         </div>
         <div class="info">
-          <b>{{ prod.Brand.Name_kr }}</b>
+          <b>{{ prod.brand.name_kr }}</b>
           <div class="price">
-            {% load humanize %} {{prod.Origin_price|intcomma}}원
+            {% load humanize %} {{prod.origin_price|intcomma}}원
           </div>
         </div>
       </div>
