@@ -88,8 +88,8 @@ def main(request):
 def category_pg(request):
     #auth
     if request.user.is_authenticated :
-        gender = GenderChar.WOMAN if request.user.Gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.Gender)
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
@@ -104,9 +104,9 @@ def category_pg(request):
             ctg_pd_list = products.objects.filter( Q(category__main=main_ctg_id) & (q_gender | Q(gender=GenderType.COMMON) ) )#.order_by(flt) 
         else :
             sub_ctg = subcategories.objects.get( id = sub_ctg_id )
-            if sub_ctg.Gender != CtgGenderType.COMMON and sub_ctg.Gender != CtgGenderType.NONE:
-                gender = GenderChar.WOMAN if sub_ctg.Gender == CtgGenderType.WOMAN else GenderChar.MAN
-            main_ctg = sub_ctg.Main
+            if sub_ctg.gender != CtgGenderType.COMMON and sub_ctg.gender != CtgGenderType.NONE:
+                gender = GenderChar.WOMAN if sub_ctg.gender == CtgGenderType.WOMAN else GenderChar.MAN
+            main_ctg = sub_ctg.main
             ctg_pd_list = products.objects.filter( Q(category=sub_ctg) & (q_gender | Q(gender=GenderType.COMMON) ))#.order_by(flt) #todo
         paginator = Paginator(ctg_pd_list, const.ITEMS_PER_PAGE )
         page = paginator.get_page(1)
@@ -152,15 +152,15 @@ def product_pg(request, product_id):
     #제품 디테일 페이지 관련
     if request.user.is_authenticated :
         #회원
-        gender = GenderChar.WOMAN if request.user.Gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.Gender)
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        if pd.Gender != GenderType.COMMON :
-            gender = GenderChar.WOMAN if pd.Gender == GenderType.WOMAN else GenderChar.MAN
+        if pd.gender != GenderType.COMMON :
+            gender = GenderChar.WOMAN if pd.gender == GenderType.WOMAN else GenderChar.MAN
     
-    q_gender = Q( Gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     context = {
@@ -189,7 +189,7 @@ def analyzing(request):
     if request.user.is_authenticated and request.method == 'POST': 
         
         #성별을 가져옵니다.
-        gender = request.user.Gender
+        gender = request.user.gender
         q_gender = Q( gender = gender )
 
         #request의 포스트 데이터의 validate 체크
