@@ -93,16 +93,23 @@
           </div>
         </header>
         <dl class="myPage-menu">
-          <dt class="sr-only">회원가입 & 로그인</dt>
           <div class="signUp-signIn">
+            {% if user %}
+            <dt class="sr-only">로그아웃</dt>
+            <dd class="logout">
+              <a href="{% url 'logout' %}">로그아웃</a>
+            </dd>
+            {% else %}
+            <dt class="sr-only">회원가입 & 로그인</dt>
             <dd class="sign-up">
               <a href="{% url 'signup'%}">RUNUP 맴버 가입</a>
             </dd>
             <dd class="sign-in">
               <a href="{% url 'login'%}">로그인</a>
             </dd>
-            <dt class="sr-only">좋아요</dt>
-            <dd class="myPage-likes">좋아요</dd>
+            {% endif %}
+            <!-- <dt class="sr-only">좋아요</dt> -->
+            <!-- <dd class="myPage-likes">좋아요</dd> -->
             <dt class="sr-only">고객센터</dt>
             <dd>고객센터</dd>
             <dt class="sr-only">내정보</dt>
