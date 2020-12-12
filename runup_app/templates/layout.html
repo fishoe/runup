@@ -94,7 +94,7 @@
         </header>
         <dl class="myPage-menu">
           <div class="signUp-signIn">
-            {% if user %}
+            {% if user.is_authenticated %}
             <dt class="sr-only">로그아웃</dt>
             <dd class="logout">
               <a href="{% url 'logout' %}">로그아웃</a>
