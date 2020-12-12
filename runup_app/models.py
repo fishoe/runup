@@ -9,7 +9,7 @@ class brands(models.Model):
     description = models.TextField(null=True)
     link = models.URLField()
 
-class main_categories(models.Model):
+class maincategories(models.Model):
     class genderctg(models.IntegerChoices):
         WOMAN = 1
         MAN = 2
@@ -20,10 +20,10 @@ class main_categories(models.Model):
     name_en = models.CharField(max_length=50,unique=True) 
     gender = models.IntegerField(choices=genderctg.choices)
 
-class sub_categories(models.Model):
+class subcategories(models.Model):
     name_kr = models.CharField(max_length=50)
     name_en = models.CharField(max_length=50)
-    main = models.ForeignKey(main_categories, on_delete= models.CASCADE, related_name='sub_ctgs')
+    main = models.ForeignKey(maincategories, on_delete= models.CASCADE, related_name='sub_ctgs')
 
     class genderctg(models.IntegerChoices):
         WOMAN = 1
@@ -40,7 +40,7 @@ class products(models.Model):
         MAN = 2
 
     brand = models.ForeignKey(brands,related_name="products", on_delete = models.DO_NOTHING)
-    category = models.ForeignKey(sub_categories,related_name='products', on_delete = models.DO_NOTHING)
+    category = models.ForeignKey(subcategories,related_name='products', on_delete = models.DO_NOTHING)
     name = models.CharField(max_length=150)
     img_url = models.URLField()
     url = models.URLField()

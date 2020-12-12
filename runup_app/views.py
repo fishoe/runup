@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.http import Http404, HttpResponseNotFound, JsonResponse
 from config.settings import DEBUG
 
-from .models import sub_categories, main_categories, brands, products, similarities
+from .models import subcategories, maincategories, brands, products, similarities
 from .models import review_rates, reviews, product_likes, scatch_result
 from .models import main_banner 
 from .forms import UploadImgForm
@@ -35,8 +35,8 @@ def GetCtg(q_gender):
     q_common = Q(gender = CtgGenderType.COMMON)
     q_ngen = Q(gender = CtgGenderType.NONE)
 
-    main_ctgs = main_categories.objects.filter( q_gender | q_ngen | q_common).order_by('pk')
-    sub_ctgs = sub_categories.objects.filter(q_gender | q_common | q_ngen ).order_by('main')
+    main_ctgs = maincategories.objects.filter( q_gender | q_ngen | q_common).order_by('pk')
+    sub_ctgs = subcategories.objects.filter(q_gender | q_common | q_ngen ).order_by('main')
 
     return main_ctgs,sub_ctgs
 
@@ -99,11 +99,11 @@ def category_pg(request):
         flt = request.GET.get('flt','?')
         if sub_ctg_id == -1 :
             main_ctg_id = int(request.GET.get('m_ctg',-1))
-            main_ctg = main_categories.objects.get(id = main_ctg_id)
+            main_ctg = maincategories.objects.get(id = main_ctg_id)
             sub_ctg = None
             ctg_pd_list = products.objects.filter( Q(category__main=main_ctg_id) & (q_gender | Q(gender=GenderType.COMMON) ) )#.order_by(flt) 
         else :
-            sub_ctg = sub_categories.objects.get( id = sub_ctg_id )
+            sub_ctg = subcategories.objects.get( id = sub_ctg_id )
             if sub_ctg.Gender != CtgGenderType.COMMON and sub_ctg.Gender != CtgGenderType.NONE:
                 gender = GenderChar.WOMAN if sub_ctg.Gender == CtgGenderType.WOMAN else GenderChar.MAN
             main_ctg = sub_ctg.Main
@@ -112,9 +112,9 @@ def category_pg(request):
         page = paginator.get_page(1)
     except ValueError as e:
         raise Http404('invalid value')
-    except main_categories.DoesNotExist as e :
+    except maincategories.DoesNotExist as e :
         raise Http404('not m_ctg')
-    except sub_categories.DoesNotExist as e :
+    except subcategories.DoesNotExist as e :
         raise Http404('not s_ctg')
 
     main_ctgs, sub_ctgs = GetCtg(q_gender)
