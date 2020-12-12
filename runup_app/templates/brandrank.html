@@ -10,10 +10,10 @@
 <a href="{% url 'brand_page' %}?option=like">좋아요순</a>
 <a href="{% url 'brand_page' %}?option=view">조회순</a>
 
-{% for i in b_v %}
+{% for i in list %}
     {% comment %} <ol> {% endcomment %}
         브랜드: <li>{{i.Brand__Name_en}}</li>
-        조회수: <li>{{i.b_v}}</li>
+        Count: <li>{{i.b_n}}</li>
     {% comment %} </ol>     {% endcomment %}
 {% endfor %}
 {% endblock %}

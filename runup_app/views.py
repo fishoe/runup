@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.utils import timezone
 from django.http import Http404, HttpResponseNotFound
-from django.db.models import Sum    # DB aggregation 사용
+from django.db.models import Sum,Count    # DB aggregation 사용
 from config.settings import DEBUG
 from django.http import JsonResponse
 if DEBUG == True : 
@@ -264,7 +264,7 @@ def brandrank(request):
         #   orm_group_by_sum: product.values('Gender').order_by('Gender').annotate(total=Sum('Origin_price'))   >> Gender별 가격합산 나옴
 
         # 브랜드별 조회수 딕셔너리 리스트 >> [{'Brand__Name_en': 'Athlete', 'b_v': 335}, {'Brand__Name_en': 'Bunnybugs', 'b_v': 54},...,]
-        b_v=product.values('Brand__Name_en').order_by('Brand__Name_en').annotate(b_v=Sum('View_count')).order_by('-b_v')
+        b_v=product.values('Brand__Name_en').order_by('Brand__Name_en').annotate(b_n=Sum('View_count')).order_by('-b_n')
         # 브랜드 리스트
         brand=[]
         # 브랜드별 조회수
@@ -272,21 +272,36 @@ def brandrank(request):
 
         for i in range(0,len(b_v)):
             brand.append(b_v[i]['Brand__Name_en'])
-            view.append(b_v[i]['b_v'])
+            view.append(b_v[i]['b_n'])
 
         context={
-            'b_v':b_v,
+            'list':b_v,
             'brand':brand,
             'view':view
         }
 
     # 브랜드를 좋아요 기준으로 볼때
     else:
-        # Product_Likes 테이블: User(F), Product(F)
-        # p_l=Product_Likes.objects.all()
-        # 각각을 불러오는 방법: p_l.values('User')
+        # 좋아요 테이블 리스트
+        p_l=Product_Likes.objects.values_list('Product',flat=True)
+        # 브랜드 리스트
+        brand=[]
+        # 브랜드별 찜한수
+        like=[]        
+        # 좋아요 테이블의 제품들
+        pd=Products.objects.filter(pk__in=set(p_l))
+        # 좋아요한 테이블 제품들의 브랜드를 그룹화하고 그 수들을 id기준으로 count해준다
+        # 아직 좋아요가 없는 브랜드의 경우 count를 해주지 않는다
+        b_l=pd.values('Brand__Name_en').order_by('Brand__Name_en').annotate(b_n=Count('id')).order_by('-b_n')
+
+        for i in range(0,len(b_l)):
+            brand.append(b_l[i]['Brand__Name_en'])
+            like.append(b_l[i]['b_n'])
+
         context={
-            'option':option
+            'list':b_l,
+            'brand':brand,
+            'like':like
         }
     return render(request,'brandrank.html',context)
 
