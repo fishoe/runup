@@ -3,16 +3,16 @@ from django.contrib.auth.models import AbstractUser as user_parent
 
 # Create your models here.
 
-class Users(user_parent):
-    class GenderCtg(models.IntegerChoices):
+class users(user_parent):
+    class genderctg(models.IntegerChoices):
         COMMON = 0
         WOMAN = 1
         MAN = 2
-    Email = models.EmailField()
-    Gender = models.IntegerField(choices=GenderCtg.choices)
-    Birth = models.DateField()
-    Contact = models.CharField(max_length=25)
-    Name = models.CharField(max_length=20)
+    email = models.EmailField()
+    gender = models.IntegerField(choices=genderctg.choices)
+    birth = models.DateField()
+    contact = models.CharField(max_length=25)
+    name = models.CharField(max_length=20)
 
     EMAIL_FIELD = 'Email'
     REQUIRED_FIELDS = ['Email','Gender','Birth','Contact','Name']

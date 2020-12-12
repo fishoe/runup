@@ -1,5 +1,5 @@
 from django import forms
-from .models import Users
+from .models import users
 from django.contrib.auth.forms import UserCreationForm
 
 class AccountForm(UserCreationForm):
@@ -12,16 +12,16 @@ class AccountForm(UserCreationForm):
     contact = forms.CharField(label='contact')
 
     class Meta :
-        model = Users
+        model = users
         fields = ['username','password1','password2','name','birth','email','gender','contact']
 
     def save(self):
         user = super().save(commit=False)
-        user.Name = self.cleaned_data['name']
-        user.Birth = self.cleaned_data['birth']
-        user.Email = self.cleaned_data['email']
-        user.Contact = self.cleaned_data['contact']
-        user.Gender = 1 if self.cleaned_data['gender'] == 'w' else 2
+        user.name = self.cleaned_data['name']
+        user.birth = self.cleaned_data['birth']
+        user.email = self.cleaned_data['email']
+        user.contact = self.cleaned_data['contact']
+        user.gender = 1 if self.cleaned_data['gender'] == 'w' else 2
         return user
 
     

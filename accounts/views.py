@@ -18,7 +18,7 @@ def log_in(request):
         return redirect(redir_url)
     if request.method == 'GET':
         gender = request.COOKIES.get('gender', 'w')
-        q_gender = Q(Gender=GenderType.WOMAN if gender ==GenderChar.WOMAN else GenderType.MAN)
+        q_gender = Q(gender=GenderType.WOMAN if gender ==GenderChar.WOMAN else GenderType.MAN)
 
         main_ctgs, sub_ctgs = GetCtg(q_gender)
         context = {
@@ -48,7 +48,7 @@ def signup(request):
         return redirect('index')
     if request.method == 'GET':
         gender = request.COOKIES.get('gender', 'w')
-        q_gender = Q(Gender=GenderType.WOMAN if gender ==GenderChar.WOMAN else GenderType.MAN)
+        q_gender = Q(gender=GenderType.WOMAN if gender ==GenderChar.WOMAN else GenderType.MAN)
 
         main_ctgs, sub_ctgs = GetCtg(q_gender)
         context = {
@@ -80,7 +80,7 @@ def log_out(request):
 def userinfo(request):
     if request.user.is_authenticated:
         gender = request.COOKIES.get('gender', 'w')
-        q_gender = Q(Gender=GenderType.WOMAN if gender ==GenderChar.WOMAN else GenderType.MAN)
+        q_gender = Q(gender=GenderType.WOMAN if gender ==GenderChar.WOMAN else GenderType.MAN)
 
         main_ctgs, sub_ctgs = GetCtg(q_gender)
         context = {
