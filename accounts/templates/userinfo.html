@@ -7,14 +7,14 @@
 {% endblock %}
 
 {% block content %}
-<p>{{ User.username }}</p><br>
-<p>{{ User.Name }}</p><br>
-{% if User.Gender == 1 %}
+<p>{{ user.username }}</p><br>
+<p>{{ user.Name }}</p><br>
+{% if user.Gender == 1 %}
 <p>WOMAN</p><br>
 {% else %}
 <p>MAN</p><br>
 {% endif %}
-<p>{{ User.Birth }}</p><br>
-<p>{{ User.Email }}</p><br>
-<p>{{ User.contact }}</p><br>
+<p>{{ user.Birth }}</p><br>
+<p>{{ user.Email }}</p><br>
+<p>{{ user.contact }}</p><br>
 {% endblock %}

@@ -1,15 +1,14 @@
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
+from django.db.models import Q, Sum
+from django.utils import timezone
+from django.http import Http404, HttpResponseNotFound, JsonResponse
+from config.settings import DEBUG
+
 from .models import SubCategories, MainCategories, Brands, Products, Similarities
 from .models import Review_rates, Reviews, Product_Likes, Scatch_result
 from .models import Main_banner 
 from .forms import UploadImgForm
-from django.core.paginator import Paginator
-from django.db.models import Q
-from django.utils import timezone
-from django.http import Http404, HttpResponseNotFound
-from django.db.models import Sum    # DB aggregation 사용
-from config.settings import DEBUG
-from django.http import JsonResponse
 if DEBUG == True : 
     from .models import Img_test, Img_temp
     from django.http import HttpResponse
@@ -80,8 +79,7 @@ def main(request):
         'main_post' : active_banner_list, #현재 표시 되는 배너 리스트 쿼리 리스트 Main_banner
         'main_ctgs' : main_ctgs, #메인 카테고리 리스트 
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
-        'login' : request.user.is_authenticated,
-        'user_data' : request.user, #유저 메뉴 리스트
+        'user' : request.user, #유저 메뉴 리스트
     }
 
     res = render( request, 'main_content.html', context)
@@ -136,7 +134,7 @@ def category_pg(request):
         'gender' : gender, #사용자 성별
         'main_ctgs' : main_ctgs, #메인 카테고리 리스트 
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
-        'user_data' : request.user, #유저 메뉴 리스트
+        'user' : request.user, #유저 메뉴 리스트
     }
     if request.is_ajax():
         ctg_page = int(request.GET.get('page',-1))
