@@ -40,8 +40,9 @@
   </div>
   {% endfor %}
 </div>
-
+{% csrf_token %}
 <script type="text/javascript">
+const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
   {% comment %} 각 제품을 클릭하면 로드 되는 애니메이션효과를 주는 함수 {% endcomment %}
   {% comment %} 애니메이션효과를 준 후 url로 이동한다 {% endcomment %}
   function animation(targetUrl) {
@@ -90,10 +91,20 @@
   function like_ajax(targetUrl,prod_id) {
     {% if user.is_authenticated %}
       // 로그인을 했을경우 view의 like로 가서 like DB에 데이터를 추가해준다
-      alert("로그인 됨")
-      location.href = targetUrl;
+      alert("로그인 됨");
+      $.ajax({
+        url:targetUrl,
+        data:{},
+        method:"POST",
+        dataType:"json",
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader("X-CSRFToken",csrf_token);
+        },
+        })
+      .done(function(){alert('success');})
+      .fail(function(){alert('failed');});
     {% else %}
-      alert("로그인 안됨")
+      alert("로그인 안됨");
       // 로그인이 안됐을 경우 쿠키로 저장주는 함수로 보낸다.
       addCookie(prod_id)
     {% endif %}

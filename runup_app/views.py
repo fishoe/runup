@@ -293,16 +293,31 @@ def brandrank(request):
 
 def like(request,product_id):
     # 제품을 찜하면 찜하기를 처리하는 controller함수
-    # 로그인한 유저: 추후 구현하도록 한다
-    # 로그인하지 않은 유저: prod_id값을 받아 쿠키에 저장한다
-    print('*'*30)
-    print('like')
-    print(product_id)
-    # ajax로 잘 왔는지
-    if request.is_ajax:
-        return JsonResponse({'status':1})
-    # ajax로 오는게 실패했을경우
+    # 로그인한 유저만 이 like함수로 처리한다.
+    # 로그인하지 않은 유저는 쿠키로 template상에서 저장하기 때문에 이 함수로 들어오지 않는다
+    #*****************************************************************
+
+    # DB에 like상품 삽입
+    # Product_Likes테이블(p_l)에 사용자(log_user),사용자가 찜한 상품(pd) 삽입하기
+
+    if request.method=="POST":
+        try :
+            # 테이블에 사용자가 찜한 상품이 이미 들어있을경우 그 내역 삭제
+            pd = Products.objects.get(id=product_id)
+            p_l = Product_Likes.objects.get(User=request.user,Product=pd)
+            p_l.delete()
+        except Products.DoesNotExist:
+            #잘못된 상품 요청에 대한 예외처리
+            return JsonResponse({'status':0})
+        except Product_Likes.DoesNotExist :
+            # 테이블에 사용자가 찜한 상품이 들어있지 않은 경우 삽입
+            p_l = Product_Likes(User=request.user, Product=pd)
+            p_l.save()
+        return JsonResponse({'status': 1})  
+    # ajax로` 오는게 실패했을경우
     else:
+        print(request.method)
+        print('로그인 됨_ajax통신 실패...')
         return JsonResponse({'status':0})
         # return 
 
@@ -312,9 +327,18 @@ def likes(request):
     # 로그인된 유저일 경우 찜한 목록
     # 쿠키로 저장하여 그 목록들을 보여준다
     if request.user.is_authenticated:
-        check='로그인 됨'
+        p_l=Product_Likes.objects.filter(User__username=request.user)   
+
+        if p_l !='':
+            contents=[]
+        try:
+            for i in p_l:
+                contents.append(i.Product)
+        except Exception:
+            contents=[]
+        
         context={
-            'check':check
+            'contents':contents
         }
     else:
     # 로그인이 안된 유저일 경우 찜한 목록
