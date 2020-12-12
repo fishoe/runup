@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 
 # CustomUserAuth
 
-AUTH_USER_MODEL = 'accounts.Users'
+AUTH_USER_MODEL = 'accounts.users'
 
 # Application definition
 
@@ -79,10 +79,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        # 'NAME': 'postgres',
+        # 'USER': 'postgres',
+        # 'PASSWORD': 'admin',
+        # 'HOST': 'localhost',
+        # 'PORT': '5432'
     }
 }
 
@@ -119,15 +126,26 @@ USE_L10N = True
 
 USE_TZ = True
 
+# add mimetypes
+import mimetypes
+
+mimetypes.add_type("image/svg+xml", ".svg", True)
+mimetypes.add_type("image/svg+xml", ".svgz", True)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
+
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'runup_app/static'),
+    os.path.join(BASE_DIR, 'accounts/static'),
+]
 
 LOGIN_REDIRECT_URL = '/accounts/userinfo'
 LOGIN_URL = '/accounts/login'
