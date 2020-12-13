@@ -3,6 +3,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Sum
 from django.utils import timezone
 from django.http import Http404, HttpResponseNotFound, JsonResponse
+from django.db.models import Sum,Count    # DB aggregation 사용
+
 from config.settings import DEBUG
 
 from .models import subcategories, maincategories, brands, products, similarities
@@ -247,7 +249,19 @@ def brandrank(request):
     option=request.GET.get('option')
     # 먼저 모든 제품 로드
     product=products.objects.all()
+
+    #제품 디테일 페이지 관련
+    if request.user.is_authenticated :
+        #회원
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
+    else :
+        #비회원
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
     
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    main_ctgs, sub_ctgs = GetCtg(q_gender)
+
     # 브랜드를 조회수 기준으로 볼때
     if option=='view':            
         # product[0].Brand.Name_en  >> FCMM //제품의 브랜드 이름
@@ -255,7 +269,7 @@ def brandrank(request):
         #   orm_group_by_sum: product.values('Gender').order_by('Gender').annotate(total=Sum('Origin_price'))   >> Gender별 가격합산 나옴
 
         # 브랜드별 조회수 딕셔너리 리스트 >> [{'Brand__Name_en': 'Athlete', 'b_v': 335}, {'Brand__Name_en': 'Bunnybugs', 'b_v': 54},...,]
-        b_v=product.values('brand__name_en').order_by('brand__name_en').annotate(b_v=Sum('view_count')).order_by('-b_v')
+        b_v=product.values('brand__name_en').order_by('brand__name_en').annotate(b_n=Sum('view_count')).order_by('-b_n')
         # 브랜드 리스트
         brand=[]
         # 브랜드별 조회수
@@ -263,82 +277,122 @@ def brandrank(request):
 
         for i in range(0,len(b_v)):
             brand.append(b_v[i]['brand__name_en'])
-            view.append(b_v[i]['b_v'])
+            view.append(b_v[i]['b_n'])
 
         context={
-            'b_v':b_v,
+            'list':b_v,
             'brand':brand,
-            'view':view
+            'view':view,
+            'gender' : gender ,
+            'main_ctgs' : main_ctgs ,
+            'sub_ctgs' : sub_ctgs ,
         }
 
     # 브랜드를 좋아요 기준으로 볼때
     else:
-        # Product_Likes 테이블: User(F), Product(F)
-        # p_l=Product_Likes.objects.all()
-        # 각각을 불러오는 방법: p_l.values('User')
+        # 좋아요 테이블 리스트
+        p_l=product_likes.objects.values_list('product',flat=True)
+        # 브랜드 리스트
+        brand=[]
+        # 브랜드별 찜한수
+        like=[]        
+        # 좋아요 테이블의 제품들
+        pd=products.objects.filter(pk__in=set(p_l))
+        # 좋아요한 테이블 제품들의 브랜드를 그룹화하고 그 수들을 id기준으로 count해준다
+        # 아직 좋아요가 없는 브랜드의 경우 count를 해주지 않는다
+        b_l=pd.values('brand__name_en').order_by('brand__name_en').annotate(b_n=Count('id')).order_by('-b_n')
+
+        for i in range(0,len(b_l)):
+            brand.append(b_l[i]['brand__name_en'])
+            like.append(b_l[i]['b_n'])
+
         context={
-            'option':option
+            'user':request.user,
+            'list':b_l,
+            'brand':brand,
+            'like':like,
+            'gender' : gender ,
+            'main_ctgs' : main_ctgs ,
+            'sub_ctgs' : sub_ctgs ,
         }
     return render(request,'brandrank.html',context)
 
 
 def like(request,product_id):
     # 제품을 찜하면 찜하기를 처리하는 controller함수
-    # 로그인한 유저: 추후 구현하도록 한다
-    # 로그인하지 않은 유저: prod_id값을 받아 쿠키에 저장한다
-    print('*'*30)
-    print('like')
-    print(product_id)
-    # ajax로 잘 왔는지
-    if request.is_ajax:
-        return JsonResponse({'status':1})
-    # ajax로 오는게 실패했을경우
+    # 로그인한 유저만 이 like함수로 처리한다.
+    # 로그인하지 않은 유저는 쿠키로 template상에서 저장하기 때문에 이 함수로 들어오지 않는다
+    #*****************************************************************
+
+    # DB에 like상품 삽입
+    # Product_Likes테이블(p_l)에 사용자(log_user),사용자가 찜한 상품(pd) 삽입하기
+
+    if request.method=="POST":
+        try :
+            # 테이블에 사용자가 찜한 상품이 이미 들어있을경우 그 내역 삭제
+            pd = products.objects.get(id=product_id)
+            p_l = product_likes.objects.get(user=request.user,product=pd)
+            p_l.delete()
+        except products.DoesNotExist:
+            #잘못된 상품 요청에 대한 예외처리
+            return JsonResponse({'status':0})
+        except product_likes.DoesNotExist :
+            # 테이블에 사용자가 찜한 상품이 들어있지 않은 경우 삽입
+            p_l = product_likes(user=request.user, product=pd)
+            p_l.save()
+        return JsonResponse({'status': 1})  
+    # ajax로` 오는게 실패했을경우
     else:
+        # print(request.method)
+        # print('로그인 됨_ajax통신 실패...')
         return JsonResponse({'status':0})
         # return 
 
 def likes(request):
+
     # 하단 메뉴바의 Likes의 내가 좋아요한 상품을 눌렀을 때 나오는 페이지
     #*************************************************************
     # 로그인된 유저일 경우 찜한 목록
     # 쿠키로 저장하여 그 목록들을 보여준다
     if request.user.is_authenticated:
-        check='로그인 됨'
-        context={
-            'check':check
-        }
+        contents=products.objects.filter(Like_users__user=request.user)
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
     else:
     # 로그인이 안된 유저일 경우 찜한 목록
     # 각각의 제품을 찜하기를 누를 시 쿠키의 찜한상품들(iteam_array)을 로드한다
-        check='로그인 안됨'
-        print(type(request.COOKIES))
         like = request.COOKIES.get('like','')
         like.strip(', ')
         if like != '' :
             like_array=like.split(',')
         # print(like_array)
-        contents=[]
 
         try :
-            for i in like_array:
-                pd_id = int(i)
-                pd=products.objects.get(id=pd_id)
-                contents.append(pd)
+            pd_ids = list(map(int, like_array))
+            contents = products.objects.filter(id__in=pd_ids)
         except Exception:
             contents = []
 
-        context={
-            'check':check ,
-            'user' : request.user,
-            'contents':contents
-        }
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    main_ctgs, sub_ctgs = GetCtg(q_gender)
+
+    context={
+        'gender' : gender,
+        'user' : request.user,
+        'contents':contents, 
+        'main_ctgs' : main_ctgs ,
+        'sub_ctgs' : sub_ctgs ,
+    }
     return render(request,'likes.html',context)
 
-#---------------------------------------이하 서비스 시 제거------------------------------------#
 
 def nonepg(request):
     print(request)
     return None
+
+#---------------------------------------이하 서비스 시 제거------------------------------------#
 
 # def uploadimg(request):
 #     print(request.FILES)
