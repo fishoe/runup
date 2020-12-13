@@ -258,8 +258,6 @@ def brandrank(request):
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        if pd.gender != GenderType.COMMON :
-            gender = GenderChar.WOMAN if pd.gender == GenderType.WOMAN else GenderChar.MAN
     
     q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)
