@@ -82,7 +82,7 @@ class review_rates(models.Model):
     up_down = models.BooleanField()
 
 def rec_dir_path(instance, filename):
-    return f'rec/{instance.User.id}/{filename}'
+    return f'rec/{instance.user.id}/{filename}'
 
 class scatch_result(models.Model):
     user = models.ForeignKey(users, related_name='Scatch_results', on_delete = models.DO_NOTHING)
