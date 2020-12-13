@@ -140,7 +140,7 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
     alert('***setCookie***')
     alert(document.cookie)
     var cookie_value=prod_id//escape(prod_id)
-    document.cookie=cookie_name+'='+cookie_value
+    document.cookie+=cookie_name+'='+cookie_value
     alert(document.cookie)
   }
 
@@ -180,9 +180,9 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
       }
 
       // like페이지 로드 시 item_array이용하여 product_id 불러오기
-      alert(items)
-      likes_array=items.split(',')
-      getLikes(item_array)
+      alert(items);
+      likes_array=items.split(',');
+      getLikes(item_array);
     }
 
     // like페이지 로드 시 item_array이용하여 product_id 불러오기
