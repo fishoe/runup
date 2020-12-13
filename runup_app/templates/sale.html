@@ -1,0 +1,25 @@
+{% extends 'layout.html'%} 
+{% load static %} 
+
+{% block style%}
+<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" />
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
+{% endblock %} 
+
+{% block content %}
+    세일페이지
+    {% for prod in contents %}
+      <div class="box">
+        <div class="img_box">
+          <a onclick="animation('{% url 'product' prod.id %}')">
+            <img src="{{ prod.img_url }}" alt="image" class="image" />
+          </a>
+        </div>
+        <div class="info">
+          <b>{{ prod.brand.name_kr }}</b>
+          <div class="price">{% load humanize %} {{prod.origin_price|intcomma}}원</div>
+          할인률{{prod.discount_rate}}%          
+        </div>
+      </div>
+    {% endfor %}
+{% endblock %}

@@ -387,6 +387,61 @@ def likes(request):
     }
     return render(request,'likes.html',context)
 
+def best(request):
+    #제품 디테일 페이지 관련
+    if request.user.is_authenticated :
+        #회원
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
+    else :
+        #비회원
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+    
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    main_ctgs, sub_ctgs = GetCtg(q_gender)    
+
+    p_l=product_likes.objects.values_list('product',flat=True)
+    if p_l != '' :
+        try:
+            pd=products.objects.filter(pk__in=set(p_l))
+        except Exception:
+            pd=[]
+
+    context={
+        'contents':pd,
+        'gender' : gender ,
+        'main_ctgs' : main_ctgs ,
+        'sub_ctgs' : sub_ctgs ,        
+        'user' : request.user,
+    }
+
+    return render(request,'best.html',context)
+
+# 임의로 50개의 데이터를 수정함. 추후 수정필요
+def sale(request):
+    #제품 디테일 페이지 관련
+    if request.user.is_authenticated :
+        #회원
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
+    else :
+        #비회원
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+    
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    main_ctgs, sub_ctgs = GetCtg(q_gender)    
+
+    contents=products.objects.filter(~Q(discount_rate=0))
+    
+    context={
+        'contents':contents,
+        'gender' : gender ,
+        'main_ctgs' : main_ctgs ,
+        'sub_ctgs' : sub_ctgs ,        
+        'user' : request.user,
+    }
+
+    return render(request,'sale.html',context)
 
 def nonepg(request):
     print(request)

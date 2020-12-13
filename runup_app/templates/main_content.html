@@ -7,10 +7,10 @@
   <a href="#">
     <span>NEW</span>
   </a>
-  <a href="#">
+  <a href="{% url 'best_page' %}">
     <span>BEST</span>
   </a>
-  <a href="#">
+  <a href="{% url 'sale_page' %}">
     <span>SALE</span>
   </a>
   <a href="{% url 'brand_page' %}">
@@ -168,7 +168,7 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
       console.log(itemArray.indexOf(id));
       if (itemArray.indexOf(''+id) != -1) {
         // 이미 존재하는 경우 종료
-        console.log('TJDRHD');
+        console.log('TJDRHD')
         var idx=itemArray.indexOf(id);
         itemArray=itemArray.splice(idx,1);
         setCookie('like',itemArray.join(),expire);
