@@ -257,7 +257,7 @@ def brandrank(request):
         #   orm_group_by_sum: product.values('Gender').order_by('Gender').annotate(total=Sum('Origin_price'))   >> Gender별 가격합산 나옴
 
         # 브랜드별 조회수 딕셔너리 리스트 >> [{'Brand__Name_en': 'Athlete', 'b_v': 335}, {'Brand__Name_en': 'Bunnybugs', 'b_v': 54},...,]
-        b_v=product.values('brand__name_en').order_by('brand__name_en').annotate(b_v=Sum('view_count')).order_by('-b_n')
+        b_v=product.values('brand__name_en').order_by('brand__name_en').annotate(b_n=Sum('view_count')).order_by('-b_n')
         # 브랜드 리스트
         brand=[]
         # 브랜드별 조회수
@@ -276,7 +276,7 @@ def brandrank(request):
     # 브랜드를 좋아요 기준으로 볼때
     else:
         # 좋아요 테이블 리스트
-        p_l=product_Likes.objects.values_list('product',flat=True)
+        p_l=product_likes.objects.values_list('product',flat=True)
         # 브랜드 리스트
         brand=[]
         # 브랜드별 찜한수
@@ -285,7 +285,7 @@ def brandrank(request):
         pd=products.objects.filter(pk__in=set(p_l))
         # 좋아요한 테이블 제품들의 브랜드를 그룹화하고 그 수들을 id기준으로 count해준다
         # 아직 좋아요가 없는 브랜드의 경우 count를 해주지 않는다
-        b_l=pd.values('brand__Name_en').order_by('brand__name_en').annotate(b_n=Count('id')).order_by('-b_n')
+        b_l=pd.values('brand__name_en').order_by('brand__name_en').annotate(b_n=Count('id')).order_by('-b_n')
 
         for i in range(0,len(b_l)):
             brand.append(b_l[i]['brand__name_en'])
