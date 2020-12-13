@@ -21,7 +21,7 @@ class AccountForm(UserCreationForm):
         user.birth = self.cleaned_data['birth']
         user.email = self.cleaned_data['email']
         user.contact = self.cleaned_data['contact']
-        user.gender = 1 if self.cleaned_data['gender'] == 'w' else 2
+        user.gender = self.cleaned_data['gender']
         return user
 
     
