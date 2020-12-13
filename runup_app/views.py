@@ -431,7 +431,7 @@ def sale(request):
     q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)    
 
-    contents=products.objects.filter(~Q(discount_rate=0))
+    contents=[]#products.objects.filter(~Q(discount_rate=0))
     
     context={
         'contents':contents,
