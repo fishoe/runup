@@ -3,6 +3,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q, Sum
 from django.utils import timezone
 from django.http import Http404, HttpResponseNotFound, JsonResponse
+from django.db.models import Sum,Count    # DB aggregation 사용
+
 from config.settings import DEBUG
 
 from .models import subcategories, maincategories, brands, products, similarities
@@ -255,7 +257,7 @@ def brandrank(request):
         #   orm_group_by_sum: product.values('Gender').order_by('Gender').annotate(total=Sum('Origin_price'))   >> Gender별 가격합산 나옴
 
         # 브랜드별 조회수 딕셔너리 리스트 >> [{'Brand__Name_en': 'Athlete', 'b_v': 335}, {'Brand__Name_en': 'Bunnybugs', 'b_v': 54},...,]
-        b_v=product.values('brand__name_en').order_by('brand__name_en').annotate(b_v=Sum('view_count')).order_by('-b_v')
+        b_v=product.values('brand__name_en').order_by('brand__name_en').annotate(b_v=Sum('view_count')).order_by('-b_n')
         # 브랜드 리스트
         brand=[]
         # 브랜드별 조회수
@@ -263,37 +265,67 @@ def brandrank(request):
 
         for i in range(0,len(b_v)):
             brand.append(b_v[i]['brand__name_en'])
-            view.append(b_v[i]['b_v'])
+            view.append(b_v[i]['b_n'])
 
         context={
-            'b_v':b_v,
+            'list':b_v,
             'brand':brand,
             'view':view
         }
 
     # 브랜드를 좋아요 기준으로 볼때
     else:
-        # Product_Likes 테이블: User(F), Product(F)
-        # p_l=Product_Likes.objects.all()
-        # 각각을 불러오는 방법: p_l.values('User')
+        # 좋아요 테이블 리스트
+        p_l=Product_Likes.objects.values_list('Product',flat=True)
+        # 브랜드 리스트
+        brand=[]
+        # 브랜드별 찜한수
+        like=[]        
+        # 좋아요 테이블의 제품들
+        pd=Products.objects.filter(pk__in=set(p_l))
+        # 좋아요한 테이블 제품들의 브랜드를 그룹화하고 그 수들을 id기준으로 count해준다
+        # 아직 좋아요가 없는 브랜드의 경우 count를 해주지 않는다
+        b_l=pd.values('Brand__Name_en').order_by('Brand__Name_en').annotate(b_n=Count('id')).order_by('-b_n')
+
+        for i in range(0,len(b_l)):
+            brand.append(b_l[i]['Brand__Name_en'])
+            like.append(b_l[i]['b_n'])
+
         context={
-            'option':option
+            'list':b_l,
+            'brand':brand,
+            'like':like
         }
     return render(request,'brandrank.html',context)
 
 
 def like(request,product_id):
     # 제품을 찜하면 찜하기를 처리하는 controller함수
-    # 로그인한 유저: 추후 구현하도록 한다
-    # 로그인하지 않은 유저: prod_id값을 받아 쿠키에 저장한다
-    print('*'*30)
-    print('like')
-    print(product_id)
-    # ajax로 잘 왔는지
-    if request.is_ajax:
-        return JsonResponse({'status':1})
-    # ajax로 오는게 실패했을경우
+    # 로그인한 유저만 이 like함수로 처리한다.
+    # 로그인하지 않은 유저는 쿠키로 template상에서 저장하기 때문에 이 함수로 들어오지 않는다
+    #*****************************************************************
+
+    # DB에 like상품 삽입
+    # Product_Likes테이블(p_l)에 사용자(log_user),사용자가 찜한 상품(pd) 삽입하기
+
+    if request.method=="POST":
+        try :
+            # 테이블에 사용자가 찜한 상품이 이미 들어있을경우 그 내역 삭제
+            pd = Products.objects.get(id=product_id)
+            p_l = Product_Likes.objects.get(User=request.user,Product=pd)
+            p_l.delete()
+        except Products.DoesNotExist:
+            #잘못된 상품 요청에 대한 예외처리
+            return JsonResponse({'status':0})
+        except Product_Likes.DoesNotExist :
+            # 테이블에 사용자가 찜한 상품이 들어있지 않은 경우 삽입
+            p_l = Product_Likes(User=request.user, Product=pd)
+            p_l.save()
+        return JsonResponse({'status': 1})  
+    # ajax로` 오는게 실패했을경우
     else:
+        print(request.method)
+        print('로그인 됨_ajax통신 실패...')
         return JsonResponse({'status':0})
         # return 
 
@@ -303,9 +335,18 @@ def likes(request):
     # 로그인된 유저일 경우 찜한 목록
     # 쿠키로 저장하여 그 목록들을 보여준다
     if request.user.is_authenticated:
-        check='로그인 됨'
+        p_l=Product_Likes.objects.filter(User__username=request.user)   
+
+        if p_l !='':
+            contents=[]
+        try:
+            for i in p_l:
+                contents.append(i.Product)
+        except Exception:
+            contents=[]
+        
         context={
-            'check':check
+            'contents':contents
         }
     else:
     # 로그인이 안된 유저일 경우 찜한 목록
