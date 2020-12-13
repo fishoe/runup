@@ -1,6 +1,6 @@
 {% extends 'layout.html'%} {% load static %} {% block style%}
-<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" />
-<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'styles/index.css' %}" />
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_index.css' %}" />
 <script src="{% static 'js/main_content.js' %}" defer></script>
 {% endblock %} {% block content %} {% comment %} {{category}} {% endcomment %}
 <div class="header-menu">
@@ -47,41 +47,29 @@
 </div>
 {% csrf_token %}
 <script type="text/javascript">
-const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
-  {% comment %} 각 제품을 클릭하면 로드 되는 애니메이션효과를 주는 함수 {% endcomment %}
-  {% comment %} 애니메이션효과를 준 후 url로 이동한다 {% endcomment %}
-  function animation(targetUrl) {
-    var maskHeight = $(document).height();
-    var windowHeight = $(window).height();
-    var maskWidth = $(document).width();
-    var height = $(document).scrollTop();
+  const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    {% comment %} 각 제품을 클릭하면 로드 되는 애니메이션효과를 주는 함수 {% endcomment %}
+    {% comment %} 애니메이션효과를 준 후 url로 이동한다 {% endcomment %}
+    function animation(targetUrl) {
+      var maskHeight = $(document).height();
+      var windowHeight = $(window).height();
+      var maskWidth = $(document).width();
+      var height = $(document).scrollTop();
 
-    var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-    var loadingImg = "";
-    var delayTimeMillis = 1200;
+      var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+      var loadingImg = "";
+      var delayTimeMillis = 1200;
 
-    loadingImg += "<div id='loadingImg' style='position:absolute; left:15%; display:none; z-index:10000;'>";
-    loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
-    loadingImg += "</div>";
+      loadingImg += "<div id='loadingImg' style='position:absolute; left:15%; display:none; z-index:10000;'>";
+      loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
+      loadingImg += "</div>";
 
-    $("form").append(mask).append(loadingImg);
+      $("form").append(mask).append(loadingImg);
 
-    $("#mask").css({
-      width: maskWidth,
-      height: maskHeight,
-      opacity: "0.4",
-    });
-
-    $("#mask").show();
-
-    if (height == 0) {
-      $("#loadingImg").css({
-        top: windowHeight / 3,
-      });
-    } else {
-      $("#loadingImg").css({
-        top: height + windowHeight / 3,
-
+      $("#mask").css({
+        width: maskWidth,
+        height: maskHeight,
+        opacity: "0.4",
       });
 
       $("#mask").show();
@@ -93,7 +81,27 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
       } else {
         $("#loadingImg").css({
           top: height + windowHeight / 3,
+
         });
+
+        $("#mask").show();
+
+        if (height == 0) {
+          $("#loadingImg").css({
+            top: windowHeight / 3,
+          });
+        } else {
+          $("#loadingImg").css({
+            top: height + windowHeight / 3,
+          });
+        }
+
+        $("#loadingImg").show();
+
+        // 실행 지연
+        setTimeout(function () {
+          location.href = targetUrl;
+        }, delayTimeMillis);
       }
 
       $("#loadingImg").show();
@@ -104,98 +112,89 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
       }, delayTimeMillis);
     }
 
-    $("#loadingImg").show();
+  {% comment %} 찜하기 버튼을 누르면 회원인지 아닌지 판단하는 함수, ajax처리 {% endcomment %}
+    function like_ajax(targetUrl,prod_id) {
+      {% if user.is_authenticated %}
+        // 로그인을 했을경우 view의 like로 가서 like DB에 데이터를 추가해준다
+        alert("로그인 됨");
+        $.ajax({
+          url:targetUrl,
+          data:{},
+          method:"POST",
+          dataType:"json",
+          beforeSend: function(xhr) {
+            xhr.setRequestHeader("X-CSRFToken",csrf_token);
+          },
+          })
+        .done(function(){alert('success');})
+        .fail(function(){alert('failed');});
+      {% else %}
+        alert("로그인 안됨");
+        // 로그인이 안됐을 경우 쿠키로 저장주는 함수로 보낸다.
+        addCookie(prod_id)
+      {% endif %}
+    }
 
-    // 실행 지연
-    setTimeout(function () {
-      location.href = targetUrl;
-    }, delayTimeMillis);
-  }
+  {% comment %} like 쿠키를 설정해주는 함수 {% endcomment %}
+    function setCookie(cookie_name,prod_id){
+      alert('***setCookie***')
+      alert(document.cookie)
+      var cookie_value=prod_id//escape(prod_id)
+      document.cookie=cookie_name+'='+cookie_value
+      alert(document.cookie)
+    }
 
-{% comment %} 찜하기 버튼을 누르면 회원인지 아닌지 판단하는 함수, ajax처리 {% endcomment %}
-  function like_ajax(targetUrl,prod_id) {
-    {% if user.is_authenticated %}
-      // 로그인을 했을경우 view의 like로 가서 like DB에 데이터를 추가해준다
-      alert("로그인 됨");
-      $.ajax({
-        url:targetUrl,
-        data:{},
-        method:"POST",
-        dataType:"json",
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader("X-CSRFToken",csrf_token);
-        },
-        })
-      .done(function(){alert('success');})
-      .fail(function(){alert('failed');});
-    {% else %}
-      alert("로그인 안됨");
-      // 로그인이 안됐을 경우 쿠키로 저장주는 함수로 보낸다.
-      addCookie(prod_id)
-    {% endif %}
-  }
+  {% comment %} 저장된 쿠키값을 가져오는 함수 {% endcomment %}
+    function getCookie(cookie_name) {
+      var x, y;
+      var val = document.cookie.split(';');
 
-{% comment %} like 쿠키를 설정해주는 함수 {% endcomment %}
-  function setCookie(cookie_name,prod_id){
-    alert('***setCookie***')
-    alert(document.cookie)
-    var cookie_value=prod_id//escape(prod_id)
-    document.cookie=cookie_name+'='+cookie_value
-    alert(document.cookie)
-  }
-
-{% comment %} 저장된 쿠키값을 가져오는 함수 {% endcomment %}
-  function getCookie(cookie_name) {
-    var x, y;
-    var val = document.cookie.split(';');
-
-    for (var i = 0; i < val.length; i++) {
-      x = val[i].substr(0, val[i].indexOf('='));
-      y = val[i].substr(val[i].indexOf('=') + 1);
-      x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
-      if (x == cookie_name) {
-        return unescape(y); // unescape로 디코딩 후 값 리턴
+      for (var i = 0; i < val.length; i++) {
+        x = val[i].substr(0, val[i].indexOf('='));
+        y = val[i].substr(val[i].indexOf('=') + 1);
+        x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+        if (x == cookie_name) {
+          return unescape(y); // unescape로 디코딩 후 값 리턴
+        }
       }
     }
-  }
 
-  function addCookie(id) {
-    var items = getCookie('like'); // 이미 저장된 값을 쿠키에서 가져오기
-    var maxItemNum = 5; // 최대 저장 가능한 아이템개수
-    var expire = 1; // 쿠키값을 저장할 기간
-    if (items) {
-      var itemArray = items.split(',');
-      console.log(itemArray.indexOf(id));
-      if (itemArray.indexOf(''+id) != -1) {
-        // 이미 존재하는 경우 종료
-        console.log('TJDRHD');
-        var idx=itemArray.indexOf(id);
-        itemArray=itemArray.splice(idx,1);
-        setCookie('like',itemArray.join(),expire);
-        console.log('Already exists.');
-      }
-      else {
-        // 신규 id값 저장하기
-        setCookie('like', id, expire);
+    function addCookie(id) {
+      var items = getCookie('like'); // 이미 저장된 값을 쿠키에서 가져오기
+      var maxItemNum = 5; // 최대 저장 가능한 아이템개수
+      var expire = 1; // 쿠키값을 저장할 기간
+      if (items) {
+        var itemArray = items.split(',');
+        console.log(itemArray.indexOf(id));
+        if (itemArray.indexOf(''+id) != -1) {
+          // 이미 존재하는 경우 종료
+          console.log('TJDRHD');
+          var idx=itemArray.indexOf(id);
+          itemArray=itemArray.splice(idx,1);
+          setCookie('like',itemArray.join(),expire);
+          console.log('Already exists.');
+        }
+        else {
+          // 신규 id값 저장하기
+          setCookie('like', id, expire);
+        }
+
+        // like페이지 로드 시 item_array이용하여 product_id 불러오기
+        alert(items)
+        likes_array=items.split(',')
+        getLikes(item_array)
       }
 
       // like페이지 로드 시 item_array이용하여 product_id 불러오기
-      alert(items)
-      likes_array=items.split(',')
-      getLikes(item_array)
+      alert(items);
+      {% comment %} likes_array=items.split(',') {% endcomment %}
+      {% comment %} getLikes(item_array) {% endcomment %}
     }
 
-    // like페이지 로드 시 item_array이용하여 product_id 불러오기
-    alert(items);
-    {% comment %} likes_array=items.split(',') {% endcomment %}
-    {% comment %} getLikes(item_array) {% endcomment %}
-  }
-
-  function getLikes(item_array){
-    alert('***getLikes***')
-    alert(likes_array)
-    return likes_array
-  }
-
+    function getLikes(item_array){
+      alert('***getLikes***')
+      alert(likes_array)
+      return likes_array
+    }
 </script>
 {% endblock %}

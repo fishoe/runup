@@ -1,76 +1,65 @@
-{% extends 'layout.html'%}
+{% extends 'layout.html'%} {% load static %} {% block style%}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/index.css' %}" />
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_index.css' %}" />
 
-{% load static %}
-{% block style%}
-    <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}"/>
-    <link rel="stylesheet" type="text/css" media = "(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}"/>
-    
-{% endblock %}
-
-{% block content %}
-    {% comment %} {{result}} {% endcomment %}
-    <div class="infinite-container">
-        {% for prod in prod_object %}
-            <div class="infinite-item">
-                <div class ='box'>
-                    <div class='img_box'>
-                        <a href="{% url 'sub' prod.pk%}" onclick="animation()">
-                            <img src="{{prod.image}}" alt="image" class="image">
-                        </a>
-                    </div>
-                    <div class='info'>
-                        <b>{{prod.brand}}</b>
-                        <div class='price'>
-                            {{prod.price}}원
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
+{% endblock %} {% block content %} {% comment %} {{result}} {% endcomment %}
+<div class="infinite-container">
+  {% for prod in prod_object %}
+  <div class="infinite-item">
+    <div class="box">
+      <div class="img_box">
+        <a href="{% url 'sub' prod.pk%}" onclick="animation()">
+          <img src="{{prod.image}}" alt="image" class="image" />
+        </a>
+      </div>
+      <div class="info">
+        <b>{{prod.brand}}</b>
+        <div class="price">{{prod.price}}원</div>
+      </div>
     </div>
+  </div>
+  {% endfor %}
+</div>
 
-    {% if prod_object.has_next %}
-        <a class="infinite-more-link" href="?page={{ prod_object.next_page_number }}">More</a>
-    {% endif %}
+{% if prod_object.has_next %}
+<a class="infinite-more-link" href="?page={{ prod_object.next_page_number }}">More</a>
+{% endif %}
 
-    <script>
-        if(window.console!=null){
-            console.log('console is exist')
-        }
-        else{
-            coneolse.log('console is null')
-        }
-        var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0]
-        });
-    </script>
-{% comment %} <input id='page' type='hidden' value='2'>
-<button id='callmorepost' type='button' class='btn btn-primary btn-block'>More Post</button> {% endcomment %}
-    <script type='text/javascript'>
-        function animation(){
-            var maskHeight = $(document).height(); 
-            var maskWidth = $(document).width(); 
-            
-            var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-            var loadingImg = '';
-            
-            loadingImg += "<div id='loadingImg' style='position:absolute; left:10%; top:30%; display:none; z-index:10000;'>";
-            loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
-            loadingImg += "</div>"; 
-            
-            $('form')
-                .append(mask)
-                .append(loadingImg)
-            
-            $('#mask').css({
-                'width' : maskWidth, 
-                'height': maskHeight, 
-                'opacity' : '0.4'
-            }); 
-            
-            $('#mask').show();   
-            
-            $('#loadingImg').show();
-        };
-    </script>
+<script>
+  if (window.console != null) {
+    console.log("console is exist");
+  } else {
+    coneolse.log("console is null");
+  }
+  var infinite = new Waypoint.Infinite({
+    element: $(".infinite-container")[0],
+  });
+</script>
+{% comment %} <input id="page" type="hidden" value="2" />
+<button id="callmorepost" type="button" class="btn btn-primary btn-block">More Post</button> {% endcomment %}
+<script type="text/javascript">
+  function animation() {
+    var maskHeight = $(document).height();
+    var maskWidth = $(document).width();
+
+    var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+    var loadingImg = "";
+
+    loadingImg += "<div id='loadingImg' style='position:absolute; left:10%; top:30%; display:none; z-index:10000;'>";
+    loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
+    loadingImg += "</div>";
+
+    $("form").append(mask).append(loadingImg);
+
+    $("#mask").css({
+      width: maskWidth,
+      height: maskHeight,
+      opacity: "0.4",
+    });
+
+    $("#mask").show();
+
+    $("#loadingImg").show();
+  }
+</script>
 {% endblock %}
