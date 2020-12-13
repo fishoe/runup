@@ -72,7 +72,7 @@ class review_imgs(models.Model):
     imagefile = models.ImageField(upload_to = rv_dir_path)
 
 class similarities(models.Model):
-    target_prod = models.ForeignKey(products, related_name='Target_prod',on_delete=models.CASCADE)
+    target_prod = models.ForeignKey(products, related_name='target_prod',on_delete=models.CASCADE)
     sim_prod = models.ForeignKey(products, related_name='Sim_prod',on_delete=models.CASCADE)
     sim_val = models.FloatField()
 
