@@ -276,19 +276,19 @@ def brandrank(request):
     # 브랜드를 좋아요 기준으로 볼때
     else:
         # 좋아요 테이블 리스트
-        p_l=Product_Likes.objects.values_list('Product',flat=True)
+        p_l=product_Likes.objects.values_list('product',flat=True)
         # 브랜드 리스트
         brand=[]
         # 브랜드별 찜한수
         like=[]        
         # 좋아요 테이블의 제품들
-        pd=Products.objects.filter(pk__in=set(p_l))
+        pd=products.objects.filter(pk__in=set(p_l))
         # 좋아요한 테이블 제품들의 브랜드를 그룹화하고 그 수들을 id기준으로 count해준다
         # 아직 좋아요가 없는 브랜드의 경우 count를 해주지 않는다
-        b_l=pd.values('Brand__Name_en').order_by('Brand__Name_en').annotate(b_n=Count('id')).order_by('-b_n')
+        b_l=pd.values('brand__Name_en').order_by('brand__name_en').annotate(b_n=Count('id')).order_by('-b_n')
 
         for i in range(0,len(b_l)):
-            brand.append(b_l[i]['Brand__Name_en'])
+            brand.append(b_l[i]['brand__name_en'])
             like.append(b_l[i]['b_n'])
 
         context={
@@ -311,15 +311,15 @@ def like(request,product_id):
     if request.method=="POST":
         try :
             # 테이블에 사용자가 찜한 상품이 이미 들어있을경우 그 내역 삭제
-            pd = Products.objects.get(id=product_id)
-            p_l = Product_Likes.objects.get(User=request.user,Product=pd)
+            pd = products.objects.get(id=product_id)
+            p_l = product_likes.objects.get(user=request.user,product=pd)
             p_l.delete()
-        except Products.DoesNotExist:
+        except products.DoesNotExist:
             #잘못된 상품 요청에 대한 예외처리
             return JsonResponse({'status':0})
-        except Product_Likes.DoesNotExist :
+        except product_likes.DoesNotExist :
             # 테이블에 사용자가 찜한 상품이 들어있지 않은 경우 삽입
-            p_l = Product_Likes(User=request.user, Product=pd)
+            p_l = product_likes(user=request.user, product=pd)
             p_l.save()
         return JsonResponse({'status': 1})  
     # ajax로` 오는게 실패했을경우
@@ -335,13 +335,13 @@ def likes(request):
     # 로그인된 유저일 경우 찜한 목록
     # 쿠키로 저장하여 그 목록들을 보여준다
     if request.user.is_authenticated:
-        p_l=Product_Likes.objects.filter(User__username=request.user)   
+        p_l=product_likes.objects.filter(user__username=request.user)   
 
         if p_l !='':
             contents=[]
         try:
             for i in p_l:
-                contents.append(i.Product)
+                contents.append(i.product)
         except Exception:
             contents=[]
         
@@ -375,11 +375,12 @@ def likes(request):
         }
     return render(request,'likes.html',context)
 
-#---------------------------------------이하 서비스 시 제거------------------------------------#
 
 def nonepg(request):
     print(request)
     return None
+
+#---------------------------------------이하 서비스 시 제거------------------------------------#
 
 # def uploadimg(request):
 #     print(request.FILES)
