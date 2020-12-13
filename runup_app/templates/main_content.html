@@ -140,8 +140,13 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
     var expire = 1; // 쿠키값을 저장할 기간
     if (items) {
       var itemArray = items.split(',');
-      if (itemArray.indexOf(id) != -1) {
+      console.log(itemArray.indexOf(id));
+      if (itemArray.indexOf(''+id) != -1) {
         // 이미 존재하는 경우 종료
+        console.log('TJDRHD')
+        var idx=itemArray.indexOf(id);
+        itemArray=itemArray.splice(idx,1);
+        setCookie('like',itemArray.join(),expire);
         console.log('Already exists.');
       }
       else {
@@ -158,9 +163,9 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
     }
 
     // like페이지 로드 시 item_array이용하여 product_id 불러오기
-    alert(items)
-    likes_array=items.split(',')
-    getLikes(item_array)
+    alert(items);
+    {% comment %} likes_array=items.split(',') {% endcomment %}
+    {% comment %} getLikes(item_array) {% endcomment %}
   }
 
   function getLikes(item_array){
