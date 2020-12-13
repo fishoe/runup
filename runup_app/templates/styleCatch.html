@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="https://kit.fontawesome.com/f16496386e.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/f16496386e.js" crossorigin="anonymous" defer></script>
+    <script src="{% static 'js/styleCatch.js' %}" defer></script>
     <link rel="stylesheet" href="{% static 'recommendapp/styleCatch.css' %}" />
     <title>Document</title>
   </head>
@@ -56,23 +57,4 @@
       </div>
     </section>
   </body>
-  <script>
-    $(document).ready(function () {
-      if (!("url" in window) && "webkitURL" in window) {
-        window.URL = window.webkitURL;
-      }
-      $("#photo").change(function (e) {
-        $("#pic").attr("src", URL.createObjectURL(e.target.files[0]));
-      });
-    });
-    $(document).ready(function () {
-      if (!("url" in window) && "webkitURL" in window) {
-        window.URL = window.webkitURL;
-      }
-      $("#album").change(function (e) {
-        $("#pic").attr("src", URL.createObjectURL(e.target.files[0]));
-      });
-    });
-    //$('.styleCatch-camera').on('click',function(){$('#photo').click();});
-  </script>
 </html>

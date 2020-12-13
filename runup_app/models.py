@@ -1,111 +1,98 @@
 from django.db import models
-from django.conf import settings
-from accounts.models import Users
+from accounts.models import users
 
 # Create your models here.
 
-class Brands(models.Model):
-    Name_kr = models.CharField(max_length=50, unique=True)
-    Name_en = models.CharField(max_length=50, unique=True)
-    Description = models.TextField(null=True)
-    Link = models.URLField()
+class brands(models.Model):
+    name_kr = models.CharField(max_length=50, unique=True)
+    name_en = models.CharField(max_length=50, unique=True)
+    description = models.TextField(null=True)
+    link = models.URLField()
 
-class MainCategories(models.Model):
-    class GenderCtg(models.IntegerChoices):
+class maincategories(models.Model):
+    class genderctg(models.IntegerChoices):
         WOMAN = 1
         MAN = 2
         COMMON = 3
         NONE = 4
     
-    Name_kr = models.CharField(max_length=50)
-    Name_en = models.CharField(max_length=50,unique=True) 
-    Gender = models.IntegerField(choices=GenderCtg.choices)
+    name_kr = models.CharField(max_length=50)
+    name_en = models.CharField(max_length=50,unique=True) 
+    gender = models.IntegerField(choices=genderctg.choices)
 
-class SubCategories(models.Model):
-    Name_kr = models.CharField(max_length=50)
-    Name_en = models.CharField(max_length=50)
-    Main = models.ForeignKey(MainCategories, on_delete= models.CASCADE, related_name='sub_ctgs')
+class subcategories(models.Model):
+    name_kr = models.CharField(max_length=50)
+    name_en = models.CharField(max_length=50)
+    main = models.ForeignKey(maincategories, on_delete= models.CASCADE, related_name='sub_ctgs')
 
-    class GenderCtg(models.IntegerChoices):
+    class genderctg(models.IntegerChoices):
         WOMAN = 1
         MAN = 2
         COMMON = 3
         NONE = 4
 
-    Gender = models.IntegerField(choices=GenderCtg.choices)
+    gender = models.IntegerField(choices=genderctg.choices)
 
-class Products(models.Model):
-    class GenderCtg(models.IntegerChoices):
+class products(models.Model):
+    class genderctg(models.IntegerChoices):
         COMMON = 0
         WOMAN = 1
         MAN = 2
 
-    Brand = models.ForeignKey(Brands,related_name="Products", on_delete = models.DO_NOTHING)
-    Category = models.ForeignKey(SubCategories,related_name='Products', on_delete = models.DO_NOTHING)
-    Name = models.CharField(max_length=150)
-    Img_url = models.URLField()
-    Url = models.URLField()
-    Gender = models.IntegerField(choices=GenderCtg.choices)
-    Origin_price = models.IntegerField()
-    Discount_rate = models.FloatField(null=True)
-    Retail_price = models.IntegerField(null=True)
-    View_count = models.IntegerField()
+    brand = models.ForeignKey(brands,related_name="products", on_delete = models.DO_NOTHING)
+    category = models.ForeignKey(subcategories,related_name='products', on_delete = models.DO_NOTHING)
+    name = models.CharField(max_length=150)
+    img_url = models.URLField()
+    url = models.URLField()
+    gender = models.IntegerField(choices=genderctg.choices)
+    origin_price = models.IntegerField()
+    discount_rate = models.FloatField(null=True)
+    retail_price = models.IntegerField(null=True)
+    view_count = models.IntegerField()
     #class color(models.IntegerChoices):
         #pass #컬러 대응표
     #Color = models.IntegerField() #미사용
 
-class Product_Likes(models.Model):
-    User = models.ForeignKey(Users,related_name='Like_list', on_delete = models.DO_NOTHING)
-    Product = models.ForeignKey(Products,related_name='Like_users', on_delete = models.DO_NOTHING) #prod_obj.Like_users
+class product_likes(models.Model):
+    user = models.ForeignKey(users,related_name='Like_list', on_delete = models.DO_NOTHING)
+    product = models.ForeignKey(products,related_name='Like_users', on_delete = models.DO_NOTHING) #prod_obj.Like_users
 
-class Reviews(models.Model):
-    User = models.ForeignKey(Users, related_name='Reviews', on_delete = models.DO_NOTHING)
-    Product = models.ForeignKey(Products, related_name='Product', on_delete = models.CASCADE )
-    Context = models.TextField()
-    Rate = models.IntegerField()
-    Date = models.DateTimeField(auto_now_add=True)
+class reviews(models.Model):
+    user = models.ForeignKey(users, related_name='Reviews', on_delete = models.DO_NOTHING)
+    product = models.ForeignKey(products, related_name='Product', on_delete = models.CASCADE )
+    context = models.TextField()
+    rate = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
 
 def rv_dir_path(instance,filename):
-    print(instance)
-    return f'review_/{filename}'
+    return f'review_{instance.review}/{filename}'
 
-class Review_imgs(models.Model):
-    Review = models.ForeignKey(Reviews, related_name='Imgs', on_delete = models.DO_NOTHING)
-    ImageFile = models.ImageField(upload_to = rv_dir_path)
+class review_imgs(models.Model):
+    review = models.ForeignKey(reviews, related_name='Imgs', on_delete = models.DO_NOTHING)
+    imagefile = models.ImageField(upload_to = rv_dir_path)
 
-class Similarities(models.Model):
-    Target_prod = models.ForeignKey(Products, related_name='Target_prod',on_delete=models.CASCADE)
-    Sim_prod = models.ForeignKey(Products, related_name='Sim_prod',on_delete=models.CASCADE)
-    Sim_val = models.FloatField()
+class similarities(models.Model):
+    target_prod = models.ForeignKey(products, related_name='Target_prod',on_delete=models.CASCADE)
+    sim_prod = models.ForeignKey(products, related_name='Sim_prod',on_delete=models.CASCADE)
+    sim_val = models.FloatField()
 
-class Review_rates(models.Model):
-    User = models.ForeignKey(Users, related_name='rated_revies', on_delete = models.DO_NOTHING)
-    Review = models.ForeignKey(Reviews, related_name='Rates', on_delete = models.DO_NOTHING)
-    Up_down = models.BooleanField()
+class review_rates(models.Model):
+    user = models.ForeignKey(users, related_name='rated_revies', on_delete = models.DO_NOTHING)
+    review = models.ForeignKey(reviews, related_name='Rates', on_delete = models.DO_NOTHING)
+    up_down = models.BooleanField()
 
 def rec_dir_path(instance, filename):
     return f'rec/{instance.User.id}/{filename}'
 
-class Scatch_result(models.Model):
-    User = models.ForeignKey(Users, related_name='Scatch_results', on_delete = models.DO_NOTHING)
-    Result = models.TextField()
-    Img = models.ImageField(upload_to = rec_dir_path)
-    Date = models.DateTimeField(auto_now_add=True)
+class scatch_result(models.Model):
+    user = models.ForeignKey(users, related_name='Scatch_results', on_delete = models.DO_NOTHING)
+    result = models.TextField()
+    img = models.ImageField(upload_to = rec_dir_path)
+    date = models.DateTimeField(auto_now_add=True)
 
-class Main_banner(models.Model):
-    Start = models.DateTimeField()
-    End = models.DateTimeField()
-    Img = models.ImageField(upload_to='main_banner/')
-    Link = models.URLField()
-    Name = models.CharField(max_length=150)
-
-def dir_path(instance, filename):
-    # print(instance.Product.id)
-    return f'test/instance.Product.id/{filename}'
-
-class Img_test(models.Model):
-    Product = models.ForeignKey(Products, related_name='Prod',on_delete=models.DO_NOTHING)
-    Img = models.ImageField(upload_to=dir_path)
-
-class Img_temp(models.Model):
-    Img = models.ImageField(upload_to=dir_path)
+class main_banner(models.Model):
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+    img = models.ImageField(upload_to='main_banner/')
+    link = models.URLField()
+    name = models.CharField(max_length=150)

@@ -16,7 +16,7 @@ urlpatterns = [
     path('searchPage', views.searchPage, name='searchPage'), #검색 페이지
     path('scatch_res', views.analyzing, name='analyze'), #스타일캐치 분석 페이지
 
-    #이하 테스트용 url
-    path('test', views.test, name = 'test'),
-    path('upload', views.uploadimg, name = 'up'),
+    # #이하 테스트용 url
+    # path('test', views.test, name = 'test'),
+    # path('upload', views.uploadimg, name = 'up'),
 ]

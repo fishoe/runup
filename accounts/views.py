@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
+from django.db.models import Q
+
+from runup_app.views import GenderType, GenderChar, GetCtg
 from .forms import AccountForm
 
 # Create your views here.
@@ -14,7 +17,17 @@ def log_in(request):
     if request.user.is_authenticated:
         return redirect(redir_url)
     if request.method == 'GET':
-        return render(request,'login.html')
+        gender = request.COOKIES.get('gender', 'w')
+        q_gender = Q(gender=GenderType.WOMAN if gender ==GenderChar.WOMAN else GenderType.MAN)
+
+        main_ctgs, sub_ctgs = GetCtg(q_gender)
+        context = {
+            'gender': gender,  # 사용자 성별
+            'main_ctgs': main_ctgs,  # 메인 카테고리 리스트
+            'sub_ctgs': sub_ctgs,  # 서브 카테고리 리스트
+            'user': request.user,  # 유저 메뉴 리스트
+        }
+        return render(request,'login.html',context=context)
     elif request.method =='POST':
         username = request.POST['id']
         password = request.POST['password']
@@ -33,12 +46,23 @@ def log_in(request):
 def signup(request):
     if request.user.is_authenticated :
         return redirect('index')
-    if request.method=='GET':
-        return render(request,'signup.html')
-    elif request.method=='POST':
+    if request.method == 'GET':
+        gender = request.COOKIES.get('gender', 'w')
+        q_gender = Q(gender=GenderType.WOMAN if gender ==GenderChar.WOMAN else GenderType.MAN)
+
+        main_ctgs, sub_ctgs = GetCtg(q_gender)
+        context = {
+            'gender': gender,  # 사용자 성별
+            'main_ctgs': main_ctgs,  # 메인 카테고리 리스트
+            'sub_ctgs': sub_ctgs,  # 서브 카테고리 리스트
+            'user': request.user,  # 유저 메뉴 리스트
+        }
+        return render(request, 'signup.html',context=context)
+    elif request.method == 'POST':
         #print(request.POST)
+        request.POST['gender']
         form = AccountForm(request.POST)
-        if form.is_valid() :
+        if form.is_valid():
             new_user = form.save()
             new_user.save()
             login(request,new_user)
@@ -56,8 +80,15 @@ def log_out(request):
 @login_required
 def userinfo(request):
     if request.user.is_authenticated:
+        gender = request.COOKIES.get('gender', 'w')
+        q_gender = Q(gender=GenderType.WOMAN if gender ==GenderChar.WOMAN else GenderType.MAN)
+
+        main_ctgs, sub_ctgs = GetCtg(q_gender)
         context = {
-            'User' : request.user
+            'gender': gender,  # 사용자 성별
+            'main_ctgs': main_ctgs,  # 메인 카테고리 리스트
+            'sub_ctgs': sub_ctgs,  # 서브 카테고리 리스트
+            'user': request.user,  # 유저 메뉴 리스트
         }
         return render(request,'userinfo.html',context)
     else :

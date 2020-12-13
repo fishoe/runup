@@ -65,14 +65,14 @@
         </header>
         <dl class="category-menu">
           {% for i in main_ctgs %}
-          <div class="categoty-menu-dt-section">
-            <dt class="category-menu-dt">{{ i.Name_kr }}</dt>
-            <i class="fas fa-chevron-down"></i>
+          <div class="menu-id-{{i.pk}} categoty-menu-dt-section">
+            <dt class="menu-id-{{i.pk}} category-menu-dt">{{ i.name_kr }}</dt>
+            <i class="menu-id-{{i.pk}} fas fa-chevron-down"></i>
           </div>
-          <div class="category-menu-dd-section">
-            {% for j in sub_ctgs %} {% if j.Main.pk == i.pk %}
+          <div class="menu-dropdown-{{i.pk}} category-menu-dd-section">
+            {% for j in sub_ctgs %} {% if j.main.pk == i.pk %}
             <a class="category-menu-a" href="{% url 'category' %}?s_ctg={{j.pk}}">
-              <dd class="category-menu-dd">{{ j.Name_kr }}</dd>
+              <dd class="category-menu-dd">{{ j.name_kr }}</dd>
             </a>
             {% endif %} {% endfor %}
           </div>
@@ -92,21 +92,36 @@
             </a>
           </div>
         </header>
+
         <dl class="myPage-menu">
-          <dt class="sr-only">회원가입 & 로그인</dt>
           <div class="signUp-signIn">
+            {% if user.is_authenticated %}
+            <div class="myPage-user-box">
+              <strong class="myPage-user-name">{{ user.username }}</strong>
+              <dt class="sr-only">설정</dt>
+              <dd id="myPage-user-info">
+                <a href="{% url 'userinfo' %}">설정</a>
+              </dd>
+            </div>
+            <dt class="sr-only">로그아웃</dt>
+            <dd class="logout">
+              <a href="{% url 'logout' %}">로그아웃</a>
+            </dd>
+            {% else %}
+            <dt class="sr-only">회원가입 & 로그인</dt>
             <dd class="sign-up">
-              <a href="{% url 'signup'%}">아테나 회원가입</a>
+              <a href="{% url 'signup'%}">RUNUP 맴버 가입</a>
             </dd>
             <dd class="sign-in">
-              <a href="{% url 'login'%}">로그인</a>
+              <a href="{% url 'login'%}">RUNUP 로그인</a>
             </dd>
-            <dt class="sr-only">좋아요</dt>
-            <dd class="myPage-likes">좋아요</dd>
+            {% endif %}
+            <!-- <dt class="sr-only">좋아요</dt> -->
+            <!-- <dd class="myPage-likes">좋아요</dd> -->
             <dt class="sr-only">고객센터</dt>
             <dd>고객센터</dd>
-            <dt class="sr-only">내정보</dt>
-            <dd>내정보</dd>
+            {% if user.is_authenticated %}
+            {% endif %}
           </div>
         </dl>
       </section>
@@ -123,12 +138,12 @@
             </a>
           </div>
         </header>
-        <dl class="likes-menu">
+        <!-- <dl class="likes-menu">
           <dt>최근 본 상품</dt>
           <dd>최근 본 이미지 띄우기</dd>
           <dt><a href='{% url 'likes' %}'>내가 좋아요 한 상품</a></dt>
           <dd>내가 좋아요 한 상품 띄우기</dd>
-        </dl>
+        </dl> -->
       </section>
 
       {% comment %} 메인콘텐츠 {% endcomment %}
@@ -159,8 +174,10 @@
         </dd>
         <dt class="sr-only">likes</dt>
         <dd class="likes footer-item footer-likes">
-          <img class="likes" src="{% static 'assets/likes-icon.svg' %}" alt="likes-icon" />
-          <span class="likes">LIKES</span>
+            <a class="likes" href='{% url 'likes' %}'>
+            <img class="likes" src="{% static 'assets/likes-icon.svg' %}" alt="likes-icon" />
+            <span class="likes">LIKES</span>
+          </a>
         </dd>
         <dt class="sr-only">My Page</dt>
         <dd class="myPage footer-item footer-myPage">

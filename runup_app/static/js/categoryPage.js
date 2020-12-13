@@ -28,8 +28,29 @@ categoryFilterButton.addEventListener("click", () => {
 });
 categoryFilterButton.active = false;
 
-// category cancel button click event
-const categoryCancelButton = document.querySelector(".category-cancel-icon");
-categoryCancelButton.addEventListener("click", () => {
-  window.history.back();
+// heart icon fill & border
+const heartButton = document.querySelectorAll(".heart-button");
+
+heartButton.forEach((button) => {
+  button.addEventListener("click", toggle);
+  button.active;
+});
+
+function toggle() {
+  if (this.active) {
+    this.classList.remove("active");
+  } else {
+    this.classList.add("active");
+  }
+  this.active = !this.active;
+}
+
+// 무한 스크롤 구현?
+if (window.console != null) {
+  console.log("console is exist");
+} else {
+  coneolse.log("console is null");
+}
+var infinite = new Waypoint.Infinite({
+  element: $(".infinite-container")[0],
 });

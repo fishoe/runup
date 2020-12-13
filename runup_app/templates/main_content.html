@@ -1,6 +1,7 @@
 {% extends 'layout.html'%} {% load static %} {% block style%}
 <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" />
 <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
+<script src="{% static 'js/main_content.js' %}" defer></script>
 {% endblock %} {% block content %} {% comment %} {{category}} {% endcomment %}
 <div class="header-menu">
   <a href="#">
@@ -25,17 +26,21 @@
     <div class="box">
       <div class="img_box">
         <a onclick="animation('{% url 'product' prod.id %}')">
-          <img src="{{ prod.Img_url }}" alt="image" class="image" />
+          <img src="{{ prod.img_url }}" alt="image" class="image" />
         </a>
       </div>
-      <div class="info">
-        <b>{{ prod.Brand.Name_en }}</b>
-        <div class="price">{% load humanize %} {{prod.Origin_price|intcomma}}원</div>
+      <div class="product-container">
+        <div class="info">
+          <b>{{ prod.brand.name_en }}</b>
+          <div class="price">{% load humanize %} {{prod.origin_price|intcomma}}원</div>
+        </div>
+        <!-- 임의로 찜하기 버튼을 추가했습니다. 추후 수정요망 -->
+        <!-- ajax로 제품의 아이디값을 보내서 컨트롤러단으로 보내게 한다 -->
+        <!-- ajax: 제품을 찜했는지 안했는지 '상태'만 전달을 주고받고하여 쿠키로 저장하게 한다 -->
+        <a class="product-image-box" onclick="like_ajax('{% url 'like' prod.id %}', {{ prod.id }} )">
+          <button class="heart-button" type="button"></button>
+        </a>
       </div>
-      {% comment %} 임의로 찜하기 버튼을 추가했습니다. 추후 수정요망 {% endcomment %}
-      {% comment %} ajax로 제품의 아이디값을 보내서 컨트롤러단으로 보내게 한다 {% endcomment %}
-      {% comment %} ajax: 제품을 찜했는지 안했는지 '상태'만 전달을 주고받고하여 쿠키로 저장하게 한다 {% endcomment %}
-      <div><a onclick="like_ajax('{% url 'like' prod.id %}', {{ prod.id }} )">찜</a></div>
     </div>
   </div>
   {% endfor %}
@@ -76,7 +81,27 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
     } else {
       $("#loadingImg").css({
         top: height + windowHeight / 3,
+
       });
+
+      $("#mask").show();
+
+      if (height == 0) {
+        $("#loadingImg").css({
+          top: windowHeight / 3,
+        });
+      } else {
+        $("#loadingImg").css({
+          top: height + windowHeight / 3,
+        });
+      }
+
+      $("#loadingImg").show();
+
+      // 실행 지연
+      setTimeout(function () {
+        location.href = targetUrl;
+      }, delayTimeMillis);
     }
 
     $("#loadingImg").show();
@@ -150,16 +175,14 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
         console.log('Already exists.');
       }
       else {
-        // 새로운 값 저장 및 최대 개수 유지하기
-        itemArray.unshift(id);
-        if (itemArray.length > maxItemNum ) itemArray.length = 5;
-        items = itemArray.join(',');
-        setCookie('like', items, expire);
+        // 신규 id값 저장하기
+        setCookie('like', id, expire);
       }
-    }
-    else {
-      // 신규 id값 저장하기
-      setCookie('like', id, expire);
+
+      // like페이지 로드 시 item_array이용하여 product_id 불러오기
+      alert(items)
+      likes_array=items.split(',')
+      getLikes(item_array)
     }
 
     // like페이지 로드 시 item_array이용하여 product_id 불러오기
@@ -173,5 +196,6 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
     alert(likes_array)
     return likes_array
   }
+
 </script>
 {% endblock %}
