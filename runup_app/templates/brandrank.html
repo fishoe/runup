@@ -1,19 +1,27 @@
-{% extends 'layout.html'%} 
-{% load static %} 
+{% extends 'layout.html'%} {% load static %} {% block style%}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'styles/index.css' %}" /> -->
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_index.css' %}" />
+<link rel="stylesheet" href="{% static 'styles/brandrank.css' %}" />
+{% endblock %} {% block content %}
+<section class="brandrank-section">
+  <h1 class="brandrank-title">Likes</h1>
+  <a class="brandrank-title-likes" href="{% url 'brand_page' %}?option=like">좋아요순</a>
+  <a class="brandrank-title-views" href="{% url 'brand_page' %}?option=view">조회순</a>
 
-{% block style%}
-<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" />
-<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_index.css' %}" />
-{% endblock %} 
+  <dl class="brand-list">
+    {% for i in list %}
+    <div class="brand-list-item">
+      <div class="brand-list-name">
+        <dt>브랜드:</dt>
+        <dd>{{i.brand__name_en}}</dd>
+      </div>
+      <div class="brand-list-views">
+        <dt>조회수:</dt>
+        <dd>{{i.b_n}}</dd>
+      </div>
+    </div>
+    {% endfor %}
+  </dl>
+</section>
 
-{% block content %}
-<a href="{% url 'brand_page' %}?option=like">좋아요순</a>
-<a href="{% url 'brand_page' %}?option=view">조회순</a>
-
-{% for i in list %}
-    {% comment %} <ol> {% endcomment %}
-        브랜드: <li>{{i.brand__name_en}}</li>
-        조회수: <li>{{i.b_n}}</li>
-    {% comment %} </ol>     {% endcomment %}
-{% endfor %}
 {% endblock %}

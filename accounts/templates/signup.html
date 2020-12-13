@@ -1,6 +1,6 @@
 {% extends 'layout.html'%} {% load static %} {% block style%}
-<!-- <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_layout.css' %}" /> -->
-<link rel="stylesheet" type="text/css" href="{% static 'recommendapp/signup_login.css' %}" />
+<!-- <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_layout.css' %}" /> -->
+<link rel="stylesheet" type="text/css" href="{% static 'styles/signup_login.css' %}" />
 {% endblock %} {% block content %}
 <section class="signup">
   <div class="signup-header">
@@ -32,7 +32,17 @@
     </div>
     <div class="signup-input-box">
       <label class="sr-only" for="username">ID: </label>
-      <input class="signup-input" placeholder="아이디를 입력해주세요" type="text" id="username" name="username" required="required" minlength="5" maxlength="50" pattern="^(?!.*[^\da-zA-Z]).*" />
+      <input
+        class="signup-input"
+        placeholder="아이디를 입력해주세요"
+        type="text"
+        id="username"
+        name="username"
+        required="required"
+        minlength="5"
+        maxlength="50"
+        pattern="^(?!.*[^\da-zA-Z]).*"
+      />
     </div>
     <div class="signup-input-box">
       <label class="sr-only" for="password1">PASSWORD: </label>
@@ -64,7 +74,16 @@
     </div>
     <div class="signup-input-box">
       <label class="sr-only" for="name">NAME: </label>
-      <input class="signup-input" placeholder="이름을 입력해주세요" type="text" id="name" name="name" required="required" minlength="2" maxlength="10" />
+      <input
+        class="signup-input"
+        placeholder="이름을 입력해주세요"
+        type="text"
+        id="name"
+        name="name"
+        required="required"
+        minlength="2"
+        maxlength="10"
+      />
     </div>
     <div class="signup-input-box">
       <label class="sr-only" for="email">EMAIL: </label>

@@ -93,6 +93,35 @@ input:focus {
   position: relative;
 }
 
+.men-women-switch {
+  width: 48px;
+  height: 28px;
+  border: none;
+  background-color: transparent;
+  background-size: contian;
+  background-position: center center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: 100ms;
+}
+
+.men-women-switch:hover {
+  opacity: 0.75;
+}
+
+.men-women-switch:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.men-women-switch {
+  background: url("../assets/switchWomen-icon.svg");
+}
+
+.men-women-switch.active {
+  background: url("../assets/switchMen-icon.svg");
+}
+
 .header-title-main {
   font-size: 25px;
   font-weight: 400;
