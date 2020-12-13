@@ -4,19 +4,23 @@
 <link rel="stylesheet" href="{% static 'styles/brandrank.css' %}" />
 {% endblock %} {% block content %}
 <section class="brandrank-section">
-  <h1 class="brandrank-title">Likes</h1>
-  <a class="brandrank-title-likes" href="{% url 'brand_page' %}?option=like">좋아요순</a>
-  <a class="brandrank-title-views" href="{% url 'brand_page' %}?option=view">조회순</a>
+  <header class="brandrank-header">
+    <h1 class="brandrank-title">Likes</h1>
+    <div class="brandrank-title-box">
+      <a class="brandrank-title-likes" href="{% url 'brand_page' %}?option=like">좋아요순</a>
+      <a class="brandrank-title-views" href="{% url 'brand_page' %}?option=view">조회순</a>
+    </div>
+  </header>
 
   <dl class="brand-list">
     {% for i in list %}
     <div class="brand-list-item">
       <div class="brand-list-name">
-        <dt>브랜드:</dt>
+        <dt class="sr-only">Brand</dt>
         <dd>{{i.brand__name_en}}</dd>
       </div>
       <div class="brand-list-views">
-        <dt>조회수:</dt>
+        <dt>views</dt>
         <dd>{{i.b_n}}</dd>
       </div>
     </div>
