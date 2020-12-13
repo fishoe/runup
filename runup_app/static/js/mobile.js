@@ -1,5 +1,19 @@
 "use strict";
 
+// men women switch toggle
+const switchButton = document.querySelector(".men-women-switch");
+
+function toggle() {
+  if (this.active) {
+    this.classList.remove("active");
+  } else {
+    this.classList.add("active");
+  }
+  this.active = !this.active;
+}
+
+switchButton.addEventListener("click", toggle);
+
 // dropdown click function
 function dropdownClickFunction(button, dropdown) {
   if (button.active) {

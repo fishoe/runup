@@ -7,24 +7,26 @@
     <script src="{% static 'js/mobile.js' %}" defer></script>
     <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
     <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-    <script src="{% static 'js/infinite.min.js' %}"></script>
+    <script src="{% static 'js/infinite.min.js' %}" defer></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="https://kit.fontawesome.com/f16496386e.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/layout.css' %}" />
-    <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'recommendapp/mobile_layout.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/layout.css' %}" />
+    <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_layout.css' %}" />
     <link rel="icon" href="data:," />
     {%block style%} {%endblock%}
   </head>
   <body>
+    {% comment %} <!-- {% url 'gender' == w / m %} --> {% endcomment %}
     <section class="desktop">
       <img src="{% static 'assets/service.png' %}" alt="service-image" />
     </section>
     {% comment %} 헤더 {% endcomment %}
     <header class="header">
       <div class="header-title">
-        <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
+        <button class="men-women-switch" type="button"></button>
+        <!-- <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" /> -->
         <h1 class="header-title-main">
           <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
         </h1>

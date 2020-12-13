@@ -7,7 +7,7 @@
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="https://kit.fontawesome.com/f16496386e.js" crossorigin="anonymous" defer></script>
     <script src="{% static 'js/styleCatch.js' %}" defer></script>
-    <link rel="stylesheet" href="{% static 'recommendapp/styleCatch.css' %}" />
+    <link rel="stylesheet" href="{% static 'styles/styleCatch.css' %}" />
     <title>Document</title>
   </head>
   <body>
@@ -21,7 +21,10 @@
       </label>
     </header>
     <section class="styleCatch-desc">
-      <span>about style catch</span>
+      <span class="styleCatch-desc-1"
+        >마음에 드는 옷사진을 올리세요! <br />
+        <strong>AI가 비슷한 상품</strong>을 찾아 보여줍니다</span
+      >
     </section>
     <section class="styleCatch-images">
       <div class="styleCatch-camera-wrap">
@@ -30,7 +33,7 @@
             <img src="{% static 'assets/camera-icon.svg' %}" alt="camera-icon" />
             <form class="styleCatch-camera-form" action="{% url 'analyze' %}" enctype="multipart/form-data" method="POST">
               {% csrf_token %}
-              <input type="file" id="photo" name="photo" capture="camera" accept="image/*" />
+              <input type="file" id="photo" name="photo" capture="camera" accept="image/*" value="resizePhoto" />
               <input type="file" id="album" name="album" accept="image/*" />
               <input type="submit" id="submit" />
             </form>
@@ -52,7 +55,8 @@
       <div class="styleCatch-user-image-wrap">
         <div class="styleCatch-user-image">
           <!-- <span>유저이미지 추가 공간</span> -->
-          <img id="pic" style="width: 100%" />
+          <img id="pic" style="width: 100%; display: none" />
+          <img id="resizePhoto" src="" alt="" />
         </div>
       </div>
     </section>
