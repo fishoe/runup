@@ -249,7 +249,21 @@ def brandrank(request):
     option=request.GET.get('option')
     # 먼저 모든 제품 로드
     product=products.objects.all()
+
+    #제품 디테일 페이지 관련
+    if request.user.is_authenticated :
+        #회원
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
+    else :
+        #비회원
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+        if pd.gender != GenderType.COMMON :
+            gender = GenderChar.WOMAN if pd.gender == GenderType.WOMAN else GenderChar.MAN
     
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    main_ctgs, sub_ctgs = GetCtg(q_gender)
+
     # 브랜드를 조회수 기준으로 볼때
     if option=='view':            
         # product[0].Brand.Name_en  >> FCMM //제품의 브랜드 이름
@@ -270,7 +284,10 @@ def brandrank(request):
         context={
             'list':b_v,
             'brand':brand,
-            'view':view
+            'view':view,
+            'gender' : gender ,
+            'main_ctgs' : main_ctgs ,
+            'sub_ctgs' : sub_ctgs ,
         }
 
     # 브랜드를 좋아요 기준으로 볼때
@@ -292,9 +309,13 @@ def brandrank(request):
             like.append(b_l[i]['b_n'])
 
         context={
+            'user':request.user,
             'list':b_l,
             'brand':brand,
-            'like':like
+            'like':like,
+            'gender' : gender ,
+            'main_ctgs' : main_ctgs ,
+            'sub_ctgs' : sub_ctgs ,
         }
     return render(request,'brandrank.html',context)
 
@@ -324,55 +345,48 @@ def like(request,product_id):
         return JsonResponse({'status': 1})  
     # ajax로` 오는게 실패했을경우
     else:
-        print(request.method)
-        print('로그인 됨_ajax통신 실패...')
+        # print(request.method)
+        # print('로그인 됨_ajax통신 실패...')
         return JsonResponse({'status':0})
         # return 
 
 def likes(request):
+
     # 하단 메뉴바의 Likes의 내가 좋아요한 상품을 눌렀을 때 나오는 페이지
     #*************************************************************
     # 로그인된 유저일 경우 찜한 목록
     # 쿠키로 저장하여 그 목록들을 보여준다
     if request.user.is_authenticated:
-        p_l=product_likes.objects.filter(user__username=request.user)   
-
-        if p_l !='':
-            contents=[]
-        try:
-            for i in p_l:
-                contents.append(i.product)
-        except Exception:
-            contents=[]
-        
-        context={
-            'contents':contents
-        }
+        contents=products.objects.filter(Like_users__user=request.user)
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
     else:
     # 로그인이 안된 유저일 경우 찜한 목록
     # 각각의 제품을 찜하기를 누를 시 쿠키의 찜한상품들(iteam_array)을 로드한다
-        check='로그인 안됨'
-        print(type(request.COOKIES))
         like = request.COOKIES.get('like','')
         like.strip(', ')
         if like != '' :
             like_array=like.split(',')
         # print(like_array)
-        contents=[]
 
         try :
-            for i in like_array:
-                pd_id = int(i)
-                pd=products.objects.get(id=pd_id)
-                contents.append(pd)
+            pd_ids = list(map(int, like_array))
+            contents = products.objects.filter(id__in=pd_ids)
         except Exception:
             contents = []
 
-        context={
-            'check':check ,
-            'user' : request.user,
-            'contents':contents
-        }
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    main_ctgs, sub_ctgs = GetCtg(q_gender)
+
+    context={
+        'gender' : gender,
+        'user' : request.user,
+        'contents':contents, 
+        'main_ctgs' : main_ctgs ,
+        'sub_ctgs' : sub_ctgs ,
+    }
     return render(request,'likes.html',context)
 
 
