@@ -62,8 +62,9 @@ function resizeImageFunc() {
         context.drawImage(image, 0, 0, width, height);
 
         const dataurl = canvas.toDataURL(file.type);
+        
         document.querySelector("#resizePhoto").src = dataurl;
-        $("#photo").attr("value", dataurl);
+        document.querySelector("#photo").value = URL.createObjectURL(dataurl);
       };
       reader.readAsDataURL(file);
       // console.log(file);
