@@ -209,7 +209,7 @@ def analyzing(request):
         class ACLS():
             pass
         main = ACLS()
-        main.Img_url = s_result.img.url 
+        main.img_url = s_result.img.url 
 
         main_ctgs, sub_ctgs = GetCtg(q_gender)
         smpl_pd = products.objects.all().order_by('?')[0]

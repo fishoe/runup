@@ -50,26 +50,38 @@
   const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
     {% comment %} 각 제품을 클릭하면 로드 되는 애니메이션효과를 주는 함수 {% endcomment %}
     {% comment %} 애니메이션효과를 준 후 url로 이동한다 {% endcomment %}
-    function animation(targetUrl) {
-      var maskHeight = $(document).height();
-      var windowHeight = $(window).height();
-      var maskWidth = $(document).width();
-      var height = $(document).scrollTop();
+  function animation(targetUrl) {
+    var maskHeight = $(document).height();
+    var windowHeight = $(window).height();
+    var maskWidth = $(document).width();
+    var height = $(document).scrollTop();
 
-      var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-      var loadingImg = "";
-      var delayTimeMillis = 1200;
+    var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+    var loadingImg = "";
+    var delayTimeMillis = 1200;
 
-      loadingImg += "<div id='loadingImg' style='position:absolute; left:15%; display:none; z-index:10000;'>";
-      loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
-      loadingImg += "</div>";
+    loadingImg += "<div id='loadingImg' style='position:absolute; left:15%; display:none; z-index:10000;'>";
+    loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
+    loadingImg += "</div>";
 
-      $("form").append(mask).append(loadingImg);
+    $("form").append(mask).append(loadingImg);
 
-      $("#mask").css({
-        width: maskWidth,
-        height: maskHeight,
-        opacity: "0.4",
+    $("#mask").css({
+      width: maskWidth,
+      height: maskHeight,
+      opacity: "0.4",
+    });
+
+    $("#mask").show();
+
+    if (height == 0) {
+      $("#loadingImg").css({
+        top: windowHeight / 3,
+      });
+    } else {
+      $("#loadingImg").css({
+        top: height + windowHeight / 3,
+
       });
 
       $("#mask").show();
@@ -81,27 +93,7 @@
       } else {
         $("#loadingImg").css({
           top: height + windowHeight / 3,
-
         });
-
-        $("#mask").show();
-
-        if (height == 0) {
-          $("#loadingImg").css({
-            top: windowHeight / 3,
-          });
-        } else {
-          $("#loadingImg").css({
-            top: height + windowHeight / 3,
-          });
-        }
-
-        $("#loadingImg").show();
-
-        // 실행 지연
-        setTimeout(function () {
-          location.href = targetUrl;
-        }, delayTimeMillis);
       }
 
       $("#loadingImg").show();
