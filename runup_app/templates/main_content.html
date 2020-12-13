@@ -37,7 +37,7 @@
         <!-- 임의로 찜하기 버튼을 추가했습니다. 추후 수정요망 -->
         <!-- ajax로 제품의 아이디값을 보내서 컨트롤러단으로 보내게 한다 -->
         <!-- ajax: 제품을 찜했는지 안했는지 '상태'만 전달을 주고받고하여 쿠키로 저장하게 한다 -->
-        <a class="product-image-box" onclick="like_ajax('{% url 'like' prod.id %}', {{ prod.id }} )">
+        <a class="product-image-box" onclick="like_ajax('{% url 'like' prod.id %}', '{{ prod.id }}' )">
           <button class="heart-button" type="button"></button>
         </a>
       </div>
@@ -131,9 +131,11 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
     {% else %}
       alert("로그인 안됨");
       // 로그인이 안됐을 경우 쿠키로 저장주는 함수로 보낸다.
-      addCookie(prod_id)
+      addCookie(prod_id);
     {% endif %}
   }
+
+
 
 {% comment %} like 쿠키를 설정해주는 함수 {% endcomment %}
   function setCookie(cookie_name,prod_id){
@@ -145,57 +147,55 @@ const csrf_token = document.querySelector('[name=csrfmiddlewaretoken]').value;
   }
 
 {% comment %} 저장된 쿠키값을 가져오는 함수 {% endcomment %}
-  function getCookie(cookie_name) {
-    var x, y;
-    var val = document.cookie.split(';');
+  function getCookie(name){
+    var cname , cval;
+    var clist = document.cookie.split(';');
 
-    for (var i = 0; i < val.length; i++) {
-      x = val[i].substr(0, val[i].indexOf('='));
-      y = val[i].substr(val[i].indexOf('=') + 1);
-      x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
-      if (x == cookie_name) {
-        return unescape(y); // unescape로 디코딩 후 값 리턴
+    for (var i = 0; i < clist.length; i++) {
+      cname = clist[i].substr(0, clist[i].indexOf('='));
+      cval = clist[i].substr(clist[i].indexOf('=') + 1);
+      cname = cname.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+      if (cname == name) {
+        return cval; // unescape로 디코딩 후 값 리턴
       }
     }
+    return null;
   }
 
   function addCookie(id) {
     var items = getCookie('like'); // 이미 저장된 값을 쿠키에서 가져오기
-    var maxItemNum = 5; // 최대 저장 가능한 아이템개수
-    var expire = 1; // 쿠키값을 저장할 기간
-    if (items) {
-      var itemArray = items.split(',');
-      console.log(itemArray.indexOf(id));
-      if (itemArray.indexOf(''+id) != -1) {
-        // 이미 존재하는 경우 종료
-        console.log('TJDRHD');
-        var idx=itemArray.indexOf(id);
-        itemArray=itemArray.splice(idx,1);
-        setCookie('like',itemArray.join(),expire);
-        console.log('Already exists.');
+    var maxItemNum = 20; // 최대 저장 가능한 아이템개수
+    // let expire = 1; // 쿠키값을 저장할 기간
+    if (items != null ) {
+      var item_list = items.split(',');
+      if(item_list[0] == ''){
+        var letlikes = 'like='+id;
+        document.cookie= letlikes;
+        return letlikes;
       }
-      else {
-        // 신규 id값 저장하기
-        setCookie('like', id, expire);
+      for(let i = 0; i< item_list.length;i++){
+        if (item_list[i] == ''+id){
+          item_list.splice(i,1);
+          if (item_list.length == 0){
+            var letlikes = 'like=';
+            document.cookie=letlikes;
+            return letlikes
+          }
+          var letlikes = 'like='+ item_list.join();
+          document.cookie=letlikes;
+          return letlikes;
+        }
       }
-
       // like페이지 로드 시 item_array이용하여 product_id 불러오기
-      alert(items);
-      likes_array=items.split(',');
-      getLikes(item_array);
+      item_list.push(''+id);
+      var letlikes = 'like=' + item_list.join();
+      document.cookie=letlikes;
+      return letlikes;
+    }else{
+      var letlikes = 'like='+id;
+      document.cookie= letlikes;
+      return letlikes;
     }
-
-    // like페이지 로드 시 item_array이용하여 product_id 불러오기
-    alert(items);
-    {% comment %} likes_array=items.split(',') {% endcomment %}
-    {% comment %} getLikes(item_array) {% endcomment %}
   }
-
-  function getLikes(item_array){
-    alert('***getLikes***')
-    alert(likes_array)
-    return likes_array
-  }
-
 </script>
 {% endblock %}
