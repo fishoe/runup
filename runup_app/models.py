@@ -82,10 +82,13 @@ class review_rates(models.Model):
     up_down = models.BooleanField()
 
 def rec_dir_path(instance, filename):
-    return f'rec/{instance.user.id}/{filename}'
+    if instance.user is None:
+        return f'rec/anonymous/{filename}'
+    else :
+        return f'rec/{instance.user.id}/{filename}'
 
 class scatch_result(models.Model):
-    user = models.ForeignKey(users, related_name='Scatch_results', on_delete = models.DO_NOTHING)
+    user = models.ForeignKey(users,null=True , related_name='Scatch_results', on_delete = models.DO_NOTHING)
     result = models.TextField()
     img = models.ImageField(upload_to = rec_dir_path)
     date = models.DateTimeField(auto_now_add=True)

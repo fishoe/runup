@@ -1,15 +1,15 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Count # DB aggregation 사용
 from django.utils import timezone
 from django.http import Http404, HttpResponseNotFound, JsonResponse
-from django.db.models import Sum,Count    # DB aggregation 사용
+from django.contrib.postgres.search import SearchQuery, SearchVector , SearchRank
 
 from config.settings import DEBUG
 
 from .models import subcategories, maincategories, brands, products, similarities
 from .models import review_rates, reviews, product_likes, scatch_result
-from .models import main_banner 
+from .models import main_banner
 from .forms import UploadImgForm
 #constants
 class const():
@@ -161,8 +161,7 @@ def product_pg(request, product_id):
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
         if pd.gender != GenderType.COMMON :
             gender = GenderChar.WOMAN if pd.gender == GenderType.WOMAN else GenderChar.MAN
-    
-    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     context = {
@@ -180,28 +179,32 @@ def product_pg(request, product_id):
     return res
 
 from django.contrib.auth.decorators import login_required
-@login_required
+
 def styleCatch(request):
-    if request.user.is_authenticated :
-        return render(request, 'styleCatch.html')
+    return render(request, 'styleCatch.html')
 
 # from django.views.decorators.csrf import csrf_exempt, csrf_protect
-@login_required
 def analyzing(request):
-    if request.user.is_authenticated and request.method == 'POST': 
+    if request.method == 'POST': 
         
         #성별을 가져옵니다.
-        gender = request.user.gender
-        q_gender = Q( gender = gender )
-
+        if request.user.is_authenticated :
+            gender = request.user.gender
+            q_gender = Q( gender = gender )
+        else :
+            gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+            q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+        
         #request의 포스트 데이터의 validate 체크
         form = UploadImgForm(request.POST, request.FILES)
         if form.is_valid() :
             img = request.FILES['photo'] if 'photo' in request.FILES else request.FILES['album']
 
             #암튼 함수를 돌렸음 암튼 그럼
-
-            s_result = scatch_result(user=request.user, img= img, result='Nothing')
+            if request.user.is_authenticated:
+                s_result = scatch_result(user=request.user, img= img, result='Nothing')
+            else :
+                s_result = scatch_result(img= img, result='Nothing')
             s_result.save()
         else :
             return HttpResponseNotFound("Not valid Image")
@@ -228,7 +231,38 @@ def analyzing(request):
         return redirect('index')
 
 def searchPage(request):
-    return render(request, 'searchPage.html')
+    #auth
+    if request.user.is_authenticated :
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
+    else :
+        #비회원
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    
+    string = request.GET.get('q','')
+
+    if string == '' :
+        return redirect('index')
+    vector = SearchVector('name','brand__name_en','brand__name_kr')
+    query = SearchQuery(string)
+    pds = products.objects.annotate(rank=SearchRank(vector,query)).filter(rank__gte= 0.01).order_by('-rank')
+
+    pgnator = Paginator(pds,per_page=const.ITEMS_PER_PAGE)
+    page = pgnator.page(1)
+
+    main_ctgs, sub_ctgs = GetCtg(q_gender)
+
+    context = {
+        'user' : request.user , # 유저정보
+        'contents' : page , #상품 목록 리스트 Products
+        'gender' : gender, #사용자 성별
+        'main_ctgs' : main_ctgs, #메인 카테고리 리스트 
+        'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
+        'user' : request.user, #유저 메뉴 리스트
+    }
+
+    return render(request,'ctg_content.html', context=context )
 
 def brandrank(request):
     #브랜드 랭크 페이지
@@ -258,8 +292,8 @@ def brandrank(request):
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     
-    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     # 브랜드를 조회수 기준으로 볼때
@@ -374,8 +408,8 @@ def likes(request):
             contents = []
 
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
 
-    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     context={
@@ -396,8 +430,7 @@ def best(request):
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-    
-    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)    
 
     p_l=product_likes.objects.values_list('product',flat=True)
@@ -427,8 +460,7 @@ def sale(request):
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-    
-    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)    
 
     contents=[]#products.objects.filter(~Q(discount_rate=0))
@@ -437,7 +469,7 @@ def sale(request):
         'contents':contents,
         'gender' : gender ,
         'main_ctgs' : main_ctgs ,
-        'sub_ctgs' : sub_ctgs ,        
+        'sub_ctgs' : sub_ctgs ,
         'user' : request.user,
     }
 
