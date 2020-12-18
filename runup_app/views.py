@@ -58,7 +58,7 @@ def main(request):
         if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
             #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
             gender = GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
     
     flt_opt = request.GET.get('flt','?')
     all_pd = products.objects.filter(q_gender | Q( gender=GenderType.COMMON )).order_by(flt_opt)#정렬 옵션에 대한 것
@@ -431,7 +431,7 @@ def sale(request):
     q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     main_ctgs, sub_ctgs = GetCtg(q_gender)    
 
-    contents=[]#products.objects.filter(~Q(discount_rate=0))
+    contents=products.objects.filter().exclude(discount_rate=0)
     
     context={
         'contents':contents,
