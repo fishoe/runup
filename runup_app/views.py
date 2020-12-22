@@ -14,6 +14,14 @@ from .forms import UploadImgForm
 #constants
 class const():
     ITEMS_PER_PAGE=30
+    flt_opt = {
+        'name':'name',
+        '-name':'-name',
+        'price':'origin_price',
+        '-price':'-origin_price',
+        'sim_val':'sim_val',
+        '-sim_val':'-sim_val',
+    }
 
 class GenderType():
     COMMON = 0
@@ -61,7 +69,16 @@ def main(request):
         q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
     
     flt_opt = request.GET.get('flt','?')
-    all_pd = products.objects.filter(q_gender | Q( gender=GenderType.COMMON )).order_by(flt_opt)#정렬 옵션에 대한 것
+    if flt_opt not in ['price','-price','name','-name','like','-like'] :
+        flt_opt = '?'
+
+    if flt_opt in ['like','-like'] :
+        contents = products.objects.filter(q_gender | Q( gender=GenderType.COMMON ))\
+            .annotate(like
+            =Count('Like_users')).order_by(flt_opt)
+    else :
+        all_pd = products.objects.filter(q_gender | Q( gender=GenderType.COMMON )).order_by(const.flt_opt[flt_opt])#정렬 옵션에 대한 것
+
     prod_page = Paginator(all_pd, const.ITEMS_PER_PAGE ) #모든 상품을 30개 보여준다.
     page = prod_page.get_page(1)
 
@@ -98,18 +115,30 @@ def category_pg(request):
         q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     try :
         sub_ctg_id = int(request.GET.get('s_ctg',-1))
-        flt = request.GET.get('flt','?')
+        flt_opt = request.GET.get('flt','name')
+        if flt_opt not in ['price','-price','name','-name','like','-like'] :
+            flt_opt = 'name'
         if sub_ctg_id == -1 :
             main_ctg_id = int(request.GET.get('m_ctg',-1))
             main_ctg = maincategories.objects.get(id = main_ctg_id)
             sub_ctg = None
-            ctg_pd_list = products.objects.filter( Q(category__main=main_ctg_id) & (q_gender | Q(gender=GenderType.COMMON) ) )#.order_by(flt) 
+            if flt_opt in ['like','-like']:
+                ctg_pd_list = products.objects.filter( Q(category__main=main_ctg_id) & (q_gender | Q(gender=GenderType.COMMON) ) )\
+                    .annotate(like=Count('Like_users')).order_by(flt_opt)
+            else :
+                ctg_pd_list = products.objects.filter( Q(category__main=main_ctg_id) & (q_gender | Q(gender=GenderType.COMMON) ) )\
+                    .order_by(const.flt_opt[flt_opt]) 
         else :
             sub_ctg = subcategories.objects.get( id = sub_ctg_id )
             if sub_ctg.gender != CtgGenderType.COMMON and sub_ctg.gender != CtgGenderType.NONE:
                 gender = GenderChar.WOMAN if sub_ctg.gender == CtgGenderType.WOMAN else GenderChar.MAN
             main_ctg = sub_ctg.main
-            ctg_pd_list = products.objects.filter( Q(category=sub_ctg) & (q_gender | Q(gender=GenderType.COMMON) ))#.order_by(flt) #todo
+            if flt_opt in ['like','-like']:
+                ctg_pd_list = products.objects.filter( Q(category=sub_ctg) & (q_gender | Q(gender=GenderType.COMMON) ))\
+                    .annotate(like=Count('Like_users')).order_by(flt_opt)
+            else :
+                ctg_pd_list = products.objects.filter( Q(category=sub_ctg) & (q_gender | Q(gender=GenderType.COMMON) ))\
+                    .order_by(const.flt_opt[flt_opt])
         paginator = Paginator(ctg_pd_list, const.ITEMS_PER_PAGE )
         page = paginator.get_page(1)
     except ValueError as e:
@@ -146,7 +175,13 @@ def product_pg(request, product_id):
         pd = products.objects.get( id=product_id )
     except products.DoesNotExist as e:
         raise Http404(e)
-    contents = similarities.objects.filter(target_prod=pd).order_by('-sim_val') 
+    flt_opt = request.GET.get('flt','-sim_val')
+    if flt_opt not in ['price','-price','name','-name','like','-like']:
+        flt_opt = '-sim_val'
+    if flt_opt in ['like','-like'] :
+        contents = similarities.objects.filter(target_prod=pd).annotate(likes=Count('Like_users')).order_by(flt_opt)
+    else :
+        contents = similarities.objects.filter(target_prod=pd).order_by(const.flt_opt[flt_opt])
 
     #리프레시 검사(리프레시를 이용한 뷰카운트 조작 방지 구현)
     pd.view_count += 1
@@ -244,9 +279,9 @@ def searchPage(request):
 
     if string == '' :
         return redirect('index')
-    vector = SearchVector('name','brand__name_en','brand__name_kr')
+    vector = SearchVector('name','brand__name_en','brand__name_kr','category__name_kr','category__name_en')
     query = SearchQuery(string)
-    pds = products.objects.annotate(rank=SearchRank(vector,query)).filter(rank__gte= 0.01).order_by('-rank')
+    pds = products.objects.annotate(rank=SearchRank(vector,query)).filter(rank__gte= 0.0001).order_by('-rank')
 
     pgnator = Paginator(pds,per_page=const.ITEMS_PER_PAGE)
     page = pgnator.page(1)
@@ -389,7 +424,7 @@ def likes(request):
     # 로그인된 유저일 경우 찜한 목록
     # 쿠키로 저장하여 그 목록들을 보여준다
     if request.user.is_authenticated:
-        contents=products.objects.filter(Like_users__user=request.user)
+        contents=products.objects.filter(Like_users__user=request.user).order_by('name')
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
         q_gender = Q(gender= request.user.gender)
     else:
@@ -461,7 +496,7 @@ def sale(request):
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
         q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-    main_ctgs, sub_ctgs = GetCtg(q_gender)    
+    main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     contents=products.objects.filter().exclude(discount_rate=0)
     
