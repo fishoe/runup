@@ -3,7 +3,7 @@
 <script src="{% static 'js/main_content.js' %}" defer></script>
 {% endblock %} {% block content %} {% comment %} {{category}} {% endcomment %}
 <div class="header-menu">
-  <a href="#">
+  <a href="{% url 'new_page' %}">
     <span>NEW</span>
   </a>
   <a href="{% url 'best_page' %}">

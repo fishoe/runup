@@ -475,6 +475,30 @@ def sale(request):
 
     return render(request,'sale.html',context)
 
+def new(request):
+    #제품 디테일 페이지 관련
+    if request.user.is_authenticated :
+        #회원
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        q_gender = Q(gender= request.user.gender)
+    else :
+        #비회원
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    main_ctgs, sub_ctgs = GetCtg(q_gender)
+
+    contents=products.objects.filter(discount_rate=0).order_by('?')[:30]
+
+    context={
+        'contents':contents,
+        'gender' : gender ,
+        'main_ctgs' : main_ctgs ,
+        'sub_ctgs' : sub_ctgs ,
+        'user' : request.user,
+    }
+
+    return render(request,'new.html',context)    
+
 def nonepg(request):
     print(request)
     return None

@@ -9,6 +9,7 @@ urlpatterns = [
     path('<int:product_id>/like',views.like, name = 'like'), #좋아요 action 대응 ajax url
     path('best', views.best, name = 'best_page'), #베스트 리스트 페이지
     path('sale', views.sale, name = 'sale_page'), #세일즈 리스트 페이지
+    path('new', views.new, name = 'new_page'), #세일즈 리스트 페이지
     path('brandrank', views.brandrank, name = 'brand_page'), #브랜드 리스트 페이지
     path('category', views.category_pg, name = 'category'), #카테고리 페이지
     path('scatch',views.styleCatch, name = 'styleCatch'), #스타일캐치 페이지
