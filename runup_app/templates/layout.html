@@ -34,37 +34,11 @@
           <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
         </a>
       </div>
-
-      {% comment %}
-      <div class="header-search">
-        <img class="header-search-icon" src="{% static 'assets/search-icon.svg'%}" alt="search-icon" />
-        <form action='{% url "search" %}' method="POST" class="search-container">
-          {% csrf_token %}
-          <input placeholder="Search" name="search" />
-          <input type="image" class="header-search-icon" src="{% static 'assets/search-icon.svg'%}" alt="search-icon" />
-          <button type="submit">Search</button>
-        </form>
-      </div>
-      <img class="header-wide-line" src="{% static 'assets/wide-line.svg'%}" alt="wide-line-image" />
-      {% endcomment %}
     </header>
 
     <section class="wrap">
       {% comment %} 메뉴바 {% endcomment %}
-      <!-- <section class="category-box"></section> -->
-
       <section class="category-box">
-        <header class="header">
-          <div class="header-title">
-            <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
-            <h1 class="header-title-main">
-              <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
-            </h1>
-            <a href="{% url 'searchPage' %}">
-              <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
-            </a>
-          </div>
-        </header>
         <dl class="category-menu">
           {% for i in main_ctgs %}
           <div class="menu-id-{{i.pk}} categoty-menu-dt-section">
@@ -83,18 +57,6 @@
       </section>
 
       <section class="myPage-box">
-        <header class="header">
-          <div class="header-title">
-            <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
-            <h1 class="header-title-main">
-              <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
-            </h1>
-            <a href="{% url 'searchPage' %}">
-              <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
-            </a>
-          </div>
-        </header>
-
         <dl class="myPage-menu">
           <div class="signUp-signIn">
             {% if user.is_authenticated %}
@@ -129,17 +91,6 @@
       </section>
 
       <section class="likes-box">
-        <header class="header">
-          <div class="header-title">
-            <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" />
-            <h1 class="header-title-main">
-              <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
-            </h1>
-            <a href="{% url 'searchPage' %}">
-              <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
-            </a>
-          </div>
-        </header>
         <!-- <dl class="likes-menu">
           <dt>최근 본 상품</dt>
           <dd>최근 본 이미지 띄우기</dd>
