@@ -1,7 +1,7 @@
 {% extends 'layout.html'%} {% load static %} {% block style%}
 <!-- <link rel="stylesheet" type="text/css" href="{% static 'recommendapp/index.css' %}" /> -->
 <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_index.css' %}" />
-<script src="{% static 'js/categoryPage.js' %}" defer></script>
+<script src="{% static 'js/ctg_content.js' %}" defer></script>
 {% endblock %} {% block content %}
 <!--********************************* 카테고리 헤더 *********************************-->
 
@@ -54,7 +54,8 @@
     <div class="infinite-item">
       <div class="box">
         <div class="img_box">
-          <a onclick="animation('{% url 'product' prod.id %}')">
+        {% comment %} onclick="animation('{% url 'product' prod.id %}')" {% endcomment %}
+          <a href='{% url 'product' prod.id %}'>
             <img src="{{ prod.img_url }}" alt="image" class="image" />
           </a>
         </div>
@@ -80,49 +81,5 @@
 {% comment %} <input id="page" type="hidden" value="2" />
 <button id="callmorepost" type="button" class="btn btn-primary btn-block">More Post</button>
 {% endcomment %}
-
-<script type="text/javascript">
-  function animation(targetUrl) {
-    var maskHeight = $(document).height();
-    var windowHeight = $(window).height();
-    var maskWidth = $(document).width();
-    var height = $(document).scrollTop();
-
-    var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-    var loadingImg = "";
-    var delayTimeMillis = 1200;
-
-    loadingImg += "<div id='loadingImg' style='position:absolute; left:10%; display:none; z-index:10000;'>";
-    loadingImg += " <img src='https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif'/>";
-    loadingImg += "</div>";
-
-    $("form").append(mask).append(loadingImg);
-
-    $("#mask").css({
-      width: maskWidth,
-      height: maskHeight,
-      opacity: "0.4",
-    });
-
-    $("#mask").show();
-
-    if (height == 0) {
-      $("#loadingImg").css({
-        top: windowHeight / 3,
-      });
-    } else {
-      $("#loadingImg").css({
-        top: height + windowHeight / 3,
-      });
-    }
-
-    $("#loadingImg").show();
-
-    // 실행 지연
-    setTimeout(function () {
-      location.href = targetUrl;
-    }, delayTimeMillis);
-  }
-</script>
 
 {% endblock %}
