@@ -21,6 +21,7 @@ class const():
         '-price':'-origin_price',
         'sim_val':'sim_val',
         '-sim_val':'-sim_val',
+        'random' : '?'
     }
 
 class GenderType():
@@ -68,12 +69,12 @@ def main(request):
             gender = GenderChar.WOMAN
         q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
     
-    flt_opt = request.GET.get('flt','?')
+    flt_opt = request.GET.get('flt','random')
     if flt_opt not in ['price','-price','name','-name','like','-like'] :
-        flt_opt = '?'
+        flt_opt = 'random'
 
     if flt_opt in ['like','-like'] :
-        contents = products.objects.filter(q_gender | Q( gender=GenderType.COMMON ))\
+        all_pd = products.objects.filter(q_gender | Q( gender=GenderType.COMMON ))\
             .annotate(like
             =Count('Like_users')).order_by(flt_opt)
     else :
@@ -161,12 +162,11 @@ def category_pg(request):
         'gender' : gender, #사용자 성별
         'main_ctgs' : main_ctgs, #메인 카테고리 리스트 
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
-        'user' : request.user, #유저 메뉴 리스트
     }
-    if request.is_ajax():
+    if request.method == 'POST':
         ctg_page = int(request.GET.get('page',-1))
         context['contents']=paginator.page(ctg_page)
-        return render(request,'ctg_content.html',context=context)
+        return render(request,'page.html',context=context)
     else :
         return render(request,'ctg_content.html', context=context )
 
@@ -246,8 +246,8 @@ def analyzing(request):
         #대충 알고리즘을 돌렸습니다
         class ACLS():
             pass
-        main = ACLS()
-        main.img_url = s_result.img.url 
+        main_content = ACLS()
+        main_content.img_url = s_result.img.url 
 
         main_ctgs, sub_ctgs = GetCtg(q_gender)
         smpl_pd = products.objects.all().order_by('?')[0]
@@ -255,7 +255,7 @@ def analyzing(request):
 
         context = {
             'user' : request.user , # 유저정보
-            'main' : main ,
+            'main' : main_content ,
             'contents' : contents ,
             'gender' : gender ,
             'main_ctgs' : main_ctgs ,
@@ -294,7 +294,6 @@ def searchPage(request):
         'gender' : gender, #사용자 성별
         'main_ctgs' : main_ctgs, #메인 카테고리 리스트 
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
-        'user' : request.user, #유저 메뉴 리스트
     }
 
     return render(request,'ctg_content.html', context=context )

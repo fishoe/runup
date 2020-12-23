@@ -36,6 +36,8 @@ heartButton.forEach((button) => {
   button.active;
 });
 
+
+
 function toggle() {
   if (this.active) {
     this.classList.remove("active");
@@ -46,10 +48,12 @@ function toggle() {
 }
 
 // 무한 스크롤 구현?
-const infinite = new Waypoint.Infinite({
-  element: document.querySelector(".infinite-container"),
+// const infinite = new Waypoint.Infinite({
+//   element: document.querySelector(".infinite-container"),
   // element: $(".infinite-container")[0],
-});
+// });
+
+
 
 // 상품 넘어갈때 나오는 에니메이션 효과 코드 주석 onclick event를 사용해서 했었음.
 // function animation(targetUrl) {
