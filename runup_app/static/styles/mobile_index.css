@@ -114,6 +114,41 @@ input {
   box-shadow: none;
 }
 
+/* item dropdwon menu */
+.item-dropdown-ul {
+  display: flex;
+  flex-direction: column;
+  background-color: #eff2f7;
+  padding: 3px 0;
+  border-radius: 3px;
+  opacity: 0.88;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 7;
+}
+
+.item-dropdown-li {
+  font-size: 10px;
+  padding: 3px 7px;
+  border-bottom: 1px solid gray;
+}
+
+.item-dropdown-li:last-child{
+  border-bottom:none;
+}
+
+.item-dropdown-delete-button{
+  width: 100%;
+  height: 100vh;
+  background-color: #fff;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 6;
+}
+
 /* 기존에 있던 css */
 .infinite-container {
   display: flex;
@@ -151,7 +186,7 @@ input {
   width: 100%;
   margin: 2% 2% 10px 2%;
   height: 150px;
-  /* margin-bottom: 10px; */
+  position: relative;
 }
 
 .image {
