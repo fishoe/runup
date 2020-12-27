@@ -1,5 +1,4 @@
 {% extends 'layout.html'%} {% load static %} {% block style%}
-<link rel="stylesheet" type="text/css" href="{% static 'styles/index.css' %}" />
 <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_index.css' %}" />
 {% endblock %} 
 
@@ -19,15 +18,24 @@
             <b>{{ prod.brand.name_kr }}</b>
             <div class="price">{% load humanize %} {{prod.origin_price|intcomma}}원</div>
           </div>
-          <!-- onclick="like_ajax('{% url 'like' prod.id %}', {{ prod.id }} )" -->
-          <a class="product-image-box">
-            <button class="heart-button" type="button"></button>
+        {% comment %} likes페이지는 찜하기를 해제할 경우 id값을 이용하여 js에 넘긴다 //js에서 선택한 콘텐츠 삭제 {% endcomment %}
+        {% comment %} 로그인 된 회원의 경우 로드된 db에서 확인 {% endcomment %}
+        {% if user.is_authenticated %}
+          <a class="product-image-box-login {{ prod.id }}">
+            <button class="heart-button {% if prod in likes %}active{% endif %}" type="button" id="likes_page" value={{prod.id}}></button>
           </a>
+        {% comment %} 로그인 되지 않았을 경우 쿠키값에서 확인 {% endcomment %}
+        {% else %}
+          <a class="product-image-box-logout {{ prod.id }}">
+            <button class="heart-button {% if prod in likes %}active{% endif %}" type="button" id="likes_page" value={{prod.id}}></button>
+          </a>
+        {% endif %}
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
+  {% csrf_token %}
   {% if contents.has_next %}
   <a class="infinite-more-link" href="?page={{ contents.next_page_number }}&s_ctg={{s_ctg.id}}">More</a>
   {% endif %}

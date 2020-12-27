@@ -1,6 +1,5 @@
 {% extends 'layout.html'%} {% load static %} {% block style%}
 <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_index.css' %}" />
-<script src="{% static 'js/main_content.js' %}" defer></script>
 {% endblock %} {% block content %} {% comment %} {{category}} {% endcomment %}
 <div class="header-menu">
   <a href="{% url 'new_page' %}">
@@ -41,15 +40,16 @@
         <a class="product-image-box-login {{ prod.id }}" onclick="like_ajax('{% url 'like' prod.id %}', '{{ prod.id }}' )">
           <button class="heart-button" type="button"></button>
         </a>
-        {% endcomment %} {% if user.is_authenticated %}
-        <a class="product-image-box-login {{ prod.id }}">
-          <button class="heart-button" type="button"></button>
-        </a>
-        {% else %}
-        <a class="product-image-box-logout {{ prod.id }}">
-          <button class="heart-button" type="button"></button>
-        </a>
-        {% endif %}
+        {% endcomment %}         
+          {% if user.is_authenticated %}
+            <a class="product-image-box-login {{ prod.id }}">
+              <button class="heart-button {% if prod in likes %}active{% endif %}" type="button"></button>
+            </a>
+          {% else %}
+            <a class="product-image-box-logout {{ prod.id }}">
+              <button class="heart-button {% if prod in likes %}active{% endif %}" type="button"></button>
+            </a>
+          {% endif %}
       </div>
     </div>
   </div>

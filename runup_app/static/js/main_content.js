@@ -8,14 +8,30 @@ function toggle() {
     this.classList.add("active");
   }
   this.active = !this.active;
+  // like페이지에서 온 요청일 경우 실행하는 코드
+  // 찜하기 버튼을 해제할때마다 화면에서 그 상품을 사라지게 한다
+  if(document.getElementById("likes_page")){
+    let content_list=this.parentNode.parentNode.parentNode.parentNode.parentNode
+    let delete_item=this.parentNode.parentNode.parentNode.parentNode
+    content_list.removeChild(delete_item)
+  }
+
 }
 
 // 하트 버튼 클릭 이벤트
 const heartButton = document.querySelectorAll(".heart-button");
 function heartClickFunc() {
   heartButton.forEach((button) => {
+    //active 조건 검사 버튼에 active true or false 입력
+    // button.active에 default값을 줘서 할당되지 않은 값이 없도록 한다
+    // 이미 찜한상품이면 active를 true로 default값을 준다
+    if(button.classList.contains('active')){
+      button.active=true
+    }
+    else{
+      button.active=false
+    }
     button.addEventListener("click", toggle);
-    button.active;
   });
 }
 
