@@ -52,13 +52,15 @@ def GetCtg(q_gender):
     return main_ctgs,sub_ctgs
 
 def main(request):
-
     #로그인 인증
     if request.user.is_authenticated :
         #회원 메뉴 아이템
         #회원 성별 획득
-        gender = request.user.gender
-        q_gender = Q( gender = request.user.gender )
+        gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
+            gender = request.COOKIES['gender']
+        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
         #비회원 메뉴 아이템
         #비회원 성별 획득
@@ -109,10 +111,17 @@ def category_pg(request):
     #auth
     if request.user.is_authenticated :
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.gender)
+        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
+            gender = request.COOKIES['gender']
+        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
         #비회원
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
+        gender = request.GET.get('gender', gender)
+        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
+            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
+            gender = GenderChar.WOMAN
         q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     try :
         sub_ctg_id = int(request.GET.get('s_ctg',-1))
@@ -190,7 +199,10 @@ def product_pg(request, product_id):
     if request.user.is_authenticated :
         #회원
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.gender)
+        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
+            gender = request.COOKIES['gender']
+        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
@@ -228,6 +240,10 @@ def analyzing(request):
             q_gender = Q( gender = gender )
         else :
             gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
+            gender = request.GET.get('gender', gender)
+            if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
+                #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
+                gender = GenderChar.WOMAN
             q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
         
         #request의 포스트 데이터의 validate 체크
@@ -269,7 +285,10 @@ def searchPage(request):
     #auth
     if request.user.is_authenticated :
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.gender)
+        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
+            gender = request.COOKIES['gender']
+        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN]  else gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
@@ -322,7 +341,10 @@ def brandrank(request):
     if request.user.is_authenticated :
         #회원
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.gender)
+        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
+            gender = request.COOKIES['gender']
+        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
@@ -425,7 +447,10 @@ def likes(request):
     if request.user.is_authenticated:
         contents=products.objects.filter(Like_users__user=request.user).order_by('name')
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.gender)
+        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
+            gender = request.COOKIES['gender']
+        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else:
     # 로그인이 안된 유저일 경우 찜한 목록
     # 각각의 제품을 찜하기를 누를 시 쿠키의 찜한상품들(iteam_array)을 로드한다
@@ -460,7 +485,10 @@ def best(request):
     if request.user.is_authenticated :
         #회원
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.gender)
+        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
+            gender = request.COOKIES['gender']
+        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
@@ -490,7 +518,10 @@ def sale(request):
     if request.user.is_authenticated :
         #회원
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.gender)
+        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
+            gender = request.COOKIES['gender']
+        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
@@ -514,7 +545,10 @@ def new(request):
     if request.user.is_authenticated :
         #회원
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q(gender= request.user.gender)
+        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
+            gender = request.COOKIES['gender']
+        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
         #비회원
         gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN

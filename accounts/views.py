@@ -35,7 +35,10 @@ def log_in(request):
         if user is not None :
             login(request, user)
             redir_url= request.POST['next'] if request.POST['next'] != '' else 'index'
-            return redirect(redir_url)
+            response = redirect(redir_url)
+            u_gender = GenderChar.WOMAN if user.gender == GenderType.WOMAN else GenderChar.MAN
+            response.set_cookie('gender', u_gender)
+            return response
         else :
             if redir_url != 'index':
                 return render(request,'login.html',{'error':'login failed','next':request})
@@ -60,13 +63,15 @@ def signup(request):
         return render(request, 'signup.html',context=context)
     elif request.method == 'POST':
         #print(request.POST)
-        request.POST['gender']
         form = AccountForm(request.POST)
         if form.is_valid():
             new_user = form.save()
             new_user.save()
             login(request,new_user)
-            return redirect(settings.LOGIN_REDIRECT_URL)
+            u_gender = GenderChar.WOMAN if new_user.gender == GenderType.WOMAN else GenderChar.MAN
+            response = redirect(settings.LOGIN_REDIRECT_URL)
+            response.set_cookie('gender',u_gender)
+            return response
         else :
             return render(request,'signup.html',{'errors':form.errors})
         return render(request,'signup.html')

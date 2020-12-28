@@ -26,7 +26,7 @@
     {% comment %} 헤더 {% endcomment %}
     <header class="header">
       <div class="header-title">
-        <button class="men-women-switch" type="button"></button>
+        <button class="men-women-switch {% if gender == 'm'%}active{% endif %}" type="button" onclick=""></button>
         <!-- <img src="{% static 'assets/switchMen-icon.svg' %}" alt="switchMen-icon" /> -->
         <h1 class="header-title-main">
           <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
