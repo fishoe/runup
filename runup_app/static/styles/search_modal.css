@@ -33,6 +33,10 @@
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
   }
+
+  .search-bar:focus{
+    border: 1px solid;
+  }
   
   /* 검색바+검색버튼 */
   .search-bar-content{

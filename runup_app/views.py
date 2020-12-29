@@ -111,7 +111,9 @@ def main(request):
     #메인 포스트 노출 파트
 
     active_banner_list = main_banner.objects.filter( Q(start__gte = timezone.now())| Q(end__lte = timezone.now()) )
+    # active_banner_list = main_banner.objects.all()
     context = {
+        'active_banner_list':active_banner_list,
         'likes':get_like(request),
         'contents' : page, #상품 목록 리스트 Products
         'gender' : gender, #사용자 성별
