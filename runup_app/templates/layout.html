@@ -10,12 +10,14 @@
     <script src="{% static 'js/infinite.min.js' %}" defer></script>    
     <script src="{% static 'js/main_content.js' %}" defer></script>
     <script src="{% static 'js/back_event.js' %}" defer></script>
+    <script src="{% static 'js/search.js' %}" defer></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="https://kit.fontawesome.com/f16496386e.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="{% static 'styles/layout.css' %}" />
     <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_layout.css' %}" />
+    <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/search_modal.css' %}" />
     <link rel="icon" href="data:," />
     {%block style%} {%endblock%}
   </head>
@@ -32,14 +34,28 @@
         <h1 class="header-title-main">
           <a href="{% url 'index' %}" class="logo_a">RUNUP</a>
         </h1>
-        <a href="{% url 'searchPage' %}">
+        <a class="header-search">
           <img src="{% static 'assets/search-icon.svg' %}" alt="search-icon" />
         </a>
       </div>
     </header>
 
     <section class="wrap">
-      {% comment %} 메뉴바 {% endcomment %}
+      {% comment %} 검색아이콘 클릭시 나타나는 모달창 {% endcomment %}
+      <section class="search-box">
+        <div class="search-modal">
+          <div class="search-content">
+            <a class="search-close">&times;</a>
+            <div class="search-bar-content">
+              <input class="search-bar" type="text" placeholder="Search...">
+              <div class="search-text-box">
+                <a class="search-text" href="#">검색</a>
+              </div>              
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="category-box">
         <dl class="category-menu">
           {% for i in main_ctgs %}
