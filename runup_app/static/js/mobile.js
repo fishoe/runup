@@ -3,13 +3,31 @@
 // men women switch toggle
 const switchButton = document.querySelector(".men-women-switch");
 
+if (switchButton.className.includes('active')){
+  switchButton.active = true;
+}else{
+  switchButton.active = false;
+}
+
 function toggle() {
+  let url = new URL(document.URL);
   if (this.active) {
     this.classList.remove("active");
+    if (url.searchParams.has('gender')){
+      url.searchParams.set('gender','w');
+    }else{
+      url.searchParams.append('gender','w');
+    }
   } else {
     this.classList.add("active");
+    if (url.searchParams.has('gender')){
+      url.searchParams.set('gender','m');
+    }else{
+      url.searchParams.append('gender','m');
+    }
   }
   this.active = !this.active;
+  location.href=url.href;
 }
 
 switchButton.addEventListener("click", toggle);

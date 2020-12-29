@@ -119,10 +119,6 @@ function addCookie(id) {
   }
 }
 
-// infinite-item click event 오래 클릭 했을때, 모달창 띄우기?
-const infiniteItem = document.querySelectorAll(".infinite-item");
-console.log(infiniteItem);
-
 // init 함수
 function init() {
   heartClickFunc();

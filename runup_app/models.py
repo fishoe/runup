@@ -46,7 +46,7 @@ class products(models.Model):
     url = models.URLField()
     gender = models.IntegerField(choices=genderctg.choices)
     origin_price = models.IntegerField()
-    discount_rate = models.FloatField(null=True)
+    discount_rate = models.FloatField(default=0.0)
     retail_price = models.IntegerField(null=True)
     view_count = models.IntegerField()
     #class color(models.IntegerChoices):
