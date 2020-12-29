@@ -1,6 +1,8 @@
 {% extends 'layout.html'%} {% load static %} {% block style%}
 <link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/mobile_index.css' %}" />
+<link rel="stylesheet" type="text/css" media="(max-width: 480px)" href="{% static 'styles/banner.css' %}" />
 <script src="{% static 'js/main_content.js' %}" defer></script>
+<script src="{% static 'js/banner.js' %}" defer></script>
 {% endblock %} {% block content %} {% comment %} {{category}} {% endcomment %}
 <div class="header-menu">
   <a href="{% url 'new_page' %}">
@@ -17,7 +19,11 @@
   </a>
 </div>
 <div class="ad-section">
-  <div class="ad-box"></div>
+  <div class="ad-box">
+    {% for i in active_banner_list %}
+      <img src="{{ i.img }}" alt="image" class="banner-img" />
+    {% endfor %}
+  </div>
 </div>
 <div class="infinite-container">
   {% for prod in contents %}
