@@ -19,6 +19,16 @@ categorySortButton.addEventListener("click", () => {
 });
 categorySortButton.active = false;
 
+function getfilterURL(flt_opt){
+  let url = new URL(document.URL);
+  if ( url.searchParams.has('flt') ) {
+    url.searchParams.set('flt',flt_opt);
+  }else {
+    url.searchParams.append('flt',flt_opt);
+  }
+  location.href= url.href;
+}
+
 // categoryFilter dropdown-menu
 const categoryFilterButton = document.querySelector(".category-sub-filter");
 const categoryFilterDropdownMenu = document.querySelector(".categoryFilter-dropdown-menu");
@@ -35,8 +45,6 @@ heartButton.forEach((button) => {
   button.addEventListener("click", toggle);
   button.active;
 });
-
-
 
 function toggle() {
   if (this.active) {
