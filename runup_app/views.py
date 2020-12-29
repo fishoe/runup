@@ -51,6 +51,27 @@ def GetCtg(q_gender):
 
     return main_ctgs,sub_ctgs
 
+# 상품이 로드되는 페이지 마다 찜여부를 확인하기 위해 필요한 함수
+# 찜한 상품의 리스트들을 내보내준다
+def get_like(request):
+    likes=[]
+    # 로그인한 유저의 경우 찜한 상품들 로드
+    if request.user.is_authenticated:
+        likes=products.objects.filter(Like_users__user=request.user)
+    else:
+    # 로그인이 안된 유저일 경우 찜한 목록
+    # 각각의 제품을 찜하기를 누를 시 쿠키의 찜한상품들(iteam_array)을 로드한다
+        like = request.COOKIES.get('like','')
+        like.strip(', ')
+        if like != '' :
+            like_array=like.split(',')
+        try :
+            pd_ids = list(map(int, like_array))
+            likes = products.objects.filter(id__in=pd_ids)
+        except Exception:
+            lieks = []        
+    return likes
+
 def main(request):
     #로그인 인증
     if request.user.is_authenticated :
@@ -90,8 +111,8 @@ def main(request):
     #메인 포스트 노출 파트
 
     active_banner_list = main_banner.objects.filter( Q(start__gte = timezone.now())| Q(end__lte = timezone.now()) )
-
     context = {
+        'likes':get_like(request),
         'contents' : page, #상품 목록 리스트 Products
         'gender' : gender, #사용자 성별
         'main_post' : active_banner_list, #현재 표시 되는 배너 리스트 쿼리 리스트 Main_banner
@@ -163,6 +184,7 @@ def category_pg(request):
     #print(request.user)
 
     context = {
+        'likes':get_like(request),
         'user' : request.user , # 유저정보
         'contents' : page , #상품 목록 리스트 Products
         'm_ctg': main_ctg ,
@@ -308,6 +330,7 @@ def searchPage(request):
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     context = {
+        'likes':get_like(request),
         'user' : request.user , # 유저정보
         'contents' : page , #상품 목록 리스트 Products
         'gender' : gender, #사용자 성별
@@ -458,8 +481,6 @@ def likes(request):
         like.strip(', ')
         if like != '' :
             like_array=like.split(',')
-        # print(like_array)
-
         try :
             pd_ids = list(map(int, like_array))
             contents = products.objects.filter(id__in=pd_ids)
@@ -472,6 +493,7 @@ def likes(request):
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     context={
+        'likes':get_like(request),
         'gender' : gender,
         'user' : request.user,
         'contents':contents, 
@@ -503,6 +525,7 @@ def best(request):
             pd=[]
 
     context={
+        'likes':get_like(request),
         'contents':pd,
         'gender' : gender ,
         'main_ctgs' : main_ctgs ,
@@ -531,6 +554,7 @@ def sale(request):
     contents=products.objects.filter().exclude(discount_rate=0)
     
     context={
+        'likes':get_like(request),
         'contents':contents,
         'gender' : gender ,
         'main_ctgs' : main_ctgs ,
@@ -558,6 +582,7 @@ def new(request):
     contents=products.objects.filter(discount_rate=0).order_by('?')[:30]
 
     context={
+        'likes':get_like(request),
         'contents':contents,
         'gender' : gender ,
         'main_ctgs' : main_ctgs ,

@@ -1,0 +1,57 @@
+/* 모달창 background */
+.search-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+  }
+  
+  /* 모달 콘텐츠 요소 박스 */
+  .search-content {
+    padding:5%;
+    background-color: #fefefe;
+    width: 100%; /* Could be more or less, depending on screen size */
+    height: 100%;
+  }
+  
+  /* 모달 나가기 버튼 */
+  .search-close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  /* 검색바 */
+  .search-bar{
+    height: 30px;
+    width: 80%;
+    border: 1px solid;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  
+  /* 검색바+검색버튼 */
+  .search-bar-content{
+    padding-top: 8%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .search-text-box{
+      height: 30px;
+      background-color: black;
+      width: 50px;
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .search-text{
+      color: white;
+  }

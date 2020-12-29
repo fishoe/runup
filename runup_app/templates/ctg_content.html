@@ -66,14 +66,21 @@
             <div class="price">{% load humanize %} {{prod.origin_price|intcomma}}원</div>
           </div>
           <!-- onclick="like_ajax('{% url 'like' prod.id %}', {{ prod.id }} )" -->
-          <a class="product-image-box">
-            <button class="heart-button" type="button"></button>
-          </a>
+          {% if user.is_authenticated %}
+            <a class="product-image-box-login {{ prod.id }}">
+              <button class="heart-button {% if prod in likes %}active{% endif %}" type="button"></button>
+            </a>
+          {% else %}
+            <a class="product-image-box-logout {{ prod.id }}">
+              <button class="heart-button {% if prod in likes %}active{% endif %}" type="button"></button>
+            </a>
+          {% endif %}
         </div>
       </div>
     </div>
     {% endfor %}
   </div>
+  {% csrf_token %}
   {% if contents.has_next %}
   <a class="infinite-more-link" href="?page={{ contents.next_page_number }}&s_ctg={{s_ctg.id}}">More</a>
   {% endif %}
