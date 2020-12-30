@@ -554,7 +554,7 @@ def best(request):
     p_l=product_likes.objects.values_list('product',flat=True)
     if p_l != '' :
         try:
-            pd=products.objects.filter(pk__in=set(p_l))
+            pd=products.objects.filter(Q(pk__in=set(p_l)) & Q(q_gender | Q( gender=GenderType.COMMON )))
         except Exception:
             pd=[]
 
@@ -592,7 +592,7 @@ def sale(request):
 
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
-    contents=products.objects.filter().exclude(discount_rate=0)
+    contents=products.objects.filter(q_gender | Q( gender=GenderType.COMMON )).exclude(discount_rate=0)
     
     context={
         'likes':get_like(request),
@@ -628,7 +628,7 @@ def new(request):
 
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
-    contents=products.objects.filter(discount_rate=0).order_by('?')[:30]
+    contents=products.objects.filter(Q(discount_rate=0)&Q(q_gender | Q( gender=GenderType.COMMON ))).order_by('?')[:30]
 
     context={
         'likes':get_like(request),
