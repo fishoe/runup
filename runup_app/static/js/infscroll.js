@@ -1,4 +1,4 @@
-const csrf_token = document.querySelector("[name=csrfmiddlewaretoken]").value;
+// const csrf_token = document.querySelector("[name=csrfmiddlewaretoken]").value;
 
 function setPageUrl(pg) {
     let nextpgUrl = new URL(document.URL);
@@ -9,6 +9,9 @@ function setPageUrl(pg) {
     }
     document.querySelector(".infinite-more-link").href = nextpgUrl.href;
 }
+
+if (document.querySelector(".infinite-more-link") != null) setPageUrl(2);
+
 document.addEventListener("DOMContentLoaded", () => {
   let sentinel = document.querySelector("#sentinel");
 
@@ -17,8 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let entry = entries[0];
     if (entry.intersectionRatio > 0) {
       //when scrolled down
+      if (document.querySelector(".infinite-more-link") == null) return;
       next_pg_url = document.querySelector(".infinite-more-link").href;
-      if (next_pg_url == '') return;
+      if (next_pg_url == document.URL) return;
       fetch(next_pg_url, {
         method: "POST",
         headers: {
@@ -29,11 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then((response) => response.text())
       .then((data) => {
-        let cl = document.querySelector(".infinite-container");
-        let dl = data.split('<token/>');
+        let cl = document.querySelector(".infinite-container"); //containor link
+        let dl = data.split('<token/>'); //data list ['상품 리스트 html','다음 페이지']
         cl.innerHTML += dl[0];
-        if (dl[1] != '')
-          setPageUrl(dl[1]);
+        next_link = dl[1].trim();
+        if (next_link != '')
+          setPageUrl(next_link);
         else document.querySelector(".infinite-more-link").href = '';
         
         let imageBox = document.querySelectorAll(".img_box");

@@ -197,7 +197,8 @@ def category_pg(request):
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
     }
     if request.method == 'POST':
-        ctg_page = int(request.GET.get('page',-1))
+        ctg_page = int(request.GET.get('page'))
+        # print(request.GET.get('page'))
         context['contents']=paginator.page(ctg_page)
         return render(request,'page.html',context=context)
     else :

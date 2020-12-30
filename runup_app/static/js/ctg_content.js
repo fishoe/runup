@@ -39,12 +39,12 @@ categoryFilterButton.addEventListener("click", () => {
 categoryFilterButton.active = false;
 
 // heart icon fill & border
-const heartButton = document.querySelectorAll(".heart-button");
+// const heartButton = document.querySelectorAll(".heart-button");
 
-heartButton.forEach((button) => {
-  button.addEventListener("click", toggle);
-  button.active;
-});
+// heartButton.forEach((button) => {
+//   button.addEventListener("click", toggle);
+//   button.active;
+// });
 
 function toggle() {
   if (this.active) {
