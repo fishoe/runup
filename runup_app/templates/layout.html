@@ -44,17 +44,17 @@
     <section class="wrap">
       {% comment %} 검색아이콘 클릭시 나타나는 모달창 {% endcomment %}
       <section class="search-box">
-        <div class="search-modal">
+        <form class="search-modal" method="GET" action="{% url 'searchPage' %}">
           <div class="search-content">
             <a class="search-close">&times;</a>
             <div class="search-bar-content">
-              <input class="search-bar" type="text" placeholder="Search...">
+              <input class="search-bar" type="text" name = 'q' placeholder="Search...">
               <div class="search-text-box">
-                <a class="search-text" href="{% url 'searchPage' %}">검색</a>
+                <input class="search-text" type = "submit" value="검색">
               </div>              
             </div>
           </div>
-        </div>
+        </form>
       </section>
 
       <section class="category-box">
