@@ -514,15 +514,21 @@ def best(request):
         gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
         q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
-        #비회원
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+        #비회원 메뉴 아이템
+        #비회원 성별 획득
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
+        gender = request.GET.get('gender', gender)
+        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
+            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
+            gender = GenderChar.WOMAN
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
+
     main_ctgs, sub_ctgs = GetCtg(q_gender)    
 
     p_l=product_likes.objects.values_list('product',flat=True)
     if p_l != '' :
         try:
-            pd=products.objects.filter(pk__in=set(p_l))
+            pd=products.objects.filter(Q(pk__in=set(p_l)) & Q(q_gender | Q( gender=GenderType.COMMON )))
         except Exception:
             pd=[]
 
@@ -548,12 +554,18 @@ def sale(request):
         gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
         q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
-        #비회원
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+        #비회원 메뉴 아이템
+        #비회원 성별 획득
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
+        gender = request.GET.get('gender', gender)
+        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
+            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
+            gender = GenderChar.WOMAN
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
+
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
-    contents=products.objects.filter().exclude(discount_rate=0)
+    contents=products.objects.filter(q_gender | Q( gender=GenderType.COMMON )).exclude(discount_rate=0)
     
     context={
         'likes':get_like(request),
@@ -576,12 +588,18 @@ def new(request):
         gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
         q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else :
-        #비회원
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+        #비회원 메뉴 아이템
+        #비회원 성별 획득
+        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
+        gender = request.GET.get('gender', gender)
+        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
+            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
+            gender = GenderChar.WOMAN
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
+
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
-    contents=products.objects.filter(discount_rate=0).order_by('?')[:30]
+    contents=products.objects.filter(Q(discount_rate=0)&Q(q_gender | Q( gender=GenderType.COMMON ))).order_by('?')[:30]
 
     context={
         'likes':get_like(request),
