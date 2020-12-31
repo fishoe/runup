@@ -14,8 +14,8 @@ class users(user_parent):
     contact = models.CharField(max_length=25)
     name = models.CharField(max_length=20)
 
-    EMAIL_FIELD = 'Email'
-    REQUIRED_FIELDS = ['Email','Gender','Birth','Contact','Name']
+    EMAIL_FIELD = 'email'
+    REQUIRED_FIELDS = ['email','gender','birth','contact','name']
     
     class Meta(user_parent.Meta):
         swappable = 'AUTH_USER_MODEL'

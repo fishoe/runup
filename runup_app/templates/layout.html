@@ -8,8 +8,8 @@
     <script src="{% static 'js/longClickEvent.js' %}" defer></script>
     <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
     <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-    <script src="{% static 'js/infinite.min.js' %}" defer></script>    
-    <script src="{% static 'js/main_content.js' %}" defer></script>
+    <script src="{% static 'js/infinite.min.js' %}" defer></script>
+    <script src="{% static 'js/main_content.js' %}" defer></script>    
     <script src="{% static 'js/back_event.js' %}" defer></script>
     <script src="{% static 'js/search.js' %}" defer></script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
@@ -44,17 +44,17 @@
     <section class="wrap">
       {% comment %} 검색아이콘 클릭시 나타나는 모달창 {% endcomment %}
       <section class="search-box">
-        <div class="search-modal">
+        <form class="search-modal" method="GET" action="{% url 'searchPage' %}">
           <div class="search-content">
             <a class="search-close">&times;</a>
             <div class="search-bar-content">
-              <input class="search-bar" type="text" placeholder="Search...">
+              <input class="search-bar" type="text" name = 'q' placeholder="Search...">
               <div class="search-text-box">
-                <a class="search-text" href="{% url 'searchPage' %}">검색</a>
+                <input class="search-text" type = "submit" value="검색">
               </div>              
             </div>
           </div>
-        </div>
+        </form>
       </section>
 
       <section class="category-box">

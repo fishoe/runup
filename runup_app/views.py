@@ -73,24 +73,22 @@ def get_like(request):
     return likes
 
 def main(request):
-    #로그인 인증
+    gender = GenderChar.WOMAN
     if request.user.is_authenticated :
-        #회원 메뉴 아이템
-        #회원 성별 획득
+        #회원
+        #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
-            gender = request.COOKIES['gender']
-        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-    else :
-        #비회원 메뉴 아이템
-        #비회원 성별 획득
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
-        gender = request.GET.get('gender', gender)
-        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
-            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
-            gender = GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
+    
+    #올바른 쿠키값에 대한 검사
+    if 'gender' in request.COOKIES and \
+        (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+        gender = request.COOKIES['gender']
+    
+    #올바른 url 쿼리 스트링에 대한 검사
+    url_qsting_gender = request.GET.get('gender',gender)
+    if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+            gender = url_qsting_gender
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     
     flt_opt = request.GET.get('flt','random')
     if flt_opt not in ['price','-price','name','-name','like','-like'] :
@@ -124,28 +122,27 @@ def main(request):
     }
 
     res = render( request, 'main_content.html', context)
-    
-    #cookie save if user is authenticated
-    if request.user.is_authenticated is False : 
-        res.set_cookie('gender', gender )
+    res.set_cookie('gender', gender )
     return res
 
 def category_pg(request):
-    #auth
+    gender = GenderChar.WOMAN
     if request.user.is_authenticated :
+        #회원
+        #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
-            gender = request.COOKIES['gender']
-        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-    else :
-        #비회원
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
-        gender = request.GET.get('gender', gender)
-        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
-            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
-            gender = GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    
+    #올바른 쿠키값에 대한 검사
+    if 'gender' in request.COOKIES and \
+        (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+        gender = request.COOKIES['gender']
+    
+    #올바른 url 쿼리 스트링에 대한 검사
+    url_qsting_gender = request.GET.get('gender',gender)
+    if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+            gender = url_qsting_gender
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    
     try :
         sub_ctg_id = int(request.GET.get('s_ctg',-1))
         flt_opt = request.GET.get('flt','name')
@@ -197,11 +194,14 @@ def category_pg(request):
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
     }
     if request.method == 'POST':
-        ctg_page = int(request.GET.get('page',-1))
+        ctg_page = int(request.GET.get('page'))
+        # print(request.GET.get('page'))
         context['contents']=paginator.page(ctg_page)
         return render(request,'page.html',context=context)
     else :
-        return render(request,'ctg_content.html', context=context )
+        res = render(request,'ctg_content.html', context=context )
+        res.set_cookie('gender', gender )
+        return res
 
 def product_pg(request, product_id):
     try :
@@ -220,19 +220,23 @@ def product_pg(request, product_id):
     pd.view_count += 1
 
     #제품 디테일 페이지 관련
+    gender = GenderChar.WOMAN
     if request.user.is_authenticated :
         #회원
+        #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
-            gender = request.COOKIES['gender']
-        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-    else :
-        #비회원
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        if pd.gender != GenderType.COMMON :
-            gender = GenderChar.WOMAN if pd.gender == GenderType.WOMAN else GenderChar.MAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    
+    #올바른 쿠키값에 대한 검사
+    if 'gender' in request.COOKIES and \
+        (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+        gender = request.COOKIES['gender']
+    
+    #올바른 url 쿼리 스트링에 대한 검사
+    url_qsting_gender = request.GET.get('gender',gender)
+    if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+            gender = url_qsting_gender
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     context = {
@@ -245,8 +249,7 @@ def product_pg(request, product_id):
     }
 
     res = render(request,'sub_content.html',context=context)
-    if request.user.is_authenticated is False : 
-        res.set_cookie('gender', gender )
+    res.set_cookie('gender', gender )
     return res
 
 from django.contrib.auth.decorators import login_required
@@ -257,18 +260,22 @@ def styleCatch(request):
 # from django.views.decorators.csrf import csrf_exempt, csrf_protect
 def analyzing(request):
     if request.method == 'POST': 
-        
-        #성별을 가져옵니다.
+        gender = GenderChar.WOMAN
         if request.user.is_authenticated :
-            gender = request.user.gender
-            q_gender = Q( gender = gender )
-        else :
-            gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-            gender = request.GET.get('gender', gender)
-            if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
-                #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
-                gender = GenderChar.WOMAN
-            q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+            #회원
+            #회원의 성별을 확인
+            gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
+        
+        #올바른 쿠키값에 대한 검사
+        if 'gender' in request.COOKIES and \
+            (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+            gender = request.COOKIES['gender']
+        
+        #올바른 url 쿼리 스트링에 대한 검사
+        url_qsting_gender = request.GET.get('gender',gender)
+        if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+                gender = url_qsting_gender
+        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
         
         #request의 포스트 데이터의 validate 체크
         form = UploadImgForm(request.POST, request.FILES)
@@ -306,17 +313,22 @@ def analyzing(request):
         return redirect('index')
 
 def searchPage(request):
-    #auth
+    gender = GenderChar.WOMAN
     if request.user.is_authenticated :
+        #회원
+        #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
-            gender = request.COOKIES['gender']
-        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN]  else gender
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-    else :
-        #비회원
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    
+    #올바른 쿠키값에 대한 검사
+    if 'gender' in request.COOKIES and \
+        (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+        gender = request.COOKIES['gender']
+    
+    #올바른 url 쿼리 스트링에 대한 검사
+    url_qsting_gender = request.GET.get('gender',gender)
+    if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+            gender = url_qsting_gender
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     
     string = request.GET.get('q','')
 
@@ -340,7 +352,9 @@ def searchPage(request):
         'sub_ctgs' : sub_ctgs, #서브 카테고리 리스트
     }
 
-    return render(request,'ctg_content.html', context=context )
+    res = render(request,'ctg_content.html', context=context )
+    res.set_cookie('gender',gender)
+    return res
 
 def brandrank(request):
     #브랜드 랭크 페이지
@@ -363,18 +377,21 @@ def brandrank(request):
     product=products.objects.all()
 
     #제품 디테일 페이지 관련
+    gender = GenderChar.WOMAN
     if request.user.is_authenticated :
-        #회원
+        #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
-            gender = request.COOKIES['gender']
-        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-    else :
-        #비회원
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     
+    #올바른 쿠키값에 대한 검사
+    if 'gender' in request.COOKIES and \
+        (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+        gender = request.COOKIES['gender']
+    
+    #올바른 url 쿼리 스트링에 대한 검사
+    url_qsting_gender = request.GET.get('gender',gender)
+    if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+            gender = url_qsting_gender
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )    
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     # 브랜드를 조회수 기준으로 볼때
@@ -430,6 +447,9 @@ def brandrank(request):
             'main_ctgs' : main_ctgs ,
             'sub_ctgs' : sub_ctgs ,
         }
+
+    res = render(request,'brandrank.html',context)
+    res.set_cookie('gender',gender)
     return render(request,'brandrank.html',context)
 
 
@@ -464,18 +484,14 @@ def like(request,product_id):
         # return 
 
 def likes(request):
-
     # 하단 메뉴바의 Likes의 내가 좋아요한 상품을 눌렀을 때 나오는 페이지
     #*************************************************************
     # 로그인된 유저일 경우 찜한 목록
     # 쿠키로 저장하여 그 목록들을 보여준다
+    gender = GenderChar.WOMAN
     if request.user.is_authenticated:
         contents=products.objects.filter(Like_users__user=request.user).order_by('name')
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
-            gender = request.COOKIES['gender']
-        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
     else:
     # 로그인이 안된 유저일 경우 찜한 목록
     # 각각의 제품을 찜하기를 누를 시 쿠키의 찜한상품들(iteam_array)을 로드한다
@@ -489,8 +505,16 @@ def likes(request):
         except Exception:
             contents = []
 
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    #올바른 쿠키값에 대한 검사
+    if 'gender' in request.COOKIES and \
+        (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+        gender = request.COOKIES['gender']
+    
+    #올바른 url 쿼리 스트링에 대한 검사
+    url_qsting_gender = request.GET.get('gender',gender)
+    if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+            gender = url_qsting_gender
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
 
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
@@ -502,26 +526,27 @@ def likes(request):
         'main_ctgs' : main_ctgs ,
         'sub_ctgs' : sub_ctgs ,
     }
-    return render(request,'likes.html',context)
+    res = render(request,'likes.html',context)
+    res.set_cookie('gender',gender)
+    return res
 
 def best(request):
     #제품 디테일 페이지 관련
+    gender = GenderChar.WOMAN
     if request.user.is_authenticated :
         #회원
+        #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
-            gender = request.COOKIES['gender']
-        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-    else :
-        #비회원 메뉴 아이템
-        #비회원 성별 획득
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
-        gender = request.GET.get('gender', gender)
-        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
-            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
-            gender = GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
+    #올바른 쿠키값에 대한 검사
+    if 'gender' in request.COOKIES and \
+        (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+        gender = request.COOKIES['gender']
+    
+    #올바른 url 쿼리 스트링에 대한 검사
+    url_qsting_gender = request.GET.get('gender',gender)
+    if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+            gender = url_qsting_gender
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
 
     main_ctgs, sub_ctgs = GetCtg(q_gender)    
 
@@ -540,29 +565,30 @@ def best(request):
         'sub_ctgs' : sub_ctgs ,        
         'user' : request.user,
     }
-
-    return render(request,'best.html',context)
+    res = render(request,'best.html',context)
+    res.set_cookie('gender',gender)
+    return res
 
 # 임의로 50개의 데이터를 수정함. 추후 수정필요
 def sale(request):
     #제품 디테일 페이지 관련
+    gender = GenderChar.WOMAN
     if request.user.is_authenticated :
         #회원
+        #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
-            gender = request.COOKIES['gender']
-        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-    else :
-        #비회원 메뉴 아이템
-        #비회원 성별 획득
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
-        gender = request.GET.get('gender', gender)
-        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
-            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
-            gender = GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
-
+    
+    #올바른 쿠키값에 대한 검사
+    if 'gender' in request.COOKIES and \
+        (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+        gender = request.COOKIES['gender']
+    
+    #올바른 url 쿼리 스트링에 대한 검사
+    url_qsting_gender = request.GET.get('gender',gender)
+    if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+            gender = url_qsting_gender
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
+    
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     contents=products.objects.filter(q_gender | Q( gender=GenderType.COMMON )).exclude(discount_rate=0)
@@ -576,26 +602,28 @@ def sale(request):
         'user' : request.user,
     }
 
-    return render(request,'sale.html',context)
+    res = render(request,'sale.html',context)
+    res.set_cookie('gender',gender)
+    return res
 
 def new(request):
     #제품 디테일 페이지 관련
+    gender = GenderChar.WOMAN
     if request.user.is_authenticated :
         #회원
+        #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-        if ('gender' in request.COOKIES) and (request.COOKIES['gender'] in [GenderChar.WOMAN,GenderChar.MAN]) :
-            gender = request.COOKIES['gender']
-        gender = request.GET.get('gender',gender) if request.GET.get('gender',gender) in [GenderChar.WOMAN,GenderChar.MAN] else gender
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-    else :
-        #비회원 메뉴 아이템
-        #비회원 성별 획득
-        gender = request.COOKIES['gender'] if 'gender' in request.COOKIES else GenderChar.WOMAN #쿠키 값을 먼저 받는다.
-        gender = request.GET.get('gender', gender)
-        if (gender == GenderChar.WOMAN or gender == GenderChar.MAN) is not True :
-            #잘못된 접근에 대한 정오 w, m이 아닌 경우 w로 정정
-            gender = GenderChar.WOMAN
-        q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )        
+
+    #올바른 쿠키값에 대한 검사
+    if 'gender' in request.COOKIES and \
+        (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
+        gender = request.COOKIES['gender']
+    
+    #올바른 url 쿼리 스트링에 대한 검사
+    url_qsting_gender = request.GET.get('gender',gender)
+    if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
+            gender = url_qsting_gender
+    q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
 
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
@@ -609,8 +637,9 @@ def new(request):
         'sub_ctgs' : sub_ctgs ,
         'user' : request.user,
     }
-
-    return render(request,'new.html',context)    
+    res = render(request,'new.html',context)
+    res.set_cookie('gender',gender)
+    return res
 
 def nonepg(request):
     print(request)

@@ -32,16 +32,16 @@
           <dl class="categorySort-dropdown-list">
             <dt class="sr-only">정렬</dt>
             <dd>
-              <a href="#">인기순</a>
+              <a onclick="getfilterURL('like')">인기순</a>
             </dd>
             <dd>
-              <a href="#">상푼순</a>
+              <a onclick="getfilterURL('name')">상품순</a>
             </dd>
             <dd>
-              <a href="?ctg={{ctg}}&flt=1">높은가격순</a>
+              <a onclick="getfilterURL('-price')">높은가격순</a>
             </dd>
             <dd>
-              <a href="?ctg={{ctg}}&flt=2">낮은가격순</a>
+              <a onclick="getfilterURL('price')">낮은가격순</a>
             </dd>
           </dl>
         </aside>
@@ -80,7 +80,6 @@
     </div>
     {% endfor %}
   </div>
-  {% csrf_token %}
   {% if contents.has_next %}
   <a class="infinite-more-link" href="?page={{ contents.next_page_number }}&s_ctg={{s_ctg.id}}">More</a>
   {% endif %}
