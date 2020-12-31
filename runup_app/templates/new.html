@@ -13,7 +13,7 @@
     <div class="infinite-item">
       <div class="box">
         <div class="img_box">
-          <a onclick="animation('{% url 'product' prod.id %}')">
+          <a class="img_box_a {{prod.id}} {{prod.url}}" href="{% url 'product' prod.id %}">
             <img src="{{ prod.img_url }}" alt="image" class="image" />
           </a>
         </div>

@@ -537,7 +537,6 @@ def best(request):
         #회원
         #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-    
     #올바른 쿠키값에 대한 검사
     if 'gender' in request.COOKIES and \
         (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
@@ -589,7 +588,7 @@ def sale(request):
     if (url_qsting_gender == GenderChar.WOMAN or url_qsting_gender == GenderChar.MAN):
             gender = url_qsting_gender
     q_gender = Q( gender = GenderType.WOMAN if gender == GenderChar.WOMAN else GenderType.MAN )
-
+    
     main_ctgs, sub_ctgs = GetCtg(q_gender)
 
     contents=products.objects.filter(q_gender | Q( gender=GenderType.COMMON )).exclude(discount_rate=0)
@@ -614,7 +613,7 @@ def new(request):
         #회원
         #회원의 성별을 확인
         gender = GenderChar.WOMAN if request.user.gender == GenderType.WOMAN else GenderChar.MAN
-    
+
     #올바른 쿠키값에 대한 검사
     if 'gender' in request.COOKIES and \
         (request.COOKIES['gender'] == GenderChar.WOMAN or request.COOKIES['gender'] == GenderChar.MAN):
