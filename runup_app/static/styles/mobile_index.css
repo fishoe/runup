@@ -230,6 +230,14 @@ input {
   background: url("../assets/heart-fill.svg");
 }
 
+.sale-price{
+  color: red;
+}
+
+.discount-rate{
+  color: blue;
+}
+
 /* background: url("../assets/heart.svg"); */
 
 /* <= 375 */

@@ -10,8 +10,11 @@
       <img src="{{main.img_url}}" alt="image" class="target_img" />
     </a>
     <div class="info">
-      <b>{{main.brand.name_kr}}</b>
+      <b>{{ main.name }}</b>
+      {{ main.brand.name_en }}
       <div class="price">{% load humanize %} {{main.origin_price|intcomma}}원</div>
+      <div class="sale-price">{% load humanize %} 세일가:  {{main.retail_price|intcomma}}원</div>
+      <div class="discount-rate">{% load humanize %} {{main.discount_rate}}% 세일</div>
     </div>
   </div>
   <div class="sim_container">
@@ -66,8 +69,11 @@
           </a>
         </div>
         <div class="info">
-          <b>{{content.sim_prod.brand.Name_kr}}</b>
+          <b>{{content.sim_prod.name}}</b>
+          {{content.sim_prod.brand.Name_en}}
           <div class="price">{% load humanize %} {{content.sim_prod.origin_price|intcomma}}원</div>
+          <div class="sale-price">{% load humanize %} 세일가:  {{content.sim_prod.retail_price|intcomma}}원</div>
+          <div class="discount-rate">{% load humanize %} {{content.sim_prod.discount_rate}}% 세일</div>
         </div>
       </div>
       {% endfor %}

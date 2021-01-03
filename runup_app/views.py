@@ -94,12 +94,14 @@ def main(request):
     if flt_opt not in ['price','-price','name','-name','like','-like'] :
         flt_opt = 'random'
 
+    brand=Q(brand__name_en='DANSKIN') | Q(brand__name_en='GILDAN')        
+
     if flt_opt in ['like','-like'] :
-        all_pd = products.objects.filter(q_gender | Q( gender=GenderType.COMMON ))\
+        all_pd = products.objects.filter(brand & Q(q_gender | Q( gender=GenderType.COMMON )))\
             .annotate(like
             =Count('Like_users')).order_by(flt_opt)
     else :
-        all_pd = products.objects.filter(q_gender | Q( gender=GenderType.COMMON )).order_by(const.flt_opt[flt_opt])#정렬 옵션에 대한 것
+        all_pd = products.objects.filter(brand & Q(q_gender | Q( gender=GenderType.COMMON ))).order_by(const.flt_opt[flt_opt])#정렬 옵션에 대한 것
 
     prod_page = Paginator(all_pd, const.ITEMS_PER_PAGE ) #모든 상품을 30개 보여준다.
     page = prod_page.get_page(1)

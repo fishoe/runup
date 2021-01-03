@@ -2,7 +2,7 @@
 .search-modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 100; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -46,17 +46,18 @@
   }
 
   .search-text-box{
-      height: 30px;
-      background-color: black;
-      width: 50px;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    height: 30px;
+    background-color: black;
+    width: 50px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .search-text{
-      color: white;
-      background: transparent;
+    background-color: black;
+    color: white;
+    background: transparent;
   }

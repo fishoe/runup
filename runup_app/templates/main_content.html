@@ -37,8 +37,11 @@
       </div>
       <div class="product-container">
         <div class="info">
-          <b>{{ prod.brand.name_en }}</b>
+          <b>{{ prod.name }}</b>
+          {{ prod.brand.name_en }}
           <div class="price">{% load humanize %} {{prod.origin_price|intcomma}}원</div>
+          <div class="sale-price">{% load humanize %} 세일가:  {{prod.retail_price|intcomma}}원</div>
+          <div class="discount-rate">{% load humanize %} {{prod.discount_rate}}% 세일</div>
         </div>
         <!-- 임의로 찜하기 버튼을 추가했습니다. 추후 수정요망 -->
         <!-- ajax로 제품의 아이디값을 보내서 컨트롤러단으로 보내게 한다 -->
@@ -62,4 +65,8 @@
   </div>
   {% endfor %}
 </div>
+  {% if contents.has_next %}
+  <a class="infinite-more-link" href="?page={{ contents.next_page_number }}&s_ctg={{s_ctg.id}}">next page</a>
+  {% endif %}
+  <div id="sentinel"></div>
 {% csrf_token %} {% endblock %}
