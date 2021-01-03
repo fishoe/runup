@@ -73,6 +73,7 @@ def get_like(request):
     return likes
 
 def main(request):
+    print('test')
     gender = GenderChar.WOMAN
     if request.user.is_authenticated :
         #회원
