@@ -19,8 +19,11 @@
         </div>
         <div class="product-container">
           <div class="info">
-            <b>{{ prod.brand.name_kr }}</b>
+            <b>{{ prod.name }}</b>
+            {{ prod.brand.name_en }}
             <div class="price">{% load humanize %} {{prod.origin_price|intcomma}}원</div>
+            <div class="sale-price">{% load humanize %} 세일가:  {{prod.retail_price|intcomma}}원</div>
+            <div class="discount-rate">{% load humanize %} {{prod.discount_rate}}% 세일</div>
           </div>
           <!-- onclick="like_ajax('{% url 'like' prod.id %}', {{ prod.id }} )" -->
           {% if user.is_authenticated %}
